@@ -1,0 +1,6 @@
+.bsp
+.idea
+project/target/
+target/
+*.class
+*.dylib
