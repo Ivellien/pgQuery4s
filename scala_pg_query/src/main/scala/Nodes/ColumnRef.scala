@@ -1,10 +1,10 @@
 package Nodes
 
-import Nodes.CursorSyntax.MyACursor
-import io.circe.ACursor
+import io.circe._
+import io.circe.generic.semiauto._
 
 case class ColumnRef(
-                      fields: Iterable[Node],
+                      fields: List[Node],
                       location: Option[Int]
                     ) extends Node {
   override def toQuery(): String = {
@@ -12,10 +12,5 @@ case class ColumnRef(
   }
 }
 object ColumnRef {
-  def apply(cursor: ACursor): ColumnRef = {
-    ColumnRef(
-      fields = cursor.downField("fields").values.head.map(x => Node(x.hcursor)),
-      location = cursor.getIntFieldOption("location")
-    )
-  }
+  implicit val decoder: Decoder[ColumnRef] = deriveDecoder[ColumnRef]
 }
