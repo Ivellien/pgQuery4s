@@ -1,8 +1,7 @@
 package Nodes
 
-import Nodes.CursorSyntax.MyACursor
-import io.circe.ACursor
-
+import io.circe._
+import io.circe.generic.semiauto._
 
 case class NodeInteger(
                         ival: Int
@@ -10,9 +9,5 @@ case class NodeInteger(
   override def toQuery(): String = ival.toString
 }
 object NodeInteger {
-  def apply(cursor: ACursor): NodeInteger = {
-    NodeInteger(
-      ival = cursor.getIntFieldOption("ival").head
-    )
-  }
+  implicit val decoder: Decoder[NodeInteger] = deriveDecoder[NodeInteger]
 }

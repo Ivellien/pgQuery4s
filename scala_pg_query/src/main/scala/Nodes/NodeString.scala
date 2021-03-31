@@ -1,7 +1,7 @@
 package Nodes
 
-import Nodes.CursorSyntax.MyACursor
-import io.circe.ACursor
+import io.circe._
+import io.circe.generic.semiauto._
 
 case class NodeString(
                        str: String
@@ -9,9 +9,5 @@ case class NodeString(
   override def toQuery(): String = str
 }
 object NodeString {
-  def apply(cursor: ACursor): NodeString = {
-    NodeString(
-      str = cursor.getStringFieldOption("str").head
-    )
-  }
+  implicit val decoder: Decoder[NodeString] = deriveDecoder[NodeString]
 }

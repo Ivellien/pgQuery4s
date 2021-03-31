@@ -1,12 +1,12 @@
 package Nodes
 
 import Enums.A_Expr_Kind
-import Nodes.CursorSyntax.MyACursor
-import io.circe.ACursor
+import io.circe._
+import io.circe.generic.semiauto._
 
 case class A_Expr(
                    kind: A_Expr_Kind.Value,
-                   name: Iterable[Node],
+                   name: List[Node],
                    lexpr: Option[Node],
                    rexpr: Option[Node],
                    location: Option[Int],
@@ -19,13 +19,5 @@ case class A_Expr(
   }
 }
 object A_Expr {
-  def apply(cursor: ACursor): A_Expr = {
-    A_Expr(
-      kind = A_Expr_Kind(cursor.get[Int]("kind").toOption.head),
-      name =  cursor.downField("name").values.head.map(x => Node(x.hcursor)),
-      lexpr = cursor.getNodeOption("lexpr"),
-      rexpr = cursor.getNodeOption("rexpr"),
-      location = cursor.getIntFieldOption("location")
-    )
-  }
+  implicit val decoder: Decoder[A_Expr] = deriveDecoder[A_Expr]
 }

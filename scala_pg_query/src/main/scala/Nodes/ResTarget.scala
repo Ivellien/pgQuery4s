@@ -1,12 +1,16 @@
 package Nodes
 
-import Nodes.CursorSyntax.MyACursor
-import io.circe.ACursor
+import io.circe._
+import io.circe.generic.extras.semiauto._
+import io.circe.generic.extras.JsonKey
+// marked as always used in intellij, otherwise the optimizer will get rid of it
+import Nodes.Node.circeConfig
+
 
 case class ResTarget(
                       name: Option[String],
                       indirection: Option[Node],
-                      value: Option[Node],
+                      @JsonKey("val") value: Option[Node],
                       location: Option[Int],
                     ) extends Node {
   override def toQuery(): String = {
@@ -15,12 +19,5 @@ case class ResTarget(
 }
 
 object ResTarget {
-  def apply(cursor: ACursor): ResTarget = {
-    ResTarget(
-      name = cursor.getStringFieldOption("name"),
-      indirection = cursor.getNodeOption("indirection"),
-      value = cursor.getNodeOption("val"),
-      location = cursor.getIntFieldOption("location")
-    )
-  }
+  implicit val decoder: Decoder[ResTarget] = deriveConfiguredDecoder[ResTarget]
 }

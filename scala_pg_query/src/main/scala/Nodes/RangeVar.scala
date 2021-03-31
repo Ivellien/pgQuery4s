@@ -1,7 +1,7 @@
 package Nodes
 
-import Nodes.CursorSyntax.MyACursor
-import io.circe.ACursor
+import io.circe._
+import io.circe.generic.semiauto._
 
 case class RangeVar(
                      catalogname: Option[String],
@@ -16,15 +16,5 @@ case class RangeVar(
 }
 
 object RangeVar {
-  def apply(cursor: ACursor): RangeVar = {
-    RangeVar(
-      catalogname = cursor.getStringFieldOption("catalogname"),
-      schemaname = cursor.getStringFieldOption("schemaname"),
-      relname = cursor.getStringFieldOption("relname"),
-      inh = cursor.getBooleanField("inh"),
-      relpersistence = cursor.getStringFieldOption("relpersistence"),
-      alias = None,
-      location = cursor.getIntFieldOption("location")
-    )
-  }
+  implicit val decoder: Decoder[RangeVar] = deriveDecoder[RangeVar]
 }

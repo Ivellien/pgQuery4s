@@ -1,7 +1,7 @@
 package Nodes
 
-import Nodes.CursorSyntax.MyACursor
-import io.circe.ACursor
+import io.circe._
+import io.circe.generic.semiauto._
 
 case class RawStmt(
                     stmt: Option[Node],
@@ -14,11 +14,5 @@ case class RawStmt(
 }
 
 object RawStmt {
-  def apply(cursor: ACursor): RawStmt = {
-    RawStmt(
-      stmt = cursor.getNodeOption("stmt"),
-      stmt_location = cursor.getIntFieldOption("stmt_location"),
-      stmt_len = cursor.getIntFieldOption("smtm_len")
-    )
-  }
+  implicit val decoder: Decoder[RawStmt] = deriveDecoder[RawStmt]
 }

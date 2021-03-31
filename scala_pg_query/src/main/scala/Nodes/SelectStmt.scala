@@ -1,12 +1,12 @@
 package Nodes
 
-import CursorSyntax.MyACursor
-import io.circe.ACursor
+import io.circe._
+import io.circe.generic.semiauto._
 
 case class SelectStmt(distinctClause: Option[Node],
                       intoClause: Option[Node],
-                      targetList: Iterable[Node],
-                      fromClause: Iterable[Node],
+                      targetList: List[Node],
+                      fromClause: List[Node],
                       whereClause: Option[Node],
                       groupClause: Option[Node],
                       havingClause: Option[Node],
@@ -14,24 +14,14 @@ case class SelectStmt(distinctClause: Option[Node],
   override def toQuery(): String = {
     val targets: String = targetList.map(x => x.toQuery()).mkString(",")
     val from: String = fromClause.map(x => x.toQuery()).mkString(",")
-    val where: String = if(whereClause.isEmpty) "" else whereClause.get.toQuery()
+    val where: String = if (whereClause.isEmpty) "" else whereClause.get.toQuery()
     "SELECT " + targets + " " +
-    "FROM " + from + " " +
-    "WHERE " + where
+      "FROM " + from + " " +
+      "WHERE " + where
   }
 }
 
+
 object SelectStmt {
-  def apply(cursor: ACursor): Node = {
-    SelectStmt(
-      distinctClause = cursor.getNodeOption("distinctClause"),
-      intoClause = cursor.getNodeOption("intoClause"),
-      targetList = cursor.getIterableNode("targetList"),
-      fromClause = cursor.getIterableNode("fromClause"),
-      whereClause = cursor.getNodeOption("whereClause"),
-      groupClause = cursor.getNodeOption("groupClause"),
-      havingClause = cursor.getNodeOption("havingClause"),
-      op = cursor.getIntFieldOption("op")
-    )
-  }
+  implicit val decoder: Decoder[SelectStmt] = deriveDecoder[SelectStmt]
 }
