@@ -1,4 +1,4 @@
-package Nodes
+package nodes
 
 import io.circe._
 import io.circe.generic.semiauto._
@@ -11,13 +11,13 @@ case class SelectStmt(distinctClause: Option[Node],
                       groupClause: Option[Node],
                       havingClause: Option[Node],
                       op: Option[Int]) extends Node {
-  override def toQuery(): String = {
-    val targets: String = targetList.map(x => x.toQuery()).mkString(",")
-    val from: String = fromClause.map(x => x.toQuery()).mkString(",")
-    val where: String = if (whereClause.isEmpty) "" else whereClause.get.toQuery()
+  override def query: String = {
+    val targets: String = targetList.map(x => x.query).mkString(",")
+    val from: String = fromClause.map(x => x.query).mkString(",")
+    val where: Node = whereClause.getOrElse(EmptyNode())
     "SELECT " + targets + " " +
       "FROM " + from + " " +
-      "WHERE " + where
+      "WHERE " + where.query
   }
 }
 

@@ -1,4 +1,4 @@
-package Enums
+package enums
 
 object NodeTag extends Enumeration {
   val T_Invalid = Value("Invalid")

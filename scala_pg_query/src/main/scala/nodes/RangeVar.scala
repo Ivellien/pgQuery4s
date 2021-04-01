@@ -1,4 +1,4 @@
-package Nodes
+package nodes
 
 import io.circe._
 import io.circe.generic.semiauto._
@@ -12,7 +12,7 @@ case class RangeVar(
                      alias: Option[Node],
                      location: Option[Int],
                    ) extends Node {
-  override def toQuery(): String = if (relname.isEmpty) "" else relname.get
+  override def query: String = relname.getOrElse("")
 }
 
 object RangeVar {

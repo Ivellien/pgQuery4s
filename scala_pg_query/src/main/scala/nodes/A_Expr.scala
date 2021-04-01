@@ -1,6 +1,6 @@
-package Nodes
+package nodes
 
-import Enums.A_Expr_Kind
+import enums.A_Expr_Kind
 import io.circe._
 import io.circe.generic.semiauto._
 
@@ -11,10 +11,10 @@ case class A_Expr(
                    rexpr: Option[Node],
                    location: Option[Int],
                  ) extends Node {
-  override def toQuery(): String = {
-    val lexprString: String = if (lexpr.isEmpty) "" else lexpr.get.toQuery()
-    val rexprString: String = if (rexpr.isEmpty) "" else rexpr.get.toQuery()
-    val nameString: String = if (name.isEmpty) "" else name.head.toQuery()
+  override def query: String = {
+    val lexprString: String = lexpr.getOrElse(EmptyNode()).query
+    val rexprString: String = rexpr.getOrElse(EmptyNode()).query
+    val nameString: String = name.headOption.getOrElse(EmptyNode()).query
     lexprString + " " + nameString + " " + rexprString
   }
 }

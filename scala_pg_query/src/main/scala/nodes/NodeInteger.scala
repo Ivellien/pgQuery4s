@@ -1,4 +1,4 @@
-package Nodes
+package nodes
 
 import io.circe._
 import io.circe.generic.semiauto._
@@ -6,7 +6,7 @@ import io.circe.generic.semiauto._
 case class NodeInteger(
                         ival: Int
                       ) extends Node {
-  override def toQuery(): String = ival.toString
+  override def query: String = ival.toString
 }
 object NodeInteger {
   implicit val decoder: Decoder[NodeInteger] = deriveDecoder[NodeInteger]

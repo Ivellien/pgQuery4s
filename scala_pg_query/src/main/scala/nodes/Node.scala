@@ -1,13 +1,11 @@
-package Nodes
+package nodes
 
-import Enums.NodeTag
-import io.circe.ACursor
-import io.circe.Decoder
-import io.circe.HCursor
+import enums.NodeTag
 import io.circe.generic.extras.Configuration
+import io.circe.{ACursor, Decoder, HCursor}
 
 abstract class Node {
-  def toQuery(): String
+  def query: String
 }
 
 object Node {
@@ -53,5 +51,5 @@ object Node {
 }
 
 case class EmptyNode() extends Node {
-  override def toQuery(): String = ""
+  override def query: String = ""
 }

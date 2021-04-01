@@ -1,11 +1,10 @@
-package Nodes
+package nodes
 
 import io.circe._
-import io.circe.generic.extras.semiauto._
 import io.circe.generic.extras.JsonKey
+import io.circe.generic.extras.semiauto._
 // marked as always used in intellij, otherwise the optimizer will get rid of it
-import Nodes.Node.circeConfig
-
+import nodes.Node.circeConfig
 
 case class ResTarget(
                       name: Option[String],
@@ -13,9 +12,7 @@ case class ResTarget(
                       @JsonKey("val") value: Option[Node],
                       location: Option[Int],
                     ) extends Node {
-  override def toQuery(): String = {
-    if (value.isEmpty) "" else value.get.toQuery()
-  }
+  override def query: String = value.getOrElse(EmptyNode()).query
 }
 
 object ResTarget {
