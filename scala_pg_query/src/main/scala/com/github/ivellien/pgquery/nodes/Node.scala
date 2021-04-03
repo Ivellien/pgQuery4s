@@ -1,6 +1,7 @@
-package com.github.Ivellien.pgquery.nodes
+package com.github.ivellien.pgquery.nodes
 
-import com.github.Ivellien.pgquery.enums.NodeTag
+import com.github.ivellien.pgquery.enums.NodeTag
+import com.typesafe.scalalogging.Logger
 import io.circe.generic.extras.Configuration
 import io.circe.{ACursor, Decoder, HCursor}
 
@@ -44,7 +45,7 @@ object Node {
       case NodeTag.T_A_Expr => value.as[A_Expr]
       case NodeTag.T_A_Const => value.as[A_Const]
       case _ =>
-        println("Unsupported yet - " + key)
+        Logger("logger").debug(s"Unsupported yet - $key")
         Right(EmptyNode())
     }
   }

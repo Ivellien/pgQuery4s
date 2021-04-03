@@ -1,6 +1,6 @@
-package com.github.Ivellien.pgquery
+package com.github.ivellien.pgquery
 
-import com.github.Ivellien.pgquery.nodes.Node
+import com.github.ivellien.pgquery.nodes.Node
 import io.circe.Json
 import io.circe.parser.parse
 

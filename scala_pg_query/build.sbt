@@ -15,6 +15,8 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-generic-extras",
   "io.circe" %% "circe-parser"
 ).map(_ % circeVersion)
+libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
+libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.3"
 
 val compileWrapper = taskKey[Seq[Path]]("compile wrapper code using gcc")
 compileWrapper / sourceDirectory := sourceDirectory.value / "main" / "native"
