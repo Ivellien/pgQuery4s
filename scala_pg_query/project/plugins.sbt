@@ -1,1 +1,1 @@
-//addSbtPlugin("ch.jodersky" % "sbt-jni" % "1.4.1")
+addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.2")
