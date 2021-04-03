@@ -1,3 +1,5 @@
+package com.github.Ivellien.pgquery
+
 class PgQueryWrapper {
   System.loadLibrary("PgQueryWrapper")
 

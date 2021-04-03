@@ -1,9 +1,8 @@
-package nodes
+package com.github.Ivellien.pgquery.nodes
 
 import io.circe._
 import io.circe.generic.extras.semiauto._
-// marked as always used in intellij, otherwise the optimizer will get rid of it
-import nodes.Node.circeConfig
+import com.github.Ivellien.pgquery.nodes.Node.circeConfig // this must be imported, intellij will see it as unused though
 import io.circe.generic.extras.JsonKey
 
 case class A_Const(
