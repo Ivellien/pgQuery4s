@@ -1,6 +1,6 @@
-package nodes
+package com.github.Ivellien.pgquery.nodes
 
-import enums.NodeTag
+import com.github.Ivellien.pgquery.enums.NodeTag
 import io.circe.generic.extras.Configuration
 import io.circe.{ACursor, Decoder, HCursor}
 

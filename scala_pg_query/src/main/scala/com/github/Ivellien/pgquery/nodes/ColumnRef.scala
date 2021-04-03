@@ -1,4 +1,4 @@
-package nodes
+package com.github.Ivellien.pgquery.nodes
 
 import io.circe._
 import io.circe.generic.semiauto._

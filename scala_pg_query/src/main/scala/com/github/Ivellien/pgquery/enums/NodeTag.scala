@@ -1,4 +1,4 @@
-package enums
+package com.github.Ivellien.pgquery.enums
 
 object NodeTag extends Enumeration {
   val T_Invalid = Value("Invalid")

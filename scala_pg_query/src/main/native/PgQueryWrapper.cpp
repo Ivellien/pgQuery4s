@@ -2,7 +2,7 @@
 #include <string.h>
 #include <pg_query.h>
 
-JNIEXPORT jstring JNICALL Java_PgQueryWrapper_pgQueryParse
+JNIEXPORT jstring JNICALL Java_com_github_Ivellien_pgquery_PgQueryWrapper_pgQueryParse
   (JNIEnv *env, jobject obj, jstring string) {
     const char* str = env->GetStringUTFChars(string, 0);
     char cap[128];

@@ -1,6 +1,8 @@
+package com.github.Ivellien.pgquery
+
+import com.github.Ivellien.pgquery.nodes.Node
 import io.circe.Json
 import io.circe.parser.parse
-import nodes.Node
 
 object Main {
   def main(args: Array[String]): Unit = {

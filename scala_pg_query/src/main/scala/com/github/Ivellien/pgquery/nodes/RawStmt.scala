@@ -1,6 +1,6 @@
-package nodes // this still needs to have proper package prefix like com.github.yourusername.
+package com.github.Ivellien.pgquery.nodes
 
-import nodes.Node.circeConfig // this must be imported, intellij will see it as unused though
+import com.github.Ivellien.pgquery.nodes.Node.circeConfig // this must be imported, intellij will see it as unused though
 import io.circe.generic.extras.ConfiguredJsonCodec
 
 @ConfiguredJsonCodec(decodeOnly = true)

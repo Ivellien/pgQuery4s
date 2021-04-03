@@ -1,6 +1,6 @@
-package nodes
+package com.github.Ivellien.pgquery.nodes
 
-import enums.A_Expr_Kind
+import com.github.Ivellien.pgquery.enums.A_Expr_Kind
 import io.circe._
 import io.circe.generic.semiauto._
 

@@ -1,4 +1,4 @@
-package enums
+package com.github.Ivellien.pgquery.enums
 
 import io.circe.{Decoder, DecodingFailure}
 
