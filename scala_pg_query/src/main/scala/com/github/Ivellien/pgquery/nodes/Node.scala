@@ -10,7 +10,7 @@ abstract class Node {
 
 object Node {
 
-  implicit val circeConfig: Configuration = Configuration.default
+  implicit val circeConfig: Configuration = Configuration.default.withDefaults
 
   implicit val decoder: Decoder[Node] = (c: HCursor) => {
     /*

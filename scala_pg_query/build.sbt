@@ -5,6 +5,8 @@ name := "Bachelor-project"
 version := "0.1"
 scalaVersion := "2.13.5"
 
+scalacOptions += "-Ymacro-annotations"
+
 val circeVersion = "0.13.0"
 
 libraryDependencies ++= Seq(

@@ -1,16 +1,12 @@
 package com.github.Ivellien.pgquery.nodes
 
-import io.circe._
-import io.circe.generic.semiauto._
+import com.github.Ivellien.pgquery.nodes.Node.circeConfig // this must be imported, intellij will see it as unused though
+import io.circe.generic.extras.ConfiguredJsonCodec
 
-case class RawStmt(
-                    stmt: Option[Node],
-                    stmtLocation: Option[Int],
-                    stmtLen: Option[Int],
+@ConfiguredJsonCodec(decodeOnly = true)
+case class RawStmt(stmtLocation: Option[Int],
+                   stmtLen: Option[Int],
+                   stmt: Node = EmptyNode(), // with the default params enabled in the circe config you can do this
                   ) extends Node {
-  override def query: String = stmt.getOrElse(EmptyNode()).query
-}
-
-object RawStmt {
-  implicit val decoder: Decoder[RawStmt] = deriveDecoder[RawStmt]
+  override def query: String = stmt.query // than this becomes much simpler
 }
