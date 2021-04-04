@@ -7,7 +7,7 @@ import io.circe.parser.parse
 object Main {
   def main(args: Array[String]): Unit = {
     val sample = new PgQueryWrapper
-    val input: String = "select xoxo, momo FROM newTable WHERE x = 5"
+    val input: String = "UPDATE Customers SET ContactName = 'Alfred Schmidt', City= 'Frankfurt' WHERE CustomerID = 1"
     val text: String = sample.pgQueryParse(input)
 
     val data: Json = parse(text).getOrElse(Json.Null)
