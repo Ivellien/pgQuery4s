@@ -8,7 +8,7 @@ class QueryTests extends FunSuite {
   test("parsing") {
     val input: String = "SELECT x FROM y WHERE x < 2 and x > 0 or x = 1"
 
-    val parser = new PgQueryParser(input)
-    assert(parser.prettify == input)
+    val parser = new PgQueryParser
+    assert(parser.prettify(input) == input)
   }
 }

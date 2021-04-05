@@ -2,13 +2,13 @@ package com.github.ivellien.pgquery
 
 object Main {
   def main(args: Array[String]): Unit = {
-    val parser = new PgQueryParser(
-      "SELECT x FROM y WHERE x < 2 and x > 0 or x = 1"
-    )
+    val input: String =
+      "SELECT DISTINCT ON (age) age FROM dummy_table ORDER BY x ASC, y DESC"
 
-    println(parser.originalQuery)
-    println(parser.json)
-    println(parser.parseTree)
-    println(parser.prettify)
+    val parser: PgQueryParser = new PgQueryParser
+
+    println(parser.json(input))
+    println(parser.parseTree(input))
+    println(parser.prettify(input))
   }
 }
