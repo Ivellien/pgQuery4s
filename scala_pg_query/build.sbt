@@ -17,6 +17,7 @@ libraryDependencies ++= Seq(
 ).map(_ % circeVersion)
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.3"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % Test
 
 val compileWrapper = taskKey[Seq[Path]]("compile wrapper code using gcc")
 compileWrapper / sourceDirectory := sourceDirectory.value / "main" / "native"
@@ -24,8 +25,11 @@ compileWrapper / target := baseDirectory.value / "lib"
 
 // can be specified using DYLD_LIBRARY_PATH (linux) and LD_LIBRARY_PATH (unix)
 // as shown here https://stackoverflow.com/a/43122432
-javaOptions in run += s"-Djava.library.path=${(compileWrapper / target).value}"
 fork in run := true
+javaOptions in run += s"-Djava.library.path=${(compileWrapper / target).value}"
+
+fork in Test := true
+javaOptions in Test += s"-Djava.library.path=${(compileWrapper / target).value}"
 
 compileWrapper := {
 

@@ -44,8 +44,9 @@ object Node extends LazyLogging {
       case NodeTag.T_Integer => value.as[NodeInteger]
       case NodeTag.T_A_Expr => value.as[A_Expr]
       case NodeTag.T_A_Const => value.as[A_Const]
+      case NodeTag.T_BoolExpr => value.as[BoolExpr]
       case _ =>
-        logger.debug(s"Unsupported yet - $key")
+        logger.error(s"Unsupported yet - $key")
         Right(EmptyNode())
     }
   }
