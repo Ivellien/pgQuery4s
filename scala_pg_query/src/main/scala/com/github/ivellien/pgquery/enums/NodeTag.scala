@@ -3,8 +3,8 @@ package com.github.ivellien.pgquery.enums
 object NodeTag extends Enumeration {
   val T_Invalid = Value("Invalid")
   /*
-     * TAGS FOR EXECUTOR NODES (execnodes.h)
-     */
+   * TAGS FOR EXECUTOR NODES (execnodes.h)
+   */
   val T_IndexInfo = Value("IndexInfo")
   val T_ExprContext = Value("ExprContext")
   val T_ProjectionInfo = Value("ProjectionInfo")
@@ -13,8 +13,8 @@ object NodeTag extends Enumeration {
   val T_EState = Value("EState")
   val T_TupleTableSlot = Value("TupleTableSlot")
   /*
-     * TAGS FOR PLAN NODES (plannodes.h)
-     */
+   * TAGS FOR PLAN NODES (plannodes.h)
+   */
   val T_Plan = Value("Plan")
   val T_Result = Value("Result")
   val T_ProjectSet = Value("ProjectSet")
@@ -62,10 +62,10 @@ object NodeTag extends Enumeration {
   val T_PlanRowMark = Value("PlanRowMark")
   val T_PlanInvalItem = Value("PlanInvalItem")
   /*
-     * TAGS FOR PLAN STATE NODES (execnodes.h)
-     *
-     * These should correspond one-to-one with Plan node types.
-     */
+   * TAGS FOR PLAN STATE NODES (execnodes.h)
+   *
+   * These should correspond one-to-one with Plan node types.
+   */
   val T_PlanState = Value("PlanState")
   val T_ResultState = Value("ResultState")
   val T_ProjectSetState = Value("ProjectSetState")
@@ -109,8 +109,8 @@ object NodeTag extends Enumeration {
   val T_LockRowsState = Value("LockRowsState")
   val T_LimitState = Value("LimitState")
   /*
-     * TAGS FOR PRIMITIVE NODES (primnodes.h)
-     */
+   * TAGS FOR PRIMITIVE NODES (primnodes.h)
+   */
   val T_Alias = Value("Alias")
   val T_RangeVar = Value("RangeVar")
   val T_TableFunc = Value("TableFunc")
@@ -164,14 +164,14 @@ object NodeTag extends Enumeration {
   val T_OnConflictExpr = Value("OnConflictExpr")
   val T_IntoClause = Value("IntoClause")
   /*
-     * TAGS FOR EXPRESSION STATE NODES (execnodes.h)
-     *
-     * ExprState represents the evaluation state for a whole expression tree.
-     * Most Expr-based plan nodes do not have a corresponding expression state
-     * node, they're fully handled within execExpr* - but sometimes the state
-     * needs to be shared with other parts of the executor, as for example
-     * with AggrefExprState, which nodeAgg.c has to modify.
-     */
+   * TAGS FOR EXPRESSION STATE NODES (execnodes.h)
+   *
+   * ExprState represents the evaluation state for a whole expression tree.
+   * Most Expr-based plan nodes do not have a corresponding expression state
+   * node, they're fully handled within execExpr* - but sometimes the state
+   * needs to be shared with other parts of the executor, as for example
+   * with AggrefExprState, which nodeAgg.c has to modify.
+   */
   val T_ExprState = Value("ExprState")
   val T_AggrefExprState = Value("AggrefExprState")
   val T_WindowFuncExprState = Value("WindowFuncExprState")
@@ -180,8 +180,8 @@ object NodeTag extends Enumeration {
   val T_AlternativeSubPlanState = Value("AlternativeSubPlanState")
   val T_DomainConstraintState = Value("DomainConstraintState")
   /*
-     * TAGS FOR PLANNER NODES (relation.h)
-     */
+   * TAGS FOR PLANNER NODES (relation.h)
+   */
   val T_PlannerInfo = Value("PlannerInfo")
   val T_PlannerGlobal = Value("PlannerGlobal")
   val T_RelOptInfo = Value("RelOptInfo")
@@ -238,14 +238,14 @@ object NodeTag extends Enumeration {
   val T_GroupingSetData = Value("GroupingSetData")
   val T_StatisticExtInfo = Value("StatisticExtInfo")
   /*
-     * TAGS FOR MEMORY NODES (memnodes.h)
-     */
+   * TAGS FOR MEMORY NODES (memnodes.h)
+   */
   val T_MemoryContext = Value("MemoryContext")
   val T_AllocSetContext = Value("AllocSetContext")
   val T_SlabContext = Value("SlabContext")
   /*
-     * TAGS FOR VALUE NODES (value.h)
-     */
+   * TAGS FOR VALUE NODES (value.h)
+   */
   val T_Value = Value("Value")
   val T_Integer = Value("Integer")
   val T_Float = Value("Float")
@@ -253,18 +253,18 @@ object NodeTag extends Enumeration {
   val T_BitString = Value("BitString")
   val T_Null = Value("Null")
   /*
-     * TAGS FOR LIST NODES (pg_list.h)
-     */
+   * TAGS FOR LIST NODES (pg_list.h)
+   */
   val T_List = Value("List")
   val T_IntList = Value("IntList")
   val T_OidList = Value("OidList")
   /*
-     * TAGS FOR EXTENSIBLE NODES (extensible.h)
-     */
+   * TAGS FOR EXTENSIBLE NODES (extensible.h)
+   */
   val T_ExtensibleNode = Value("ExtensibleNode")
   /*
-     * TAGS FOR STATEMENT NODES (mostly in parsenodes.h)
-     */
+   * TAGS FOR STATEMENT NODES (mostly in parsenodes.h)
+   */
   val T_RawStmt = Value("RawStmt")
   val T_Query = Value("Query")
   val T_PlannedStmt = Value("PlannedStmt")
@@ -379,8 +379,8 @@ object NodeTag extends Enumeration {
   val T_CreateStatsStmt = Value("CreateStatsStmt")
   val T_AlterCollationStmt = Value("AlterCollationStmt")
   /*
-     * TAGS FOR PARSE TREE NODES (parsenodes.h)
-     */
+   * TAGS FOR PARSE TREE NODES (parsenodes.h)
+   */
   val T_A_Expr = Value("A_Expr")
   val T_ColumnRef = Value("ColumnRef")
   val T_ParamRef = Value("ParamRef")
@@ -433,8 +433,8 @@ object NodeTag extends Enumeration {
   val T_PartitionRangeDatum = Value("PartitionRangeDatum")
   val T_PartitionCmd = Value("PartitionCmd")
   /*
-     * TAGS FOR REPLICATION GRAMMAR PARSE NODES (replnodes.h)
-     */
+   * TAGS FOR REPLICATION GRAMMAR PARSE NODES (replnodes.h)
+   */
   val T_IdentifySystemCmd = Value("IdentifySystemCmd")
   val T_BaseBackupCmd = Value("BaseBackupCmd")
   val T_CreateReplicationSlotCmd = Value("CreateReplicationSlotCmd")
