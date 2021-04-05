@@ -1,6 +1,7 @@
-package com.github.Ivellien.pgquery.nodes
+package com.github.ivellien.pgquery.nodes
 
-import com.github.Ivellien.pgquery.enums.NodeTag
+import com.github.ivellien.pgquery.enums.NodeTag
+import com.typesafe.scalalogging.{LazyLogging, Logger}
 import io.circe.generic.extras.Configuration
 import io.circe.{ACursor, Decoder, HCursor}
 
@@ -8,7 +9,7 @@ abstract class Node {
   def query: String
 }
 
-object Node {
+object Node extends LazyLogging {
 
   implicit val circeConfig: Configuration = Configuration.default.withDefaults
 
@@ -43,8 +44,9 @@ object Node {
       case NodeTag.T_Integer => value.as[NodeInteger]
       case NodeTag.T_A_Expr => value.as[A_Expr]
       case NodeTag.T_A_Const => value.as[A_Const]
+      case NodeTag.T_BoolExpr => value.as[BoolExpr]
       case _ =>
-        println("Unsupported yet - " + key)
+        logger.error(s"Unsupported yet - $key")
         Right(EmptyNode())
     }
   }

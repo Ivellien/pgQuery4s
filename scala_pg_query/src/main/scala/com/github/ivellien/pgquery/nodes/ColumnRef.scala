@@ -1,14 +1,12 @@
-package com.github.Ivellien.pgquery.nodes
+package com.github.ivellien.pgquery.nodes
 
-import io.circe._
-import io.circe.generic.semiauto._
+import io.circe.generic.extras.ConfiguredJsonCodec
+import com.github.ivellien.pgquery.nodes.Node.circeConfig
 
+@ConfiguredJsonCodec(decodeOnly = true)
 case class ColumnRef(
                       fields: List[Node],
                       location: Option[Int]
                     ) extends Node {
   override def query: String = fields.map(x => x.query).mkString(",")
-}
-object ColumnRef {
-  implicit val decoder: Decoder[ColumnRef] = deriveDecoder[ColumnRef]
 }
