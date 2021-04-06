@@ -1,0 +1,10 @@
+language: scala
+scala:
+  - 2.13.5
+
+script:
+  - cd scala_pg_query/src/main/native/libpg_query
+  - make
+  - cd ../../../..
+  - sbt compileWrapper
+  - sbt test
