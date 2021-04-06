@@ -1,9 +1,11 @@
 package com.github.ivellien.pgquery.nodes
 
-import io.circe.generic.extras.ConfiguredJsonCodec
-import com.github.ivellien.pgquery.nodes.Node.circeConfig // this must be imported, intellij will see it as unused though
+import com.github.ivellien.pgquery.nodes.Node.circeConfig
+import io.circe.Decoder
+import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
 
-@ConfiguredJsonCodec(decodeOnly = true)
-case class A_Star() extends Node {
+case object A_Star extends Node {
   override def query: String = "*"
+
+  implicit val decoder: Decoder[A_Star.type] = deriveConfiguredDecoder[A_Star.type]
 }

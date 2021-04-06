@@ -1,6 +1,6 @@
 package com.github.ivellien.pgquery.nodes
 
-import com.github.ivellien.pgquery.nodes.Node.circeConfig // this must be imported, intellij will see it as unused though
+import com.github.ivellien.pgquery.nodes.Node.circeConfig
 import io.circe.generic.extras.ConfiguredJsonCodec
 
 @ConfiguredJsonCodec(decodeOnly = true)

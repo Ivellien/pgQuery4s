@@ -1,21 +1,21 @@
 package com.github.ivellien.pgquery.nodes
 
 import io.circe.generic.extras.ConfiguredJsonCodec
-import com.github.ivellien.pgquery.nodes.Node.circeConfig // this must be imported, intellij will see it as unused though
+import com.github.ivellien.pgquery.nodes.Node.circeConfig
 
 @ConfiguredJsonCodec(decodeOnly = true)
 case class SelectStmt(
     distinctClause: List[Node] = List.empty,
-    intoClause: Node = EmptyNode(),
+    intoClause: Option[Node],
     targetList: List[Node] = List.empty,
     fromClause: List[Node] = List.empty,
-    whereClause: Node = EmptyNode(),
-    groupClause: Node = EmptyNode(),
-    havingClause: Node = EmptyNode(),
+    whereClause: Option[Node],
+    groupClause: Option[Node],
+    havingClause: Option[Node],
     windowClause: List[Node] = List.empty,
     sortClause: List[Node] = List.empty,
-    limitOffset: Node = EmptyNode(),
-    limitCount: Node = EmptyNode(),
+    limitOffset: Option[Node],
+    limitCount: Option[Node],
     lockingClause: List[Node] = List.empty,
     // TODO withClause: WithClause = EmptyNode(),
     op: Option[Int]
@@ -34,17 +34,17 @@ case class SelectStmt(
     targetList.map(x => x.query).mkString(", ")
   }
 
-  private def fromQuery: String = {
-    if (fromClause.isEmpty) ""
-    else s" FROM ${fromClause.map(x => x.query).mkString(", ")}"
+  private def fromQuery: String = fromClause match {
+    case Nil => ""
+    case _ => s" FROM ${fromClause.map(node => node.query).mkString(", ")}"
   }
 
   private def whereQuery: String = {
-    if (whereClause.query.isEmpty) "" else s" WHERE ${whereClause.query}"
+    whereClause.map(clause => s" WHERE ${clause.query}").getOrElse("")
   }
 
-  private def sortByQuery: String = {
-    if (sortClause.isEmpty) ""
-    else s" ORDER BY ${sortClause.map(x => x.query).mkString(", ")}"
+  private def sortByQuery: String = sortClause match {
+    case Nil => ""
+    case _ => s" ORDER BY ${sortClause.map(node => node.query).mkString(", ")}"
   }
 }
