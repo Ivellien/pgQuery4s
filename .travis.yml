@@ -2,6 +2,8 @@ language: scala
 scala:
   - 2.13.5
 
+dist: bionic
+
 script:
   - cd scala_pg_query/src/main/native/libpg_query
   - make
