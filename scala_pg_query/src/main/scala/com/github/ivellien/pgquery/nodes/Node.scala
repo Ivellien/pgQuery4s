@@ -33,7 +33,7 @@ object Node extends LazyLogging {
      */
 
     c.keys match {
-      case None => Right(EmptyNode())
+      case None => Right(EmptyNode)
       case _ =>
         val key: String = c.keys.get.head
         val value: ACursor = c.downField(key)
@@ -53,13 +53,13 @@ object Node extends LazyLogging {
           case NodeTag.T_SortBy     => value.as[SortBy]
           case _ =>
             logger.error(s"Unsupported yet - $key")
-            Right(EmptyNode())
+            Right(EmptyNode)
         }
     }
 
   }
 }
 
-case class EmptyNode() extends Node {
+case object EmptyNode extends Node {
   override def query: String = ""
 }

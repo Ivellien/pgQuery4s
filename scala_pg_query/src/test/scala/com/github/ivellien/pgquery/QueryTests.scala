@@ -1,7 +1,5 @@
-import com.github.ivellien.pgquery.{PgQueryParser, PgQueryWrapper}
-import com.github.ivellien.pgquery.nodes.Node
-import io.circe.Json
-import io.circe.parser.parse
+package com.github.ivellien.pgquery
+
 import org.scalatest.FunSuite
 
 class QueryTests extends FunSuite {

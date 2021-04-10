@@ -9,8 +9,8 @@ case class SortBy(
     node: Option[Node],
     sortby_dir: SortByDir.Value,
     sortby_nulls: SortByNulls.Value,
-    useOp: List[Node] = List.empty,
-    location: Option[Int]
+    location: Option[Int],
+    useOp: List[Node] = List.empty
 ) extends Node {
   override def query: String =
     s"${node.map(node => node.query).getOrElse("")}${sortby_dir.toString}"

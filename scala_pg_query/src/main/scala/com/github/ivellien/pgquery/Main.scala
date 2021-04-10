@@ -3,7 +3,7 @@ package com.github.ivellien.pgquery
 object Main {
   def main(args: Array[String]): Unit = {
     val input: String =
-      "SELECT DISTINCT ON (age) age FROM dummy_table ORDER BY x ASC, y DESC"
+      "SELECT DISTINCT age"
 
     val parser: PgQueryParser = new PgQueryParser
 

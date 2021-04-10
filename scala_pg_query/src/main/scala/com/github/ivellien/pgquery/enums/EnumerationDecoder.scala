@@ -7,7 +7,7 @@ trait EnumerationDecoder {
   this: Enumeration =>
 
   private lazy val byId: Map[Int, this.Value] =
-  values.map(v => v.id -> v).toMap
+    values.map(v => v.id -> v).toMap
 
   implicit val decoder: Decoder[this.Value] = c =>
     c.as[Int]

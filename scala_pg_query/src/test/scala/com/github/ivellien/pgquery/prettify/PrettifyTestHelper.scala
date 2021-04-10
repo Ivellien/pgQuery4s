@@ -1,8 +1,8 @@
-package PrettifyTests
+package com.github.ivellien.pgquery.prettify
 
 import com.github.ivellien.pgquery.PgQueryParser
 
-class PrettifyTestHelper {
+object PrettifyTestHelper {
   def prettifyTest(query: String): Unit = {
     val parser = new PgQueryParser
     println(s"*${parser.prettify(query)}*")
