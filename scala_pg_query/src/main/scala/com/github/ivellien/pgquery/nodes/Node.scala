@@ -33,9 +33,8 @@ object Node extends LazyLogging {
      */
 
     c.keys match {
-      case None => Right(EmptyNode)
-      case _ =>
-        val key: String = c.keys.get.head
+      case Some(keys) if keys.nonEmpty =>
+        val key: String = keys.head
         val value: ACursor = c.downField(key)
 
         NodeTag.withName(key) match {
@@ -55,6 +54,7 @@ object Node extends LazyLogging {
             logger.error(s"Unsupported yet - $key")
             Right(EmptyNode)
         }
+      case _ => Right(EmptyNode)
     }
 
   }

@@ -8,5 +8,5 @@ case class ColumnRef(
     fields: List[Node],
     location: Option[Int]
 ) extends Node {
-  override def query: String = fields.map(node => node.query).mkString(",")
+  override def query: String = fields.map(node => node.query).mkString(".")
 }
