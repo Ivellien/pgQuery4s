@@ -1,7 +1,7 @@
 package com.github.ivellien.pgquery.nodes
 
 import io.circe.generic.extras.ConfiguredJsonCodec
-import com.github.ivellien.pgquery.nodes.Node.circeConfig // this must be imported, intellij will see it as unused though
+import com.github.ivellien.pgquery.nodes.Node.circeConfig
 
 @ConfiguredJsonCodec(decodeOnly = true)
 case class RangeVar(
@@ -10,7 +10,7 @@ case class RangeVar(
     relname: Option[String],
     inh: Boolean,
     relpersistence: Option[String],
-    alias: Node = EmptyNode(),
+    alias: Option[Node],
     location: Option[Int]
 ) extends Node {
   override def query: String = relname.getOrElse("")

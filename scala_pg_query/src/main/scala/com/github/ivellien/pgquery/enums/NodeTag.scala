@@ -1,6 +1,6 @@
 package com.github.ivellien.pgquery.enums
 
-object NodeTag extends Enumeration {
+object NodeTag extends Enumeration with EnumerationDecoder {
   val T_Invalid = Value("Invalid")
   /*
    * TAGS FOR EXECUTOR NODES (execnodes.h)

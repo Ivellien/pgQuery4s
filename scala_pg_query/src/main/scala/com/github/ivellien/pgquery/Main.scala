@@ -2,13 +2,15 @@ package com.github.ivellien.pgquery
 
 object Main {
   def main(args: Array[String]): Unit = {
-    val parser = new PgQueryParser(
-      "SELECT x FROM y WHERE x < 2 and x > 0 or x = 1"
-    )
+//    val input: String =
+//      "SELECT Orders.OrderID, Customers.CustomerName, Orders.OrderDate FROM Orders INNER JOIN Customers ON Orders.CustomerID=Customers.CustomerID"
+    val input: String =
+      "SELECT *"
 
-    println(parser.originalQuery)
-    println(parser.json)
-    println(parser.parseTree)
-    println(parser.prettify)
+    val parser: PgQueryParser = new PgQueryParser
+
+    println(parser.json(input))
+    println(parser.parseTree(input))
+    println(parser.prettify(input))
   }
 }
