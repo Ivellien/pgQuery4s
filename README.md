@@ -1,22 +1,8 @@
-# Bachelor-project
+# pgQuery4s
 
 ## Current status
 
-Currently I am using JNI to access libpg_query library, being able to receive parse tree when given correct input.
-
-To use what I have - set JAVA_HOME variable, so the cpp code can get jni.h library.
-```
-cd scala_pg_query/src/main/scripts
-./run.sh
-```
-
-This script should return parse tree of query "SELECT 1".
-
-`[{"RawStmt": {"stmt": {"SelectStmt": {"targetList": [{"ResTarget": {"val": {"A_Const": {"val": {"Integer": {"ival": 1}}, "location": 7}}, "location": 7}}], "op": 0}}}}]`
-
-## Working on now
-
-Trying out [SNA library](https://code.google.com/archive/p/scala-native-access/). That should help me get structs from C library to work with them directly in scala.
+TO DO
 
 ## Instructions
 
