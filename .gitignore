@@ -1,4 +1,7 @@
-*.so
-*.class
-.idea
 .bsp
+.idea
+project/target/
+target/
+*.class
+*.dylib
+*.so
