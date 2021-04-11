@@ -1,7 +1,5 @@
 # pgQuery4s
 
-## Current status
-
 TO DO
 
 ## Instructions

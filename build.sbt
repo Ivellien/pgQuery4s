@@ -1,7 +1,7 @@
 import java.nio.file._
 import scala.sys.process._
 
-name := "Bachelor-project"
+name := "pgQuery4s"
 version := "0.1"
 scalaVersion := "2.13.5"
 
@@ -38,7 +38,7 @@ compileWrapper := {
   // then compile can be made dependent on compileWrapper
 
   val (platform, suffix) = System.getProperty("os.name").toLowerCase match {
-    case mac if mac.contains("mac") => ("darwin", "dylib")
+    case mac if mac.contains("mac")   => ("darwin", "dylib")
     case tux if tux.contains("linux") => ("linux", "so")
     case other =>
       throw new RuntimeException(s"Unknown operating system $other")
