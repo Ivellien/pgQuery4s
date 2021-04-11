@@ -5,12 +5,14 @@ object Main {
 //    val input: String =
 //      "SELECT Orders.OrderID, Customers.CustomerName, Orders.OrderDate FROM Orders INNER JOIN Customers ON Orders.CustomerID=Customers.CustomerID"
     val input: String =
-      "SELECT *"
+      "DROP DATABASE databasename"
 
     val parser: PgQueryParser = new PgQueryParser
 
     println(parser.json(input))
     println(parser.parseTree(input))
     println(parser.prettify(input))
+
+    // TODO IntoClause / CaseExpr / Union (rexpr, lexpr for SelectStmt)
   }
 }

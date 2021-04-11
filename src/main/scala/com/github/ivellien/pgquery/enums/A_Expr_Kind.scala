@@ -1,7 +1,5 @@
 package com.github.ivellien.pgquery.enums
 
-import io.circe.{Decoder, DecodingFailure}
-
 object A_Expr_Kind extends Enumeration with EnumerationDecoder {
   val AExprOp, /* normal operator */
   AexprOpAny, /* scalar op ANY (array) */

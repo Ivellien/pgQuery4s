@@ -10,5 +10,9 @@ case class ResTarget(
     @JsonKey("val") value: Option[Node],
     location: Option[Int]
 ) extends Node {
-  override def query: String = value.map(node => node.query).getOrElse("")
+  override def query: String = name match {
+    case None => s"${value.map(node => node.query).getOrElse("")}"
+    case Some(name) =>
+      s"${value.map(node => node.query).getOrElse("")} AS $name"
+  }
 }

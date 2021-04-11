@@ -14,24 +14,6 @@ object Node extends LazyLogging {
   implicit val circeConfig: Configuration = Configuration.default.withDefaults
 
   implicit val decoder: Decoder[Node] = (c: HCursor) => {
-    /*
-      // TODO
-      // ouch both .get and .head might throw an error - this should be type safe as well
-      // feel free to rewrite this to smth like
-
-      for {
-        key <- c.keys.flatMap(_.headOption).toRight(???)
-        value = c.downField(key)
-      } yield {
-        NodeTag.withName(key) match {
-          case ... => ???
-        }
-      }
-
-      and see what the individual combinators do in the process. For inspiration you can see that I
-      rewrote some other error handling this way in some other part of the codebase.
-     */
-
     c.keys match {
       case Some(keys) if keys.nonEmpty =>
         val key: String = keys.head
@@ -50,6 +32,8 @@ object Node extends LazyLogging {
           case NodeTag.T_A_Star     => value.as[A_Star.type]
           case NodeTag.T_BoolExpr   => value.as[BoolExpr]
           case NodeTag.T_SortBy     => value.as[SortBy]
+          case NodeTag.T_NullTest   => value.as[NullTest]
+          case NodeTag.T_FuncCall   => value.as[FuncCall]
           case _ =>
             logger.error(s"Unsupported yet - $key")
             Right(EmptyNode)
