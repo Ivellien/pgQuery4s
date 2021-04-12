@@ -14,5 +14,5 @@ case class CaseExpr(
     args: List[Node] = List.empty
 ) extends Node {
   override def query: String =
-    s"(CASE ${args.map(arg => arg.query).mkString(" ")} ELSE ${optionToQuery(defresult)} END)"
+    s"(CASE ${args.map(_.query).mkString(" ")} ELSE ${optionToQuery(defresult)} END)"
 }

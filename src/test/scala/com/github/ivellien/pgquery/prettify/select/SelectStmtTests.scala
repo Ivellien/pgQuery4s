@@ -122,4 +122,34 @@ class SelectStmtTests extends FunSuite {
       "SELECT customername, city, country FROM customers ORDER BY (CASE WHEN city IS NULL THEN country ELSE city END)"
     )
   }
+
+  test("SELECT statement with JOINs") {
+    PrettifyTestHelper.prettifyTest(
+      "SELECT column_name(s) FROM table1 RIGHT JOIN table2 ON table1.column_name = table2.column_name"
+    )
+    PrettifyTestHelper.prettifyTest(
+      "SELECT column_name(s) FROM table1 LEFT JOIN table2 ON table1.column_name = table2.column_name"
+    )
+    PrettifyTestHelper.prettifyTest(
+      "SELECT column_name(s) FROM table1 INNER JOIN table2 ON table1.column_name = table2.column_name"
+    )
+    PrettifyTestHelper.prettifyTest(
+      "SELECT column_name(s) FROM table1 FULL JOIN table2 ON table1.column_name = table2.column_name"
+    )
+  }
+
+  test("SELECT statement with ANY, ALL") {
+    PrettifyTestHelper.prettifyTest(
+      "SELECT title FROM film WHERE length >= ANY (SELECT max(length) FROM film)"
+    )
+    PrettifyTestHelper.prettifyTest(
+      "SELECT title FROM film WHERE length >= ALL (SELECT max(length) FROM film)"
+    )
+  }
+
+  test("SELECT statemtn with LIMIT") {
+    PrettifyTestHelper.prettifyTest(
+      "SELECT select_list FROM table_name ORDER BY sort_expression LIMIT row_count"
+    )
+  }
 }

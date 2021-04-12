@@ -11,6 +11,6 @@ case class BoolExpr(
     location: Option[Int]
 ) extends Node {
   override def query: String = {
-    args.map(x => x.query).mkString(s" ${boolop.toString} ")
+    args.map(_.query).mkString(s" ${boolop.toString} ")
   }
 }

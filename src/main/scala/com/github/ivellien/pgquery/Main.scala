@@ -2,10 +2,8 @@ package com.github.ivellien.pgquery
 
 object Main {
   def main(args: Array[String]): Unit = {
-//    val input: String =
-//      "SELECT Orders.OrderID, Customers.CustomerName, Orders.OrderDate FROM Orders INNER JOIN Customers ON Orders.CustomerID=Customers.CustomerID"
     val input: String =
-      "SELECT customername, city, country FROM Customers ORDER BY (CASE WHEN city IS NULL THEN country ELSE city END)"
+      "SELECT title FROM film WHERE length >= ANY (SELECT max(length) FROM film)"
 
     val parser: PgQueryParser = new PgQueryParser
 
@@ -13,7 +11,5 @@ object Main {
     println(parser.json(input))
     println(parser.parseTree(input))
     println(parser.prettify(input))
-
-    // TODO CaseExpr / Union (rexpr, lexpr for SelectStmt)
   }
 }

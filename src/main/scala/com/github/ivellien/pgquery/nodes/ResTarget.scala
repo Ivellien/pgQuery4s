@@ -10,8 +10,10 @@ case class ResTarget(
     @JsonKey("val") value: Option[Node],
     location: Option[Int]
 ) extends Node {
-  override def query: String = name match {
-    case None       => s"${optionToQuery(value)}"
-    case Some(name) => s"${optionToQuery(value)} AS $name"
+  override def query: String = (name, value) match {
+    case (None, None)              => s""
+    case (None, Some(value))       => s"${value.query}"
+    case (Some(name), None)        => s"$name"
+    case (Some(name), Some(value)) => s"${value.query} AS $name"
   }
 }

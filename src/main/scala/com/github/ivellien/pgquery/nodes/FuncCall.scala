@@ -18,6 +18,6 @@ case class FuncCall(
   override def query: String = funcname match {
     case Nil => ""
     case _ =>
-      s"${funcname.head.query}(${args.map(arg => arg.query).mkString(", ")})"
+      s"${funcname.head.query}(${args.map(_.query).mkString(", ")})"
   }
 }

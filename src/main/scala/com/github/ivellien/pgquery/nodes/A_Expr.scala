@@ -13,7 +13,7 @@ case class A_Expr(
     location: Option[Int]
 ) extends Node {
   override def query: String = {
-    val nameString: String = name.map(x => x.query).headOption.getOrElse("")
+    val nameString: String = name.map(_.query).headOption.getOrElse("")
     s"${optionToQuery(lexpr)} ${getOperator(nameString)} ${optionToQuery(rexpr)}"
   }
 
