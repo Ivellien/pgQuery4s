@@ -2,7 +2,7 @@ package com.github.ivellien.pgquery.nodes
 
 import com.github.ivellien.pgquery.enums.A_Expr_Kind
 import io.circe.generic.extras.ConfiguredJsonCodec
-import com.github.ivellien.pgquery.nodes.Node.circeConfig
+import com.github.ivellien.pgquery.nodes.Node.{circeConfig, optionToQuery}
 
 @ConfiguredJsonCodec(decodeOnly = true)
 case class A_Expr(
@@ -14,7 +14,7 @@ case class A_Expr(
 ) extends Node {
   override def query: String = {
     val nameString: String = name.map(x => x.query).headOption.getOrElse("")
-    s"${lexpr.map(node => node.query).getOrElse("")} ${getOperator(nameString)} ${rexpr.map(node => node.query).getOrElse("")}"
+    s"${optionToQuery(lexpr)} ${getOperator(nameString)} ${optionToQuery(rexpr)}"
   }
 
   private def getOperator(name: String): String = {

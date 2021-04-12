@@ -1,16 +1,18 @@
 package com.github.ivellien.pgquery.nodes
 
-import com.github.ivellien.pgquery.enums.NullTestType
 import com.github.ivellien.pgquery.nodes.Node.{circeConfig, optionToQuery}
 import io.circe.generic.extras.ConfiguredJsonCodec
 
 @ConfiguredJsonCodec(decodeOnly = true)
-case class NullTest(
+case class CaseExpr(
+    xpr: Option[Node],
+    casetype: Option[Int],
+    casecollid: Option[Int],
     arg: Option[Node],
-    nulltesttype: NullTestType.Value,
+    defresult: Option[Node],
     location: Option[Int],
-    argisrow: Option[Boolean]
+    args: List[Node] = List.empty
 ) extends Node {
   override def query: String =
-    s"${optionToQuery(arg)} ${nulltesttype.toString}"
+    s"(CASE ${args.map(arg => arg.query).mkString(" ")} ELSE ${optionToQuery(defresult)} END)"
 }

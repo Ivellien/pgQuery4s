@@ -87,11 +87,17 @@ class SelectStmtTests extends FunSuite {
     )
   }
 
-//  test("Union of SELECT statements") {
-//    PrettifyTestHelper.prettifyTest(
-//      "SELECT column_name(s) FROM table1 UNION SELECT column_name(s) FROM table2"
-//    )
-//  }
+  test("UNION, EXCEPT, INTERSECT of SELECT statements") {
+    PrettifyTestHelper.prettifyTest(
+      "SELECT column_name(s) FROM table1 UNION SELECT column_name(s) FROM table2"
+    )
+    PrettifyTestHelper.prettifyTest(
+      "SELECT column_name(s) FROM table1 EXCEPT SELECT column_name(s) FROM table2"
+    )
+    PrettifyTestHelper.prettifyTest(
+      "SELECT column_name(s) FROM table1 INTERSECT SELECT column_name(s) FROM table2"
+    )
+  }
 
   test("Simple SELECT statement with GROUP BY") {
     PrettifyTestHelper.prettifyTest(
@@ -105,15 +111,15 @@ class SelectStmtTests extends FunSuite {
     )
   }
 
-//  test("Simple SELECT INTO") {
-//    PrettifyTestHelper.prettifyTest(
-//      "SELECT * INTO customersbackup2017 FROM customers"
-//    )
-//  }
+  test("Simple SELECT INTO") {
+    PrettifyTestHelper.prettifyTest(
+      "SELECT * INTO customersbackup2017 FROM customers"
+    )
+  }
 
-//  test("SELECT statement with CASE") {
-//    PrettifyTestHelper.prettifyTest(
-//      "SELECT customername, city, country FROM Customers ORDER BY (CASE WHEN city IS NULL THEN country ELSE city END)"
-//    )
-//  }
+  test("SELECT statement with CASE") {
+    PrettifyTestHelper.prettifyTest(
+      "SELECT customername, city, country FROM customers ORDER BY (CASE WHEN city IS NULL THEN country ELSE city END)"
+    )
+  }
 }

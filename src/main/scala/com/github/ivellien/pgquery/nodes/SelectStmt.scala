@@ -1,7 +1,8 @@
 package com.github.ivellien.pgquery.nodes
 
+import com.github.ivellien.pgquery.enums.SetOperation
 import io.circe.generic.extras.ConfiguredJsonCodec
-import com.github.ivellien.pgquery.nodes.Node.circeConfig
+import com.github.ivellien.pgquery.nodes.Node.{circeConfig, optionToQuery}
 
 @ConfiguredJsonCodec(decodeOnly = true)
 case class SelectStmt(
@@ -10,7 +11,9 @@ case class SelectStmt(
     havingClause: Option[Node],
     limitOffset: Option[Node],
     limitCount: Option[Node],
-    op: Option[Int],
+    op: SetOperation.Value,
+    larg: Option[Node],
+    rarg: Option[Node],
     groupClause: List[Node] = List.empty,
     distinctClause: List[Node] = List.empty,
     targetList: List[Node] = List.empty,
@@ -20,9 +23,13 @@ case class SelectStmt(
     lockingClause: List[Node] = List.empty
     // TODO withClause: WithClause = EmptyNode(),
 ) extends Node {
-  override def query: String = {
-    s"SELECT $distinctQuery$targetsQuery$fromQuery$whereQuery$groupQuery$havingQuery$sortByQuery"
-  }
+  override def query: String =
+    op match {
+      case SetOperation.SetOpNone =>
+        s"SELECT $distinctQuery$targetsQuery$intoQuery$fromQuery$whereQuery$groupQuery$havingQuery$sortByQuery"
+      case _ =>
+        s"${optionToQuery(larg)} ${op.toString} ${optionToQuery(rarg)}"
+    }
 
   private def distinctQuery: String = distinctClause match {
     case Nil             => ""
@@ -56,5 +63,9 @@ case class SelectStmt(
   private def sortByQuery: String = sortClause match {
     case Nil => ""
     case _   => s" ORDER BY ${sortClause.map(node => node.query).mkString(", ")}"
+  }
+
+  private def intoQuery: String = {
+    intoClause.map(clause => s" INTO ${clause.query}").getOrElse("")
   }
 }

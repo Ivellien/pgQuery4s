@@ -1,7 +1,7 @@
 package com.github.ivellien.pgquery.nodes
 
 import com.github.ivellien.pgquery.enums.{SortByDir, SortByNulls}
-import com.github.ivellien.pgquery.nodes.Node.circeConfig
+import com.github.ivellien.pgquery.nodes.Node.{circeConfig, optionToQuery}
 import io.circe.generic.extras.ConfiguredJsonCodec
 
 @ConfiguredJsonCodec(decodeOnly = true)
@@ -13,5 +13,5 @@ case class SortBy(
     useOp: List[Node] = List.empty
 ) extends Node {
   override def query: String =
-    s"${node.map(node => node.query).getOrElse("")}${sortby_dir.toString}"
+    s"${optionToQuery(node)}${sortby_dir.toString}"
 }

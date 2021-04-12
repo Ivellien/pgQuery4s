@@ -10,6 +10,8 @@ abstract class Node {
 }
 
 object Node extends LazyLogging {
+  def optionToQuery(node: Option[Node]): String =
+    node.map(node => node.query).getOrElse("")
 
   implicit val circeConfig: Configuration = Configuration.default.withDefaults
 
@@ -34,6 +36,9 @@ object Node extends LazyLogging {
           case NodeTag.T_SortBy     => value.as[SortBy]
           case NodeTag.T_NullTest   => value.as[NullTest]
           case NodeTag.T_FuncCall   => value.as[FuncCall]
+          case NodeTag.T_IntoClause => value.as[IntoClause]
+          case NodeTag.T_CaseExpr   => value.as[CaseExpr]
+          case NodeTag.T_CaseWhen   => value.as[CaseWhen]
           case _ =>
             logger.error(s"Unsupported yet - $key")
             Right(EmptyNode)
