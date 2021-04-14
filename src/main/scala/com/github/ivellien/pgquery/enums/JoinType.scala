@@ -1,12 +1,12 @@
 package com.github.ivellien.pgquery.enums
 
 object JoinType extends Enumeration with EnumerationDecoder {
-  val JoinInner = Value("INNER JOIN")
-  val JoinLeft = Value("LEFT JOIN")
-  val JoinFull = Value("FULL JOIN")
-  val JoinRight = Value("RIGHT JOIN")
-  val JoinSemi = Value("SEMI JOIN")
-  val JoinAnti = Value("ANTI JOIN")
-  val JoinUniqueOuter = Value("UNIQUE OUTER JOIN")
-  val JoinUniqueInner = Value("UNIQUE INNER JOIN")
+  val JoinInner: Value = Value("INNER JOIN")
+  val JoinLeft: Value = Value("LEFT JOIN")
+  val JoinFull: Value = Value("FULL JOIN")
+  val JoinRight: Value = Value("RIGHT JOIN")
+  val JoinSemi: Value = Value("SEMI JOIN")
+  val JoinAnti: Value = Value("ANTI JOIN")
+  val JoinUniqueOuter: Value = Value("UNIQUE OUTER JOIN")
+  val JoinUniqueInner: Value = Value("UNIQUE INNER JOIN")
 }

@@ -1,6 +1,5 @@
-package com.github.ivellien.pgquery.prettify.select
+package com.github.ivellien.pgquery.prettify
 
-import com.github.ivellien.pgquery.prettify.PrettifyTestHelper
 import org.scalatest.FunSuite
 
 class SelectStmtTests extends FunSuite {
