@@ -1,17 +1,16 @@
 package com.github.ivellien.pgquery.nodes
 
-import com.github.ivellien.pgquery.enums.{SortByDir, SortByNulls}
+import com.github.ivellien.pgquery.enums.NullTestType
 import com.github.ivellien.pgquery.nodes.Node.{circeConfig, optionToQuery}
 import io.circe.generic.extras.ConfiguredJsonCodec
 
 @ConfiguredJsonCodec(decodeOnly = true)
-case class SortBy(
-    node: Option[Node],
-    sortby_dir: SortByDir.Value,
-    sortby_nulls: SortByNulls.Value,
+case class NullTest(
+    arg: Option[Node],
+    nulltesttype: NullTestType.Value,
     location: Option[Int],
-    useOp: List[Node] = List.empty
+    argisrow: Option[Boolean]
 ) extends Node {
   override def query: String =
-    s"${optionToQuery(node)}${sortby_dir.toString}"
+    s"${optionToQuery(arg)} ${nulltesttype.toString}"
 }
