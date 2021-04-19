@@ -1,3 +1,6 @@
 [submodule "core/src/main/native/libpg_query"]
 	path = core/src/main/native/libpg_query
 	url = https://github.com/lfittl/libpg_query.git
+[submodule "parser/src/main/native/libpg_query"]
+	path = parser/src/main/native/libpg_query
+	url = https://github.com/lfittl/libpg_query.git
