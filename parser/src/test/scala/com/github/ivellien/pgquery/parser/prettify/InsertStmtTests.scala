@@ -1,6 +1,5 @@
-package com.github.ivellien.pgquery.parser.prettify.select
+package com.github.ivellien.pgquery.parser.prettify
 
-import com.github.ivellien.pgquery.parser.prettify.PrettifyTestHelper
 import org.scalatest.FunSuite
 
 class InsertStmtTests extends FunSuite {

@@ -1,12 +1,12 @@
 package com.github.ivellien.pgquery.parser.enums
 
 object SubLinkType extends Enumeration with EnumerationDecoder {
-  val ExistsSublink = Value("EXISTS")
-  val AllSubLink = Value("ALL")
-  val AnySubLink = Value("ANY")
-  val RowcompareSubLink = Value("ROWCOMPARE")
-  val ExprSubLink = Value("EXPR")
-  val MultiExprSubLink = Value("MULTIEXP")
-  val ArraySubLink = Value("ARRAY")
-  val CreSubLink = Value("CTE")
+  val ExistsSublink: Value = Value("EXISTS")
+  val AllSubLink: Value = Value("ALL")
+  val AnySubLink: Value = Value("ANY")
+  val RowcompareSubLink: Value = Value("ROWCOMPARE")
+  val ExprSubLink: Value = Value("EXPR")
+  val MultiExprSubLink: Value = Value("MULTIEXPR")
+  val ArraySubLink: Value = Value("ARRAY")
+  val CteSubLink: Value = Value("CTE")
 }

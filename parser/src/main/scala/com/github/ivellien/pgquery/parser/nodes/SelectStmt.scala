@@ -39,7 +39,6 @@ case class SelectStmt(
       case _ =>
         s"VALUES (${valuesLists.flatMap(_.toList).map("'" + _.query + "'").mkString(", ")})"
     }
-
   }
 
   private def distinctQuery: String = distinctClause match {

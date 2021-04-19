@@ -1,6 +1,5 @@
-package com.github.ivellien.pgquery.parser.prettify.select
+package com.github.ivellien.pgquery.parser.prettify
 
-import com.github.ivellien.pgquery.parser.prettify.PrettifyTestHelper
 import org.scalatest.FunSuite
 
 class SelectStmtTests extends FunSuite {
@@ -147,7 +146,7 @@ class SelectStmtTests extends FunSuite {
     )
   }
 
-  test("SELECT statemtn with LIMIT") {
+  test("SELECT statement with LIMIT") {
     PrettifyTestHelper.prettifyTest(
       "SELECT select_list FROM table_name ORDER BY sort_expression LIMIT row_count"
     )
