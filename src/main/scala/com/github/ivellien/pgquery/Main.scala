@@ -3,7 +3,7 @@ package com.github.ivellien.pgquery
 object Main {
   def main(args: Array[String]): Unit = {
     val input: String =
-      "SELECT title FROM film WHERE length >= ANY (SELECT max(length) FROM film)"
+      "ALTER TABLE persons ADD dateofbirth date"
 
     val parser: PgQueryParser = new PgQueryParser
 
