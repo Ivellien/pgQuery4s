@@ -24,6 +24,4 @@ object Macros {
 //    val result = PgQueryParser.prettify(query.toString)
 //    c.Expr(Literal(Constant(result)))
   }
-
-  def normal(str: String): String = str
 }

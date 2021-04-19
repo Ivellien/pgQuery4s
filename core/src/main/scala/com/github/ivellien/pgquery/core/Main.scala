@@ -9,13 +9,13 @@ object Main {
     val input: String =
       "SELECT $1 WHERE $3"
 
-    println(query("address", "name LIKE john"))
-    println(compile_time_query("address", "name LIKE john"))
+    println(query("$1", "name LIKE john"))
+//    println(compile_time_query("address", "name LIKE john"))
   }
 
   // This is only checked at runtime, when the function is called
   def query(select: String, where: String): String =
-    pr"SELECT name, $select, email WHERE $where"
+    pr"SELECT $select WHERE $where"
 
   // This is checked at compile time using macro
   def compile_time_query(select: String, where: String) =
