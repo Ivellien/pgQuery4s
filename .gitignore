@@ -5,3 +5,5 @@ target/
 *.class
 *.dylib
 *.so
+*.iml
+
