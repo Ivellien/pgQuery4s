@@ -2,12 +2,13 @@ package com.github.ivellien.pgquery.core
 
 import com.github.ivellien.pgquery.macros.Macros.parse_compile
 import com.github.ivellien.pgquery.parser.PgQueryParser
+import com.github.ivellien.pgquery.parser.nodes.Node
 
 object PgQueryInterpolator {
 
   implicit class PgInterpolator(val sc: StringContext) extends AnyVal {
 
-    def ctq(args: Any*): String = {
+    def ctq(args: Any*): Node = {
       val stringContextIterator = sc.parts.iterator
       val argsIterator = args.iterator
 

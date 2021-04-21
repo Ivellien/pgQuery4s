@@ -1,27 +1,32 @@
 package com.github.ivellien.pgquery.macros
 
-import com.github.ivellien.pgquery.parser.PgQueryParser
+import com.github.ivellien.pgquery.liftable.LiftableCaseClassImpls
+import com.github.ivellien.pgquery.parser.nodes._
 
-import scala.reflect.macros.blackbox.Context
 import scala.language.experimental.macros
+import scala.reflect.macros.whitebox
+import com.github.ivellien.pgquery.parser.nodes.NodeString
 
 object Macros {
-  def parse_compile(query: String): String =
-    macro Macros.parse_impl
+  def parse_compile(query: String): Node = macro MacrosImpl.parse_impl
+}
 
-  def parse_impl(c: Context)(query: c.Expr[String]): c.Expr[String] = {
+class MacrosImpl(val c: whitebox.Context)
+    extends LiftableCaseClassImpls
+    with LiftableNode {
+
+  def parse_impl(query: c.Expr[String]): c.Expr[Node] = {
     import c.universe._
-    println("compile time !")
+
+    println(s"compile time !")
+    val lift = implicitly[Liftable[Node]]
+
     query match {
       case Expr(Literal(Constant(queryValue: String))) =>
-        c.Expr(Literal(Constant("After macro: " + queryValue)))
+        c.Expr(lift(NodeString(queryValue)))
       case _ =>
         println("Passed value is not a string.")
-        c.Expr(Literal(Constant("Not a string.")))
+        c.Expr(lift(NodeString("Not a string.")))
     }
-
-    // TODO java.library.path is not correctly set at compile time?
-//    val result = PgQueryParser.prettify(query.toString)
-//    c.Expr(Literal(Constant(result)))
   }
 }
