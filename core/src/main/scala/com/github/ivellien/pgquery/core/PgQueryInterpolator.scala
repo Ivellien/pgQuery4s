@@ -18,7 +18,8 @@ object PgQueryInterpolator {
         sb.append(argsIterator.next().toString)
         sb.append(stringContextIterator.next())
       }
-      parse_compile(sb.toString)
+      //      parse_compile(sb.toString)
+      parse_compile("SELECT stuff FROM here WHERE there")
     }
 
     def q(args: Any*): String = {

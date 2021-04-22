@@ -3,6 +3,7 @@ package com.github.ivellien.pgquery.core
 import com.github.ivellien.pgquery.core.PgQueryInterpolator.PgInterpolator
 import com.github.ivellien.pgquery.macros.Macros
 import com.github.ivellien.pgquery.parser.PgQueryParser
+import com.github.ivellien.pgquery.parser.nodes.Node
 
 object Main {
   def main(args: Array[String]): Unit = {
@@ -18,6 +19,6 @@ object Main {
     pr"SELECT $select WHERE $where"
 
   // This is checked at compile time using macro
-  def compile_time_query(select: String, where: String) =
+  def compile_time_query(select: String, where: String): Node =
     ctq"SELECT name, $select, email WHERE $where"
 }
