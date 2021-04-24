@@ -21,12 +21,7 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % Test
 
 val compileWrapper = taskKey[Seq[Path]]("compile wrapper code using gcc")
 compileWrapper / sourceDirectory := sourceDirectory.value / "main" / "native"
-compileWrapper / target := baseDirectory.value / "lib"
-
-// can be specified using DYLD_LIBRARY_PATH (linux) and LD_LIBRARY_PATH (unix)
-// as shown here https://stackoverflow.com/a/43122432
-fork := true
-javaOptions += s"-Djava.library.path=${(compileWrapper / target).value}"
+compileWrapper / target := sourceDirectory.value / "main" / "resources" / "lib"
 
 compileWrapper := {
 
