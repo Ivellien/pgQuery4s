@@ -8,12 +8,6 @@ object PgQueryInterpolator {
 
   implicit class PgInterpolator(val sc: StringContext) extends AnyVal {
 
-    def ctq(args: Any*): String =
-      compileTimeMacro(sc, args)
-
-    def compileTimeMacro(sc: StringContext, args: Any*): String =
-      macro Macros.parse_impl
-
     def q(args: Any*): String = {
       val stringContextIterator = sc.parts.iterator
       val argsIterator = args.iterator
