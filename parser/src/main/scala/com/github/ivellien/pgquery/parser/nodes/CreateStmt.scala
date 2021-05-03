@@ -6,13 +6,14 @@ import com.github.ivellien.pgquery.parser.nodes.Node.{
   circeConfig,
   optionToQuery
 }
+import io.circe.Decoder
+import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
 
-@ConfiguredJsonCodec(decodeOnly = true)
 case class CreateStmt(
-    relation: Option[Node], // RangeVar
-    partbound: Option[Node], // PartitionBoundSpec
-    partspec: Option[Node], // PartitionSpec
-    ofTypename: Option[Node], // TypeName
+    relation: Option[RangeVar],
+    partbound: Option[Node], // TODO PartitionBoundSpec
+    partspec: Option[Node], // TODO PartitionSpec
+    ofTypename: Option[TypeName],
     oncommit: OnCommitAction.Value,
     tablespacename: Option[String],
     ifNotExists: Option[Boolean],
@@ -23,4 +24,9 @@ case class CreateStmt(
 ) extends Node {
   override def query: String =
     s"CREATE TABLE ${optionToQuery(relation)} (${tableElts.map(_.query).mkString(", ")})"
+}
+
+object CreateStmt extends NodeDecoder[CreateStmt] {
+  override implicit protected val vanillaDecoder: Decoder[CreateStmt] =
+    deriveConfiguredDecoder[CreateStmt]
 }

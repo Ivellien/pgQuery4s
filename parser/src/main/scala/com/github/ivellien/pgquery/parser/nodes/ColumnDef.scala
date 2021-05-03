@@ -2,11 +2,12 @@ package com.github.ivellien.pgquery.parser.nodes
 
 import io.circe.generic.extras.ConfiguredJsonCodec
 import com.github.ivellien.pgquery.parser.nodes.Node.circeConfig
+import io.circe.Decoder
+import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
 
-@ConfiguredJsonCodec(decodeOnly = true)
 case class ColumnDef(
     colname: Option[String],
-    typeName: Option[Node], // TypeName
+    typeName: Option[TypeName], // TypeName
     inhcount: Option[Int],
     is_local: Option[Boolean],
     is_not_null: Option[Boolean],
@@ -16,8 +17,8 @@ case class ColumnDef(
     raw_default: Option[Node],
     cooked_default: Option[Node],
     identity: Option[Char],
-    identitySequence: Option[Node], // RangeVar
-    collClause: Option[Node], // CollateClause
+    identitySequence: Option[RangeVar], // RangeVar
+    collClause: Option[CollateClause], // CollateClause
     collOid: Option[Int],
     location: Option[Int],
     constraints: List[Node] = List.empty,
@@ -25,4 +26,9 @@ case class ColumnDef(
 ) extends Node {
   override def query: String =
     s"${colname.getOrElse("")}${typeName.map(" " + _.query).getOrElse("")}"
+}
+
+object ColumnDef extends NodeDecoder[ColumnDef] {
+  override implicit protected val vanillaDecoder: Decoder[ColumnDef] =
+    deriveConfiguredDecoder[ColumnDef]
 }

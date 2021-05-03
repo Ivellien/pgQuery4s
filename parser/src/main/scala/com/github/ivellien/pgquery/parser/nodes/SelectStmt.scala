@@ -1,17 +1,18 @@
 package com.github.ivellien.pgquery.parser.nodes
 
 import com.github.ivellien.pgquery.parser.enums.SetOperation
-import io.circe.generic.extras.ConfiguredJsonCodec
 import com.github.ivellien.pgquery.parser.nodes.Node.{
   circeConfig,
   optionToQuery
 }
+import io.circe.Decoder
+import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
 
-@ConfiguredJsonCodec(decodeOnly = true)
 case class SelectStmt(
-    intoClause: Option[Node],
+    intoClause: Option[IntoClause],
     whereClause: Option[Node],
     havingClause: Option[Node],
+    withClause: Option[Node], // TODO WithClause
     limitOffset: Option[Node],
     limitCount: Option[Node],
     op: SetOperation.Value,
@@ -25,7 +26,6 @@ case class SelectStmt(
     windowClause: List[Node] = List.empty,
     sortClause: List[Node] = List.empty,
     lockingClause: List[Node] = List.empty
-    // TODO withClause: WithClause = EmptyNode(),
 ) extends Node {
   override def query: String = {
     valuesLists match {
@@ -82,4 +82,9 @@ case class SelectStmt(
   private def limitCountQuery: String = {
     limitCount.map(clause => s" LIMIT ${clause.query}").getOrElse("")
   }
+}
+
+object SelectStmt extends NodeDecoder[SelectStmt] {
+  override implicit protected val vanillaDecoder: Decoder[SelectStmt] =
+    deriveConfiguredDecoder[SelectStmt]
 }

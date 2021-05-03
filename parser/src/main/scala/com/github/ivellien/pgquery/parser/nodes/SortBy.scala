@@ -5,9 +5,9 @@ import com.github.ivellien.pgquery.parser.nodes.Node.{
   circeConfig,
   optionToQuery
 }
-import io.circe.generic.extras.ConfiguredJsonCodec
+import io.circe.Decoder
+import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
 
-@ConfiguredJsonCodec(decodeOnly = true)
 case class SortBy(
     node: Option[Node],
     sortby_dir: SortByDir.Value,
@@ -17,4 +17,9 @@ case class SortBy(
 ) extends Node {
   override def query: String =
     s"${optionToQuery(node)}${sortby_dir.toString}"
+}
+
+object SortBy extends NodeDecoder[SortBy] {
+  override implicit protected val vanillaDecoder: Decoder[SortBy] =
+    deriveConfiguredDecoder[SortBy]
 }

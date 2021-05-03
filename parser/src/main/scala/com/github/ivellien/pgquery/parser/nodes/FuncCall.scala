@@ -1,9 +1,9 @@
 package com.github.ivellien.pgquery.parser.nodes
 
-import io.circe.generic.extras.ConfiguredJsonCodec
 import com.github.ivellien.pgquery.parser.nodes.Node.circeConfig
+import io.circe.Decoder
+import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
 
-@ConfiguredJsonCodec(decodeOnly = true)
 case class FuncCall(
     aggFilter: Option[Node],
     aggWithinGroup: Option[Boolean],
@@ -20,4 +20,9 @@ case class FuncCall(
     case _ =>
       s"${funcname.head.query}(${args.map(_.query).mkString(", ")})"
   }
+}
+
+object FuncCall extends NodeDecoder[FuncCall] {
+  override implicit protected val vanillaDecoder: Decoder[FuncCall] =
+    deriveConfiguredDecoder[FuncCall]
 }
