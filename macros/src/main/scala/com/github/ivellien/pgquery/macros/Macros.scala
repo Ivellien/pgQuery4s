@@ -1,25 +1,66 @@
 package com.github.ivellien.pgquery.macros
 
 import com.github.ivellien.pgquery.parser.PgQueryParser
+import com.github.ivellien.pgquery.parser.enums.A_Expr_Kind
+import com.github.ivellien.pgquery.parser.nodes._
 
-import scala.reflect.macros.blackbox.Context
 import scala.language.experimental.macros
+import scala.reflect.macros.whitebox
+import com.github.ivellien.pgquery.parser.nodes.NodeString
 
 object Macros {
-  def parse_impl(
-      c: Context
-  )(sc: c.Expr[StringContext], args: c.Expr[Any]*): c.Expr[String] = {
+  def parse_compile(query: String): Node = macro MacrosImpl.parse_impl
+}
+
+class MacrosImpl(val c: whitebox.Context) extends LiftableNode {
+  def intersperse[A](a: List[A], b: List[A]): List[A] = a match {
+    case first :: rest => first :: intersperse(b, rest)
+    case _             => b
+  }
+
+  def parse_impl(query: c.Expr[String]): c.Expr[Node] = {
     import c.universe._
-    println("compile time !")
-    args match {
-      case Expr(Literal(Constant(queryValue: String))) =>
-        c.Expr(Literal(Constant("After macro: " + queryValue)))
+
+    println(s"compile time ! (yet again)")
+    println(s"$query")
+
+    val lift = implicitly[Liftable[Node]]
+
+    println(query.tree)
+    query.tree match {
+      case Apply(
+          Select(
+            Apply(
+              _,
+              List(
+                Apply(
+                  Select(_, apply),
+                  sqlLiterals
+                )
+              )
+            ),
+            _
+          ),
+          variables
+          ) =>
+        val variablesMapped: List[String] = variables.zipWithIndex.map {
+          case (Ident(x), index) => s"$x"
+          case (_, _)            => "varname"
+        }
+        println(variablesMapped)
+        val merged = intersperse(
+          sqlLiterals.map(x => s"$x".replace("\"", "")),
+          variablesMapped
+        )
+        println(merged.mkString(""))
+        c.Expr(lift {
+          PgQueryParser.parseTree(merged.mkString(""))
+        })
       case _ =>
         println("Passed value is not a string.")
-        c.Expr(Literal(Constant("Not a string.")))
+        c.Expr(lift {
+          NodeString("Not a string.")
+        })
     }
-
-    val result = PgQueryParser.prettify(args.toString)
-    c.Expr(Literal(Constant(result)))
   }
 }
