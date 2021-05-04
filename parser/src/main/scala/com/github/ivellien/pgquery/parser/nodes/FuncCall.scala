@@ -1,5 +1,6 @@
 package com.github.ivellien.pgquery.parser.nodes
 
+import com.github.ivellien.pgquery.parser.enums.NodeTag
 import com.github.ivellien.pgquery.parser.nodes.Node.circeConfig
 import io.circe.Decoder
 import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
@@ -22,7 +23,7 @@ case class FuncCall(
   }
 }
 
-object FuncCall extends NodeDecoder[FuncCall] {
+object FuncCall extends NodeDecoder[FuncCall](NodeTag.T_FuncCall) {
   override implicit protected val vanillaDecoder: Decoder[FuncCall] =
     deriveConfiguredDecoder[FuncCall]
 }

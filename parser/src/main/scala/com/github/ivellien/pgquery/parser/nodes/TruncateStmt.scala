@@ -1,6 +1,6 @@
 package com.github.ivellien.pgquery.parser.nodes
 
-import com.github.ivellien.pgquery.parser.enums.DropBehavior
+import com.github.ivellien.pgquery.parser.enums.{DropBehavior, NodeTag}
 import com.github.ivellien.pgquery.parser.nodes.Node.circeConfig
 import io.circe.Decoder
 import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
@@ -14,7 +14,7 @@ case class TruncateStmt(
     s"TRUNCATE TABLE ${relations.map(_.query).mkString(", ")}"
 }
 
-object TruncateStmt extends NodeDecoder[TruncateStmt] {
+object TruncateStmt extends NodeDecoder[TruncateStmt](NodeTag.T_TruncateStmt) {
   override implicit protected val vanillaDecoder: Decoder[TruncateStmt] =
     deriveConfiguredDecoder[TruncateStmt]
 }

@@ -1,5 +1,6 @@
 package com.github.ivellien.pgquery.parser.nodes
 
+import com.github.ivellien.pgquery.parser.enums.NodeTag
 import io.circe.generic.extras.JsonKey
 import com.github.ivellien.pgquery.parser.nodes.Node.{
   circeConfig,
@@ -22,7 +23,7 @@ case class ResTarget(
   }
 }
 
-object ResTarget extends NodeDecoder[ResTarget] {
+object ResTarget extends NodeDecoder[ResTarget](NodeTag.T_ResTarget) {
   override implicit protected val vanillaDecoder: Decoder[ResTarget] =
     deriveConfiguredDecoder[ResTarget]
 }

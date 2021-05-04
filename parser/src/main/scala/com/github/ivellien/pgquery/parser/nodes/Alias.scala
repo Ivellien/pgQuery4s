@@ -1,9 +1,7 @@
 package com.github.ivellien.pgquery.parser.nodes
 
-import com.github.ivellien.pgquery.parser.nodes.Node.{
-  circeConfig,
-  optionToQuery
-}
+import com.github.ivellien.pgquery.parser.enums.NodeTag
+import com.github.ivellien.pgquery.parser.nodes.Node.circeConfig
 import com.github.ivellien.pgquery.parser.nodes.values.NodeString
 import io.circe.Decoder
 import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
@@ -15,7 +13,7 @@ case class Alias(
   override def query: String = ""
 }
 
-object Alias extends NodeDecoder[Alias] {
+object Alias extends NodeDecoder[Alias](NodeTag.T_Alias) {
   override implicit protected val vanillaDecoder: Decoder[Alias] =
     deriveConfiguredDecoder[Alias]
 }

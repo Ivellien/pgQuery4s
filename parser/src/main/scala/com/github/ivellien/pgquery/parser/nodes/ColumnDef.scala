@@ -1,5 +1,6 @@
 package com.github.ivellien.pgquery.parser.nodes
 
+import com.github.ivellien.pgquery.parser.enums.NodeTag
 import io.circe.generic.extras.ConfiguredJsonCodec
 import com.github.ivellien.pgquery.parser.nodes.Node.circeConfig
 import io.circe.Decoder
@@ -28,7 +29,7 @@ case class ColumnDef(
     s"${colname.getOrElse("")}${typeName.map(" " + _.query).getOrElse("")}"
 }
 
-object ColumnDef extends NodeDecoder[ColumnDef] {
+object ColumnDef extends NodeDecoder[ColumnDef](NodeTag.T_ColumnDef) {
   override implicit protected val vanillaDecoder: Decoder[ColumnDef] =
     deriveConfiguredDecoder[ColumnDef]
 }

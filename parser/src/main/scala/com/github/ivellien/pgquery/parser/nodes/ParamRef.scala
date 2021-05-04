@@ -1,5 +1,6 @@
 package com.github.ivellien.pgquery.parser.nodes
 
+import com.github.ivellien.pgquery.parser.enums.NodeTag
 import com.github.ivellien.pgquery.parser.nodes.Node.circeConfig
 import io.circe.Decoder
 import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
@@ -11,7 +12,7 @@ case class ParamRef(
   override def query: String = s"$$$number"
 }
 
-object ParamRef extends NodeDecoder[ParamRef] {
+object ParamRef extends NodeDecoder[ParamRef](NodeTag.T_ParamRef) {
   override implicit protected val vanillaDecoder: Decoder[ParamRef] =
     deriveConfiguredDecoder[ParamRef]
 }

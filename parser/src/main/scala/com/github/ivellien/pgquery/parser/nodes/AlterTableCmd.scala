@@ -1,6 +1,10 @@
 package com.github.ivellien.pgquery.parser.nodes
 
-import com.github.ivellien.pgquery.parser.enums.{AlterTableType, DropBehavior}
+import com.github.ivellien.pgquery.parser.enums.{
+  AlterTableType,
+  DropBehavior,
+  NodeTag
+}
 import io.circe.generic.extras.JsonKey
 import com.github.ivellien.pgquery.parser.nodes.Node.circeConfig
 import io.circe.Decoder
@@ -18,7 +22,8 @@ case class AlterTableCmd(
     s"${subtype.toString}${name.map(" " + _).getOrElse("")}${definition.map(" " + _.query).getOrElse("")}"
 }
 
-object AlterTableCmd extends NodeDecoder[AlterTableCmd] {
+object AlterTableCmd
+    extends NodeDecoder[AlterTableCmd](NodeTag.T_AlterTableCmd) {
   override implicit protected val vanillaDecoder: Decoder[AlterTableCmd] =
     deriveConfiguredDecoder[AlterTableCmd]
 }

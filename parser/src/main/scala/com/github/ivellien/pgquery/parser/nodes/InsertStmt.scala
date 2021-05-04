@@ -1,5 +1,6 @@
 package com.github.ivellien.pgquery.parser.nodes
 
+import com.github.ivellien.pgquery.parser.enums.NodeTag
 import com.github.ivellien.pgquery.parser.nodes.Node.{
   circeConfig,
   optionToQuery
@@ -20,7 +21,7 @@ case class InsertStmt(
     s"INSERT INTO ${optionToQuery(relation)} (${cols.map(_.query).mkString(", ")}) ${optionToQuery(selectStmt)}"
 }
 
-object InsertStmt extends NodeDecoder[InsertStmt] {
+object InsertStmt extends NodeDecoder[InsertStmt](NodeTag.T_InsertStmt) {
   override implicit protected val vanillaDecoder: Decoder[InsertStmt] =
     deriveConfiguredDecoder[InsertStmt]
 }

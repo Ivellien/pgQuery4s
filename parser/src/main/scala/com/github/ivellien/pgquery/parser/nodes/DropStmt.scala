@@ -1,6 +1,10 @@
 package com.github.ivellien.pgquery.parser.nodes
 
-import com.github.ivellien.pgquery.parser.enums.{DropBehavior, ObjectType}
+import com.github.ivellien.pgquery.parser.enums.{
+  DropBehavior,
+  NodeTag,
+  ObjectType
+}
 import com.github.ivellien.pgquery.parser.nodes.Node.circeConfig
 import io.circe.Decoder
 import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
@@ -21,7 +25,7 @@ case class DropStmt(
   }
 }
 
-object DropStmt extends NodeDecoder[DropStmt] {
+object DropStmt extends NodeDecoder[DropStmt](NodeTag.T_DropStmt) {
   override implicit protected val vanillaDecoder: Decoder[DropStmt] =
     deriveConfiguredDecoder[DropStmt]
 }

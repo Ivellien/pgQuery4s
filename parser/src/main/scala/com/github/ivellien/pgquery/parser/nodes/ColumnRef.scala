@@ -1,5 +1,6 @@
 package com.github.ivellien.pgquery.parser.nodes
 
+import com.github.ivellien.pgquery.parser.enums.NodeTag
 import com.github.ivellien.pgquery.parser.nodes.Node.circeConfig
 import com.github.ivellien.pgquery.parser.nodes.values.Value
 import io.circe.Decoder
@@ -12,7 +13,7 @@ case class ColumnRef(
   override def query: String = fields.map(_.query).mkString(".")
 }
 
-object ColumnRef extends NodeDecoder[ColumnRef] {
+object ColumnRef extends NodeDecoder[ColumnRef](NodeTag.T_ColumnRef) {
   override implicit protected val vanillaDecoder: Decoder[ColumnRef] =
     deriveConfiguredDecoder[ColumnRef]
 }

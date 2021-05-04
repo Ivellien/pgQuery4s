@@ -1,6 +1,6 @@
 package com.github.ivellien.pgquery.parser.nodes
 
-import com.github.ivellien.pgquery.parser.enums.SetOperation
+import com.github.ivellien.pgquery.parser.enums.{NodeTag, SetOperation}
 import com.github.ivellien.pgquery.parser.nodes.Node.{
   circeConfig,
   optionToQuery
@@ -84,7 +84,7 @@ case class SelectStmt(
   }
 }
 
-object SelectStmt extends NodeDecoder[SelectStmt] {
+object SelectStmt extends NodeDecoder[SelectStmt](NodeTag.T_SelectStmt) {
   override implicit protected val vanillaDecoder: Decoder[SelectStmt] =
     deriveConfiguredDecoder[SelectStmt]
 }

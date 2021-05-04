@@ -1,6 +1,6 @@
 package com.github.ivellien.pgquery.parser.nodes
 
-import com.github.ivellien.pgquery.parser.enums.RoleSpecType
+import com.github.ivellien.pgquery.parser.enums.{NodeTag, RoleSpecType}
 import io.circe.Decoder
 import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
 import com.github.ivellien.pgquery.parser.nodes.Node.circeConfig
@@ -13,7 +13,7 @@ case class RoleSpec(
   override def query: String = ""
 }
 
-object RoleSpec extends NodeDecoder[RoleSpec] {
+object RoleSpec extends NodeDecoder[RoleSpec](NodeTag.T_RoleSpec) {
   override implicit protected val vanillaDecoder: Decoder[RoleSpec] =
     deriveConfiguredDecoder[RoleSpec]
 }

@@ -1,5 +1,6 @@
 package com.github.ivellien.pgquery.parser.nodes
 
+import com.github.ivellien.pgquery.parser.enums.NodeTag
 import com.github.ivellien.pgquery.parser.nodes.Node.{
   circeConfig,
   optionToQuery
@@ -20,7 +21,7 @@ case class CaseExpr(
     s"(CASE ${args.map(_.query).mkString(" ")} ELSE ${optionToQuery(defresult)} END)"
 }
 
-object CaseExpr extends NodeDecoder[CaseExpr] {
+object CaseExpr extends NodeDecoder[CaseExpr](NodeTag.T_CaseExpr) {
   override implicit protected val vanillaDecoder: Decoder[CaseExpr] =
     deriveConfiguredDecoder[CaseExpr]
 }

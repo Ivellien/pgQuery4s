@@ -1,5 +1,6 @@
 package com.github.ivellien.pgquery.parser.nodes
 
+import com.github.ivellien.pgquery.parser.enums.NodeTag
 import com.github.ivellien.pgquery.parser.nodes.Node.circeConfig
 import com.github.ivellien.pgquery.parser.nodes.values.Value
 import io.circe.Decoder
@@ -24,7 +25,7 @@ case class TypeName(
   }
 }
 
-object TypeName extends NodeDecoder[TypeName] {
+object TypeName extends NodeDecoder[TypeName](NodeTag.T_TypeName) {
   override implicit protected val vanillaDecoder: Decoder[TypeName] =
     deriveConfiguredDecoder[TypeName]
 }

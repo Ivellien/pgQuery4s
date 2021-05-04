@@ -1,6 +1,10 @@
 package com.github.ivellien.pgquery.parser.nodes
 
-import com.github.ivellien.pgquery.parser.enums.{SortByDir, SortByNulls}
+import com.github.ivellien.pgquery.parser.enums.{
+  NodeTag,
+  SortByDir,
+  SortByNulls
+}
 import com.github.ivellien.pgquery.parser.nodes.Node.{
   circeConfig,
   optionToQuery
@@ -19,7 +23,7 @@ case class SortBy(
     s"${optionToQuery(node)}${sortby_dir.toString}"
 }
 
-object SortBy extends NodeDecoder[SortBy] {
+object SortBy extends NodeDecoder[SortBy](NodeTag.T_SortBy) {
   override implicit protected val vanillaDecoder: Decoder[SortBy] =
     deriveConfiguredDecoder[SortBy]
 }

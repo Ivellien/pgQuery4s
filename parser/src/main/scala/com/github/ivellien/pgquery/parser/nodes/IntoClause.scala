@@ -1,6 +1,6 @@
 package com.github.ivellien.pgquery.parser.nodes
 
-import com.github.ivellien.pgquery.parser.enums.OnCommitAction
+import com.github.ivellien.pgquery.parser.enums.{NodeTag, OnCommitAction}
 import com.github.ivellien.pgquery.parser.nodes.Node.{
   circeConfig,
   optionToQuery
@@ -20,7 +20,7 @@ case class IntoClause(
   override def query: String = optionToQuery(rel)
 }
 
-object IntoClause extends NodeDecoder[IntoClause] {
+object IntoClause extends NodeDecoder[IntoClause](NodeTag.T_IntoClause) {
   override implicit protected val vanillaDecoder: Decoder[IntoClause] =
     deriveConfiguredDecoder[IntoClause]
 }

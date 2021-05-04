@@ -1,6 +1,6 @@
 package com.github.ivellien.pgquery.parser.nodes
 
-import com.github.ivellien.pgquery.parser.enums.NullTestType
+import com.github.ivellien.pgquery.parser.enums.{NodeTag, NullTestType}
 import com.github.ivellien.pgquery.parser.nodes.Node.{
   circeConfig,
   optionToQuery
@@ -18,7 +18,7 @@ case class NullTest(
     s"${optionToQuery(arg)} ${nulltesttype.toString}"
 }
 
-object NullTest extends NodeDecoder[NullTest] {
+object NullTest extends NodeDecoder[NullTest](NodeTag.T_NullTest) {
   override implicit protected val vanillaDecoder: Decoder[NullTest] =
     deriveConfiguredDecoder[NullTest]
 }

@@ -1,6 +1,6 @@
 package com.github.ivellien.pgquery.parser.nodes
 
-import com.github.ivellien.pgquery.parser.enums.JoinType
+import com.github.ivellien.pgquery.parser.enums.{JoinType, NodeTag}
 import com.github.ivellien.pgquery.parser.nodes.Node.{
   circeConfig,
   optionToQuery
@@ -22,7 +22,7 @@ case class JoinExpr(
     s"${optionToQuery(larg)} ${jointype.toString} ${optionToQuery(rarg)} ON ${optionToQuery(quals)}"
 }
 
-object JoinExpr extends NodeDecoder[JoinExpr] {
+object JoinExpr extends NodeDecoder[JoinExpr](NodeTag.T_JoinExpr) {
   override implicit protected val vanillaDecoder: Decoder[JoinExpr] =
     deriveConfiguredDecoder[JoinExpr]
 }

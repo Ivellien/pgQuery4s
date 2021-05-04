@@ -1,6 +1,6 @@
 package com.github.ivellien.pgquery.parser.nodes
 
-import com.github.ivellien.pgquery.parser.enums.OnCommitAction
+import com.github.ivellien.pgquery.parser.enums.{NodeTag, OnCommitAction}
 import io.circe.generic.extras.ConfiguredJsonCodec
 import com.github.ivellien.pgquery.parser.nodes.Node.{
   circeConfig,
@@ -26,7 +26,7 @@ case class CreateStmt(
     s"CREATE TABLE ${optionToQuery(relation)} (${tableElts.map(_.query).mkString(", ")})"
 }
 
-object CreateStmt extends NodeDecoder[CreateStmt] {
+object CreateStmt extends NodeDecoder[CreateStmt](NodeTag.T_CreateStmt) {
   override implicit protected val vanillaDecoder: Decoder[CreateStmt] =
     deriveConfiguredDecoder[CreateStmt]
 }

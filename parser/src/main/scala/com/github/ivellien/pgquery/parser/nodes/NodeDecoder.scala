@@ -1,14 +1,15 @@
 package com.github.ivellien.pgquery.parser.nodes
 
+import com.github.ivellien.pgquery.parser.enums.NodeTag
 import io.circe.{ACursor, Decoder, DecodingFailure, HCursor}
 
-trait NodeDecoder[N] {
+abstract class NodeDecoder[N](tag: NodeTag.Value) {
   implicit protected val vanillaDecoder: Decoder[N]
 
   implicit val decoder: Decoder[N] = (c: HCursor) => {
     val keys = c.keys.map(_.toSeq)
     keys match {
-      case Some(Seq(key)) =>
+      case Some(Seq(key)) if tag == NodeTag.withName(key) =>
         val value: ACursor = c.downField(key)
         vanillaDecoder.tryDecode(value)
       case _ =>

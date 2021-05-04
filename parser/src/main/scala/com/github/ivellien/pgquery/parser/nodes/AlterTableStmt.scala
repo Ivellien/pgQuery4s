@@ -1,6 +1,6 @@
 package com.github.ivellien.pgquery.parser.nodes
 
-import com.github.ivellien.pgquery.parser.enums.ObjectType
+import com.github.ivellien.pgquery.parser.enums.{NodeTag, ObjectType}
 import com.github.ivellien.pgquery.parser.nodes.Node.{
   circeConfig,
   optionToQuery
@@ -18,7 +18,8 @@ case class AlterTableStmt(
     s"ALTER TABLE ${optionToQuery(relation)} ${cmds.map(_.query).mkString(" ")}"
 }
 
-object AlterTableStmt extends NodeDecoder[AlterTableStmt] {
+object AlterTableStmt
+    extends NodeDecoder[AlterTableStmt](NodeTag.T_AlterTableStmt) {
   override implicit protected val vanillaDecoder: Decoder[AlterTableStmt] =
     deriveConfiguredDecoder[AlterTableStmt]
 }

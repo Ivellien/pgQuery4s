@@ -1,5 +1,6 @@
 package com.github.ivellien.pgquery.parser.nodes
 
+import com.github.ivellien.pgquery.parser.enums.NodeTag
 import io.circe.generic.extras.ConfiguredJsonCodec
 import com.github.ivellien.pgquery.parser.nodes.Node.circeConfig
 import io.circe.Decoder
@@ -17,7 +18,7 @@ case class RangeVar(
   override def query: String = relname.getOrElse("")
 }
 
-object RangeVar extends NodeDecoder[RangeVar] {
+object RangeVar extends NodeDecoder[RangeVar](NodeTag.T_RangeVar) {
   override implicit protected val vanillaDecoder: Decoder[RangeVar] =
     deriveConfiguredDecoder[RangeVar]
 }

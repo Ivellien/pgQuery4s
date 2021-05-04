@@ -1,5 +1,6 @@
 package com.github.ivellien.pgquery.parser.nodes
 
+import com.github.ivellien.pgquery.parser.enums.NodeTag
 import com.github.ivellien.pgquery.parser.nodes.Node.{
   circeConfig,
   optionToQuery
@@ -16,7 +17,7 @@ case class RawStmt(
   override def query: String = optionToQuery(stmt)
 }
 
-object RawStmt extends NodeDecoder[RawStmt] {
+object RawStmt extends NodeDecoder[RawStmt](NodeTag.T_RawStmt) {
   override implicit protected val vanillaDecoder: Decoder[RawStmt] =
     deriveConfiguredDecoder[RawStmt]
 }
