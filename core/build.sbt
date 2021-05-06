@@ -5,6 +5,3 @@ name := "core"
 scalacOptions += "-Ymacro-annotations"
 
 val root = (project in file(".."))
-
-fork := true
-javaOptions += s"-Djava.library.path=${baseDirectory.in(root).value / "parser" / "lib"}"

@@ -1,6 +1,7 @@
 package com.github.ivellien.pgquery.core
 
-import com.github.ivellien.pgquery.macros.Macros.parse_compile
+import com.github.ivellien.pgquery.macros.Macros
+import scala.language.experimental.macros
 import com.github.ivellien.pgquery.parser.PgQueryParser
 import com.github.ivellien.pgquery.parser.nodes.Node
 

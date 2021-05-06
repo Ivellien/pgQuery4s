@@ -38,5 +38,9 @@ class MacrosImpl(val c: whitebox.Context) extends LiftableNode {
           NodeString("Not a string.")
         })
     }
+
+    // val result = PgQueryParser.prettify(args.toString)
+    // c.Expr(Literal(Constant(result)))
+
   }
 }
