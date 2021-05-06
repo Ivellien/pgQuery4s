@@ -1,12 +1,14 @@
 package com.github.ivellien.pgquery.parser.nodes
 
-import io.circe.generic.extras.{ConfiguredJsonCodec, JsonKey}
+import com.github.ivellien.pgquery.parser.enums.NodeTag
+import io.circe.generic.extras.JsonKey
 import com.github.ivellien.pgquery.parser.nodes.Node.{
   circeConfig,
   optionToQuery
 }
+import io.circe.Decoder
+import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
 
-@ConfiguredJsonCodec(decodeOnly = true)
 case class ResTarget(
     name: Option[String],
     indirection: Option[Node],
@@ -19,4 +21,9 @@ case class ResTarget(
     case (Some(name), None)        => s"$name"
     case (Some(name), Some(value)) => s"${value.query} AS $name"
   }
+}
+
+object ResTarget extends NodeDecoder[ResTarget](NodeTag.T_ResTarget) {
+  override implicit protected val vanillaDecoder: Decoder[ResTarget] =
+    deriveConfiguredDecoder[ResTarget]
 }

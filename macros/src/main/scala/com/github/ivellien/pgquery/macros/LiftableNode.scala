@@ -6,17 +6,20 @@ import com.github.ivellien.pgquery.liftable.{
   LiftableEnumerationImpls
 }
 import com.github.ivellien.pgquery.parser.nodes
+import com.github.ivellien.pgquery.parser.nodes.A_Star
 
 trait LiftableNode
     extends LiftableCaseClassImpls
-    with LiftableEnumerationImpls {
+    with LiftableEnumerationImpls
+    with LiftableCaseObjectImpls {
 
   import c.universe._
 
   private def lift[T](t: T)(implicit l: Liftable[T]) = l(t)
 
   implicit val _liftableNode: Liftable[nodes.Node] = {
-//    case n: nodes.A_Star         => lift[nodes.A_Star](n)
+//    case n: nodes.A_Star => lift[nodes.A_Star](n)
+//    case n: nodes.EmptyNode => lift[nodes.EmptyNode](n)
     case n: nodes.A_Const        => lift[nodes.A_Const](n)
     case n: nodes.A_Expr         => lift[nodes.A_Expr](n)
     case n: nodes.Alias          => lift[nodes.Alias](n)

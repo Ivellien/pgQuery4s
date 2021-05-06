@@ -44,7 +44,7 @@ class MacrosImpl(val c: whitebox.Context) extends LiftableNode {
           variables
           ) =>
         val variablesMapped: List[String] = variables.zipWithIndex.map {
-          case (Ident(x), index) => s"$x"
+          case (Ident(x), index) => s"$$${index + 1}"
           case (_, _)            => "varname"
         }
         println(variablesMapped)
@@ -53,9 +53,14 @@ class MacrosImpl(val c: whitebox.Context) extends LiftableNode {
           variablesMapped
         )
         println(merged.mkString(""))
+        val parseTree: List[Node] = {
+          PgQueryParser.parseTree(merged.mkString("")).getOrElse(List.empty)
+        }
+        println(parseTree)
         c.Expr(lift {
-          PgQueryParser.parseTree(merged.mkString(""))
+          parseTree.headOption.getOrElse(NodeString("Empty result."))
         })
+
       case _ =>
         println("Passed value is not a string.")
         c.Expr(lift {

@@ -3,6 +3,9 @@ package com.github.ivellien.pgquery.liftable
 import scala.reflect.macros.whitebox
 import scala.language.experimental.macros
 
+/**
+  * Adapted LiftableCaseClass.
+  */
 object LiftableCaseObject {
 
   /* All the trees (except one that has a special comment) in this macro are hygienic
@@ -30,8 +33,8 @@ object LiftableCaseObject {
     val T = weakTypeOf[T]
     val symbol = T.typeSymbol
 
-    if (!symbol.asClass.isCaseClass)
-      c.abort(c.enclosingPosition, s"$symbol is not a case class")
+    if (!symbol.asClass.isModule)
+      c.abort(c.enclosingPosition, s"$symbol is not a object")
     if (!symbol.isStatic)
       c.abort(c.enclosingPosition, s"$symbol is not static")
     def fields(tpe: Type) =

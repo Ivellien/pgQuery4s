@@ -1,12 +1,13 @@
 package com.github.ivellien.pgquery.parser.nodes
 
+import com.github.ivellien.pgquery.parser.enums.NodeTag
 import com.github.ivellien.pgquery.parser.nodes.Node.{
   circeConfig,
   optionToQuery
 }
-import io.circe.generic.extras.ConfiguredJsonCodec
+import io.circe.Decoder
+import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
 
-@ConfiguredJsonCodec(decodeOnly = true)
 case class CaseWhen(
     xpr: Option[Node],
     expr: Option[Node],
@@ -15,4 +16,9 @@ case class CaseWhen(
 ) extends Node {
   override def query: String =
     s"WHEN ${optionToQuery(expr)} THEN ${optionToQuery(result)}"
+}
+
+object CaseWhen extends NodeDecoder[CaseWhen](NodeTag.T_CaseWhen) {
+  override implicit protected val vanillaDecoder: Decoder[CaseWhen] =
+    deriveConfiguredDecoder[CaseWhen]
 }

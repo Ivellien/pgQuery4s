@@ -1,10 +1,10 @@
 package com.github.ivellien.pgquery.parser.nodes
 
-import com.github.ivellien.pgquery.parser.enums.BoolExprType
+import com.github.ivellien.pgquery.parser.enums.{BoolExprType, NodeTag}
 import com.github.ivellien.pgquery.parser.nodes.Node.circeConfig
-import io.circe.generic.extras.ConfiguredJsonCodec
+import io.circe.Decoder
+import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
 
-@ConfiguredJsonCodec(decodeOnly = true)
 case class BoolExpr(
     boolop: BoolExprType.Value,
     args: List[Node],
@@ -13,4 +13,9 @@ case class BoolExpr(
   override def query: String = {
     args.map(_.query).mkString(s" ${boolop.toString} ")
   }
+}
+
+object BoolExpr extends NodeDecoder[BoolExpr](NodeTag.T_BoolExpr) {
+  override implicit protected val vanillaDecoder: Decoder[BoolExpr] =
+    deriveConfiguredDecoder[BoolExpr]
 }
