@@ -1,14 +1,14 @@
 package com.github.ivellien.pgquery.parser.nodes
 
-import com.github.ivellien.pgquery.parser.enums.A_Expr_Kind
-import io.circe.generic.extras.ConfiguredJsonCodec
+import com.github.ivellien.pgquery.parser.enums.{A_Expr_Kind, NodeTag}
 import com.github.ivellien.pgquery.parser.nodes.Node.{
   circeConfig,
   optionToQuery
 }
 import com.typesafe.scalalogging.LazyLogging
+import io.circe.Decoder
+import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
 
-@ConfiguredJsonCodec(decodeOnly = true)
 case class A_Expr(
     kind: A_Expr_Kind.Value,
     name: List[Node],
@@ -55,4 +55,9 @@ case class A_Expr(
       case (_, _) => name
     }
   }
+}
+
+object A_Expr extends NodeDecoder[A_Expr](NodeTag.T_A_Expr) {
+  override implicit protected val vanillaDecoder: Decoder[A_Expr] =
+    deriveConfiguredDecoder[A_Expr]
 }

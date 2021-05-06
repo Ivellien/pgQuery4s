@@ -1,12 +1,13 @@
 package com.github.ivellien.pgquery.parser.nodes
 
+import com.github.ivellien.pgquery.parser.enums.NodeTag
 import com.github.ivellien.pgquery.parser.nodes.Node.{
   circeConfig,
   optionToQuery
 }
-import io.circe.generic.extras.ConfiguredJsonCodec
+import io.circe.Decoder
+import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
 
-@ConfiguredJsonCodec(decodeOnly = true)
 case class CaseExpr(
     xpr: Option[Node],
     casetype: Option[Int],
@@ -18,4 +19,9 @@ case class CaseExpr(
 ) extends Node {
   override def query: String =
     s"(CASE ${args.map(_.query).mkString(" ")} ELSE ${optionToQuery(defresult)} END)"
+}
+
+object CaseExpr extends NodeDecoder[CaseExpr](NodeTag.T_CaseExpr) {
+  override implicit protected val vanillaDecoder: Decoder[CaseExpr] =
+    deriveConfiguredDecoder[CaseExpr]
 }

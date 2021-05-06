@@ -1,21 +1,27 @@
 package com.github.ivellien.pgquery.parser.nodes
 
-import io.circe.generic.extras.ConfiguredJsonCodec
+import com.github.ivellien.pgquery.parser.enums.NodeTag
 import com.github.ivellien.pgquery.parser.nodes.Node.{
   circeConfig,
   optionToQuery
 }
+import io.circe.Decoder
+import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
 
-@ConfiguredJsonCodec(decodeOnly = true)
 case class InsertStmt(
-    relation: Option[Node],
-    selectStmt: Option[Node],
-    onConflictClause: Option[Node],
-    withClause: Option[Node],
-    overRide: Option[Node],
+    relation: Option[RangeVar],
+    selectStmt: Option[SelectStmt],
+    onConflictClause: Option[Node], // TODO OnConflictClause
+    withClause: Option[Node], // TODO WithClause
+    overRide: Option[Node], // TODO OverridingKind
     cols: List[Node] = List.empty,
     returningList: List[Node] = List.empty
 ) extends Node {
   override def query: String =
     s"INSERT INTO ${optionToQuery(relation)} (${cols.map(_.query).mkString(", ")}) ${optionToQuery(selectStmt)}"
+}
+
+object InsertStmt extends NodeDecoder[InsertStmt](NodeTag.T_InsertStmt) {
+  override implicit protected val vanillaDecoder: Decoder[InsertStmt] =
+    deriveConfiguredDecoder[InsertStmt]
 }

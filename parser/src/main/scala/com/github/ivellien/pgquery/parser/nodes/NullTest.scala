@@ -1,13 +1,13 @@
 package com.github.ivellien.pgquery.parser.nodes
 
-import com.github.ivellien.pgquery.parser.enums.NullTestType
+import com.github.ivellien.pgquery.parser.enums.{NodeTag, NullTestType}
 import com.github.ivellien.pgquery.parser.nodes.Node.{
   circeConfig,
   optionToQuery
 }
-import io.circe.generic.extras.ConfiguredJsonCodec
+import io.circe.Decoder
+import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
 
-@ConfiguredJsonCodec(decodeOnly = true)
 case class NullTest(
     arg: Option[Node],
     nulltesttype: NullTestType.Value,
@@ -16,4 +16,9 @@ case class NullTest(
 ) extends Node {
   override def query: String =
     s"${optionToQuery(arg)} ${nulltesttype.toString}"
+}
+
+object NullTest extends NodeDecoder[NullTest](NodeTag.T_NullTest) {
+  override implicit protected val vanillaDecoder: Decoder[NullTest] =
+    deriveConfiguredDecoder[NullTest]
 }
