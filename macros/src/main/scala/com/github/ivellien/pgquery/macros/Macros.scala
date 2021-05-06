@@ -6,7 +6,7 @@ import com.github.ivellien.pgquery.parser.nodes._
 
 import scala.language.experimental.macros
 import scala.reflect.macros.whitebox
-import com.github.ivellien.pgquery.parser.nodes.NodeString
+import com.github.ivellien.pgquery.parser.nodes.values.NodeString
 
 object Macros {
   def parse_compile(query: String): Node = macro MacrosImpl.parse_impl
@@ -57,6 +57,7 @@ class MacrosImpl(val c: whitebox.Context) extends LiftableNode {
           PgQueryParser.parseTree(merged.mkString("")).getOrElse(List.empty)
         }
         println(parseTree)
+
         c.Expr(lift {
           parseTree.headOption.getOrElse(NodeString("Empty result."))
         })
@@ -67,5 +68,9 @@ class MacrosImpl(val c: whitebox.Context) extends LiftableNode {
           NodeString("Not a string.")
         })
     }
+
+    // val result = PgQueryParser.prettify(args.toString)
+    // c.Expr(Literal(Constant(result)))
+
   }
 }

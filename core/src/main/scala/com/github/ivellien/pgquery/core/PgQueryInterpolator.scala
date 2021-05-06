@@ -16,9 +16,7 @@ object PgQueryInterpolator {
   ): java.lang.StringBuilder = {
     val stringContextIterator = sc.parts.iterator
     val argsIterator = args.iterator
-
     val sb = new java.lang.StringBuilder(stringContextIterator.next())
-
     while (argsIterator.hasNext) {
       sb.append(argsIterator.next().toString)
       sb.append(stringContextIterator.next())
