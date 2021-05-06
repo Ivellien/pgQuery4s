@@ -8,5 +8,5 @@ script:
   - cd parser/src/main/native/libpg_query
   - make
   - cd ../../../../..
-  - sbt compileWrapper
-  - sbt test
+  - sbt parser/compileWrapper
+  - sbt parser/test
