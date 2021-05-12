@@ -1,16 +1,12 @@
 package com.github.ivellien.pgquery.macros
 
 import com.github.ivellien.pgquery.parser.PgQueryParser
-import com.github.ivellien.pgquery.parser.enums.A_Expr_Kind
 import com.github.ivellien.pgquery.parser.nodes._
 
 import scala.language.experimental.macros
 import scala.reflect.macros.whitebox
 import com.github.ivellien.pgquery.parser.nodes.values.NodeString
 import com.typesafe.scalalogging.LazyLogging
-
-import scala.reflect.runtime.{universe => u}
-import u._
 
 class MacrosImpl(val c: whitebox.Context)
     extends LiftableNode
@@ -22,11 +18,11 @@ class MacrosImpl(val c: whitebox.Context)
   }
 
   def parseExprMacro(args: c.Expr[Any]*): c.Expr[Node] = {
-    parseCompileTime(args, true)
+    parseCompileTime(args, isSqlExpression = true)
   }
 
   def parseQueryMacro(args: c.Expr[Any]*): c.Expr[Node] = {
-    parseCompileTime(args, false)
+    parseCompileTime(args, isSqlExpression = false)
   }
 
   private def parseCompileTime(
@@ -51,7 +47,7 @@ class MacrosImpl(val c: whitebox.Context)
         return c.Expr(lift { NodeString("Invalid prefix.") })
     }
 
-    val varsByPos = args
+    val varsByPos: Map[Int, Tree] = args
       .map(_.tree)
       .zipWithIndex
       .map {
@@ -59,11 +55,11 @@ class MacrosImpl(val c: whitebox.Context)
       }
       .toMap
 
-    val renamedVariables = args.zipWithIndex.map {
+    val renamedVariables: List[String] = args.zipWithIndex.map {
       case (_, i) => s"$$${i + 1}"
     }.toList
 
-    val t = new Transformer() {
+    val t: Transformer = new Transformer() {
       override def transform(tree: Tree): Tree = {
         tree match {
           case q"ParamRef(..$pos)" =>
@@ -79,26 +75,25 @@ class MacrosImpl(val c: whitebox.Context)
       }
     }
 
-    val resultParseTree = isSqlExpression match {
-      case true =>
-        extractExpression(
-          PgQueryParser
-            .parseTree(
-              intersperse(
-                sqlLiteralsStrings
-                  .updated(0, "SELECT " + sqlLiteralsStrings.head),
-                renamedVariables
-              ).mkString("")
-            )
-            .getOrElse(List.empty)
-        )
-      case false =>
+    val resultParseTree: Option[Node] = if (isSqlExpression) {
+      extractExpression(
         PgQueryParser
           .parseTree(
-            intersperse(sqlLiteralsStrings, renamedVariables).mkString("")
+            intersperse(
+              sqlLiteralsStrings
+                .updated(0, "SELECT " + sqlLiteralsStrings.head),
+              renamedVariables
+            ).mkString("")
           )
           .getOrElse(List.empty)
-          .headOption
+      )
+    } else {
+      PgQueryParser
+        .parseTree(
+          intersperse(sqlLiteralsStrings, renamedVariables).mkString("")
+        )
+        .getOrElse(List.empty)
+        .headOption
     }
 
     resultParseTree match {
