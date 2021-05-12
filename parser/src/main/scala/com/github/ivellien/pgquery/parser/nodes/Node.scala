@@ -10,7 +10,7 @@ import com.typesafe.scalalogging.{LazyLogging, Logger}
 import io.circe.generic.extras.Configuration
 import io.circe.{ACursor, Decoder, HCursor}
 
-abstract class Node extends Product with Traverse {
+abstract class Node {
   def query: String
 }
 
