@@ -4,7 +4,7 @@ import com.github.ivellien.pgquery.liftable.{
   LiftableCaseClassImpls,
   LiftableEnumerationImpls
 }
-import com.github.ivellien.pgquery.parser.nodes
+import com.github.ivellien.pgquery.parser.nodes._
 
 trait LiftableNode
     extends LiftableCaseClassImpls
@@ -14,41 +14,41 @@ trait LiftableNode
 
   private def lift[T](t: T)(implicit l: Liftable[T]) = l(t)
 
-  implicit val _liftableValue: Liftable[nodes.values.Value] = {
-    case n: nodes.values.NodeInteger => lift[nodes.values.NodeInteger](n)
-    case n: nodes.values.NodeString  => lift[nodes.values.NodeString](n)
+  implicit val _liftableValue: Liftable[values.Value] = {
+    case n: values.NodeInteger => lift[values.NodeInteger](n)
+    case n: values.NodeString  => lift[values.NodeString](n)
   }
 
-  implicit val _liftableNode: Liftable[nodes.Node] = {
-    case n: nodes.A_Const            => lift[nodes.A_Const](n)
-    case n: nodes.A_Expr             => lift[nodes.A_Expr](n)
-    case n: nodes.Alias              => lift[nodes.Alias](n)
-    case n: nodes.AlterTableCmd      => lift[nodes.AlterTableCmd](n)
-    case n: nodes.AlterTableStmt     => lift[nodes.AlterTableStmt](n)
-    case n: nodes.BoolExpr           => lift[nodes.BoolExpr](n)
-    case n: nodes.CaseExpr           => lift[nodes.CaseExpr](n)
-    case n: nodes.CaseWhen           => lift[nodes.CaseWhen](n)
-    case n: nodes.ColumnDef          => lift[nodes.ColumnDef](n)
-    case n: nodes.ColumnRef          => lift[nodes.ColumnRef](n)
-    case n: nodes.CreatedbStmt       => lift[nodes.CreatedbStmt](n)
-    case n: nodes.CreateStmt         => lift[nodes.CreateStmt](n)
-    case n: nodes.DropdbStmt         => lift[nodes.DropdbStmt](n)
-    case n: nodes.DropStmt           => lift[nodes.DropStmt](n)
-    case n: nodes.FuncCall           => lift[nodes.FuncCall](n)
-    case n: nodes.InsertStmt         => lift[nodes.InsertStmt](n)
-    case n: nodes.IntoClause         => lift[nodes.IntoClause](n)
-    case n: nodes.JoinExpr           => lift[nodes.JoinExpr](n)
-    case n: nodes.values.NodeInteger => lift[nodes.values.NodeInteger](n)
-    case n: nodes.values.NodeString  => lift[nodes.values.NodeString](n)
-    case n: nodes.NullTest           => lift[nodes.NullTest](n)
-    case n: nodes.ParamRef           => lift[nodes.ParamRef](n)
-    case n: nodes.RangeVar           => lift[nodes.RangeVar](n)
-    case n: nodes.RawStmt            => lift[nodes.RawStmt](n)
-    case n: nodes.ResTarget          => lift[nodes.ResTarget](n)
-    case n: nodes.SelectStmt         => lift[nodes.SelectStmt](n)
-    case n: nodes.SortBy             => lift[nodes.SortBy](n)
-    case n: nodes.SubLink            => lift[nodes.SubLink](n)
-    case n: nodes.TruncateStmt       => lift[nodes.TruncateStmt](n)
-    case n: nodes.TypeName           => lift[nodes.TypeName](n)
+  implicit val _liftableNode: Liftable[Node] = {
+    case n: A_Const            => lift[A_Const](n)
+    case n: A_Expr             => lift[A_Expr](n)
+    case n: Alias              => lift[Alias](n)
+    case n: AlterTableCmd      => lift[AlterTableCmd](n)
+    case n: AlterTableStmt     => lift[AlterTableStmt](n)
+    case n: BoolExpr           => lift[BoolExpr](n)
+    case n: CaseExpr           => lift[CaseExpr](n)
+    case n: CaseWhen           => lift[CaseWhen](n)
+    case n: ColumnDef          => lift[ColumnDef](n)
+    case n: ColumnRef          => lift[ColumnRef](n)
+    case n: CreatedbStmt       => lift[CreatedbStmt](n)
+    case n: CreateStmt         => lift[CreateStmt](n)
+    case n: DropdbStmt         => lift[DropdbStmt](n)
+    case n: DropStmt           => lift[DropStmt](n)
+    case n: FuncCall           => lift[FuncCall](n)
+    case n: InsertStmt         => lift[InsertStmt](n)
+    case n: IntoClause         => lift[IntoClause](n)
+    case n: JoinExpr           => lift[JoinExpr](n)
+    case n: values.NodeInteger => lift[values.NodeInteger](n)
+    case n: values.NodeString  => lift[values.NodeString](n)
+    case n: NullTest           => lift[NullTest](n)
+    case n: ParamRef           => lift[ParamRef](n)
+    case n: RangeVar           => lift[RangeVar](n)
+    case n: RawStmt            => lift[RawStmt](n)
+    case n: ResTarget          => lift[ResTarget](n)
+    case n: SelectStmt         => lift[SelectStmt](n)
+    case n: SortBy             => lift[SortBy](n)
+    case n: SubLink            => lift[SubLink](n)
+    case n: TruncateStmt       => lift[TruncateStmt](n)
+    case n: TypeName           => lift[TypeName](n)
   }
 }

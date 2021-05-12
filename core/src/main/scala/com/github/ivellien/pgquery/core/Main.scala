@@ -8,7 +8,9 @@ object Main {
 
     println(query"SELECT $str")
     println(query"SELEC x")
-    println(ctq"SELECT *")
+
+    println(ctq"SELECT x, y")
+    println(ctq"SELEC x")
 
     println(expr"x = 4".query)
     println(query"SELECT x = 5".query)
