@@ -1,6 +1,7 @@
 package com.github.ivellien.pgquery.macros
 
 import com.github.ivellien.pgquery.parser.PgQueryParser
+import com.github.ivellien.pgquery.parser.PgQueryParser.PgQueryResult
 import com.github.ivellien.pgquery.parser.nodes._
 
 import scala.language.experimental.macros
@@ -8,17 +9,24 @@ import scala.reflect.macros.whitebox
 import com.github.ivellien.pgquery.parser.nodes.values.NodeString
 import com.typesafe.scalalogging.LazyLogging
 
+import scala.reflect.internal.util.Position
+
 class MacrosImpl(val c: whitebox.Context)
     extends LiftableNode
     with LazyLogging {
+  import c.universe._
 
-  def intersperse[A](a: List[A], b: List[A]): List[A] = a match {
-    case first :: rest => first :: intersperse(b, rest)
-    case _             => b
-  }
-
-  def parseExprMacro(args: c.Expr[Any]*): c.Expr[Node] = {
-    parseCompileTime(args, isSqlExpression = true)
+  def parseExprMacro(args: c.Expr[Any]*): c.Expr[ResTarget] = {
+    val result = parseCompileTime(args, isSqlExpression = true)
+    result.tree match {
+      case q"ResTarget(..${_})" => c.Expr[ResTarget](result.tree)
+      case _ =>
+        c.abort(
+          c.enclosingPosition,
+          s"Error while running compile time check. \n" +
+            s"Result from expression isn't type ResTarget."
+        )
+    }
   }
 
   def parseQueryMacro(args: c.Expr[Any]*): c.Expr[Node] = {
@@ -29,13 +37,11 @@ class MacrosImpl(val c: whitebox.Context)
       args: Seq[c.Expr[Any]],
       isSqlExpression: Boolean
   ): c.Expr[Node] = {
-    import c.universe._
-
     val lift = implicitly[Liftable[Node]]
 
     val sqlLiteralsStrings: List[String] = c.prefix.tree match {
       case q"""
-        com.github.ivellien.pgquery.core.PgQueryInterpolator.PgInterpolator(
+        com.github.ivellien.pgquery.core.PgQueryInterpolator.CompileTimeInterpolator(
         scala.StringContext.apply(..${sqlLiterals: List[Tree]})
         )
       """ =>
@@ -43,8 +49,11 @@ class MacrosImpl(val c: whitebox.Context)
           case Literal(Constant(part: String)) => part
         }
       case _ =>
-        logger.error("Could not recognize prefix.")
-        return c.Expr(lift { NodeString("Invalid prefix.") })
+        c.abort(
+          c.enclosingPosition,
+          s"Error while running compile time check. \n" +
+            s"Invalid prefix tree."
+        )
     }
 
     val varsByPos: Map[Int, Tree] = args
@@ -55,71 +64,61 @@ class MacrosImpl(val c: whitebox.Context)
       }
       .toMap
 
-    val renamedVariables: List[String] = args.zipWithIndex.map {
+    val renamedVars: List[String] = args.zipWithIndex.map {
       case (_, i) => s"$$${i + 1}"
     }.toList
 
-    val t: Transformer = new Transformer() {
-      override def transform(tree: Tree): Tree = {
-        tree match {
-          case q"ParamRef(..$pos)" =>
-            pos.headOption match {
-              case Some(Literal(Constant(constant: Int))) =>
-                varsByPos(constant)
-              case _ =>
-                super.transform(tree)
-            }
-          case _ =>
-            super.transform(tree)
-        }
-      }
-    }
+    val t: ParamRefTransformer = new ParamRefTransformer(varsByPos)
 
-    val resultParseTree: Option[Node] = if (isSqlExpression) {
-      extractExpression(
-        PgQueryParser
-          .parseTree(
-            intersperse(
-              sqlLiteralsStrings
-                .updated(0, "SELECT " + sqlLiteralsStrings.head),
-              renamedVariables
-            ).mkString("")
-          )
-          .getOrElse(List.empty)
-      )
+    val query: String =
+      intersperse(sqlLiteralsStrings, renamedVars).mkString("")
+    val resultNode: Option[Node] = if (isSqlExpression) {
+      extractExpression(PgQueryParser.parseTree("SELECT " + query))
     } else {
-      PgQueryParser
-        .parseTree(
-          intersperse(sqlLiteralsStrings, renamedVariables).mkString("")
-        )
-        .getOrElse(List.empty)
-        .headOption
+      PgQueryParser.parseTree(query).toOption
     }
 
-    resultParseTree match {
+    resultNode match {
       case Some(n: Node) =>
         c.Expr(t.transform(c.Expr(lift { n }).tree))
       case _ =>
-        logger.error("Failed parsing of query.")
-        c.Expr(lift {
-          NodeString("Failed parsing of query.")
-        })
+        c.abort(
+          c.enclosingPosition,
+          s"Error while running compile time check. \n" +
+            s"Failed parsing of the query - \'$query\'"
+        )
     }
   }
 
-  private def extractExpression(node: List[Node]): Option[Node] = {
-    node.headOption match {
-      case Some(
-          RawStmt(
-            _,
-            _,
-            Some(
-              stmt: SelectStmt
-            )
-          )
-          ) =>
-        stmt.targetList.headOption
-      case _ => None
+  private def extractExpression(
+      queryResult: PgQueryResult[Node]
+  ): Option[ResTarget] = {
+    queryResult match {
+      case Right(RawStmt(_, _, Some(select: SelectStmt))) =>
+        select.targetList.headOption
+      case _ =>
+        c.abort(
+          c.enclosingPosition,
+          s"Error while running compile time check. \n" +
+            s"Extracting expression from parse tree failed."
+        )
+    }
+  }
+
+  private def intersperse[A](a: List[A], b: List[A]): List[A] = a match {
+    case first :: rest => first :: intersperse(b, rest)
+    case _             => b
+  }
+
+  private class ParamRefTransformer(varsByPos: Map[Int, Tree])
+      extends Transformer {
+    override def transform(tree: Tree): Tree = {
+      tree match {
+        case q"ParamRef(${Literal(Constant(constant: Int))}, ${_})" =>
+          varsByPos(constant)
+        case _ =>
+          super.transform(tree)
+      }
     }
   }
 }

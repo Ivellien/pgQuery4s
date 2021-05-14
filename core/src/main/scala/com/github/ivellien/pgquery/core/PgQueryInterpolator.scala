@@ -4,19 +4,23 @@ import com.github.ivellien.pgquery.macros.MacrosImpl
 
 import scala.language.experimental.macros
 import com.github.ivellien.pgquery.parser.PgQueryParser
-import com.github.ivellien.pgquery.parser.nodes.{EmptyNode, Node}
+import com.github.ivellien.pgquery.parser.PgQueryParser.PgQueryResult
+import com.github.ivellien.pgquery.parser.nodes.{Node, ResTarget}
 import com.typesafe.scalalogging.LazyLogging
 
 object PgQueryInterpolator {
-  implicit class PgInterpolator(val sc: StringContext) extends LazyLogging {
+  implicit class CompileTimeInterpolator(sc: StringContext) {
 
     def ctq(args: Any*): Node =
       macro MacrosImpl.parseQueryMacro
 
-    def expr(args: Any*): Node =
+    def cte(args: Any*): ResTarget =
       macro MacrosImpl.parseExprMacro
+  }
 
-    def query(args: Any*): Node = {
+  implicit class RuntimeInterpolator(sc: StringContext) extends LazyLogging {
+
+    def rtq(args: Any*): PgQueryResult[Node] = {
       val stringContextIterator = sc.parts.iterator
       val argsIterator = args.iterator
       val sb = new java.lang.StringBuilder(stringContextIterator.next())
@@ -25,13 +29,7 @@ object PgQueryInterpolator {
         sb.append(stringContextIterator.next())
       }
 
-      PgQueryParser.parseTree(sb.toString) match {
-        case Left(_) | Right(Nil) =>
-          logger.error("Failed parsing of query.")
-          EmptyNode
-        case Right(nodeList: List[Node]) =>
-          nodeList.head
-      }
+      PgQueryParser.parseTree(sb.toString)
     }
 
     def pr(args: Any*): String = {
@@ -46,5 +44,4 @@ object PgQueryInterpolator {
       PgQueryParser.prettify(sb.toString)
     }
   }
-
 }
