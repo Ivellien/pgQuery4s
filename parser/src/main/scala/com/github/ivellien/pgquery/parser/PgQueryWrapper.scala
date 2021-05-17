@@ -1,8 +1,7 @@
 package com.github.ivellien.pgquery.parser
 
 class PgQueryWrapper {
-//  System.loadLibrary("PgQueryWrapper")
-  NativeLoader.loadLibrary("PgQueryWrapper")
+  NativeLoader.fromResources("PgQueryWrapper")
 
   @native def pgQueryParse(query: String): String
 }
