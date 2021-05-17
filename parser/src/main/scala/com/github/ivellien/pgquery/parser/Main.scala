@@ -7,7 +7,7 @@ object Main {
 
     println(PgQueryParser.wrapper.pgQueryParse(input))
     println(PgQueryParser.json(input))
-    println(PgQueryParser.parseTree(input))
+    println(PgQueryParser.parse(input))
     println(PgQueryParser.prettify(input))
   }
 }

@@ -14,11 +14,6 @@ trait LiftableNode
 
   private def lift[T](t: T)(implicit l: Liftable[T]) = l(t)
 
-  implicit val _liftableValue: Liftable[values.Value] = {
-    case n: values.NodeInteger => lift[values.NodeInteger](n)
-    case n: values.NodeString  => lift[values.NodeString](n)
-  }
-
   implicit val _liftableNode: Liftable[Node] = {
     case n: A_Const            => lift[A_Const](n)
     case n: A_Expr             => lift[A_Expr](n)
@@ -51,4 +46,7 @@ trait LiftableNode
     case n: TruncateStmt       => lift[TruncateStmt](n)
     case n: TypeName           => lift[TypeName](n)
   }
+
+  implicit val _liftableValue: Liftable[values.Value] =
+    _liftableNode(_)
 }
