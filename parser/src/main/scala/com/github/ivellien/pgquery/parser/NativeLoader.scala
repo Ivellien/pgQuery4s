@@ -1,50 +1,60 @@
 package com.github.ivellien.pgquery.parser
 
 import com.typesafe.scalalogging.LazyLogging
+import org.apache.commons.io.IOUtils
 
 import java.io._
+import java.net.URL
+import java.nio.file.{Files, Paths}
+import scala.util.{Failure, Success, Try, Using}
 
 object NativeLoader extends LazyLogging {
-  // Using approach described here
-  // https://stackoverflow.com/questions/12036607/bundle-native-dependencies-in-runnable-jar-with-maven/12040310#12040310
-  def loadLibrary(library: String): Unit = {
-    saveLibrary(library) match {
-      case Some(libraryPath) => System.load(libraryPath)
-      case _ =>
-        logger.info(
-          "Could not find library " + library + " - trying lookup through System.loadLibrary()."
+  def fromResources(libName: String): Unit = {
+    extractLibrary(libName) match {
+      case Success(libraryPath) => System.load(libraryPath.getAbsolutePath)
+      case Failure(exception) =>
+        throw new RuntimeException(
+          s"Could not find library $libName in resources.",
+          exception
         )
-        System.loadLibrary(library)
     }
   }
 
-  def saveLibrary(library: String): Option[String] = {
-    val libName: String = "lib" + library + ".so" // Linux-only
-    val src: InputStream =
-      this.getClass.getClassLoader.getResourceAsStream("lib/" + libName)
-    val tmpDirName: String = System.getProperty("java.io.tmpdir")
-    val tmpDir = new File(tmpDirName)
-    tmpDir.mkdir()
-    val dest: File = File.createTempFile(library + "-", ".tmp", tmpDir)
+  private def extractLibrary(library: String): Try[File] = {
+    val fullName = s"lib$library.$platformSuffix"
+    val lib = this.getClass.getClassLoader.getResource("lib/" + fullName)
+
+    if (lib.getProtocol == "file") {
+      urlToFile(lib)
+    } else {
+      unpackFromJarToTemp(fullName, lib)
+    }
+  }
+
+  private def urlToFile(lib: URL): Try[File] = {
+    Try(Paths.get(lib.toURI).toFile)
+  }
+
+  private def unpackFromJarToTemp(fullName: String, lib: URL): Try[File] = {
+    val dir = Files.createTempDirectory("pgquery4s")
+    val dest = dir.resolve(fullName).toFile
     dest.deleteOnExit()
 
-    val out = new FileOutputStream(dest)
-    writeToFile(new BufferedInputStream(src), new BufferedOutputStream(out))
+    Using.Manager { use =>
+      val in = use(lib.openStream())
+      val out = use(new FileOutputStream(dest))
 
-    src.close()
-    out.close()
-    Some(dest.getAbsolutePath())
-  }
-
-  def writeToFile(
-      inputStream: BufferedInputStream,
-      outputStream: BufferedOutputStream
-  ): Unit = {
-    val buffer = new Array[Byte](32 * 1024)
-    Iterator.continually(inputStream.read(buffer)).takeWhile(_ > 0).foreach {
-      bytesRead =>
-        outputStream.write(buffer, 0, bytesRead)
-        outputStream.flush()
+      IOUtils.copy(in, out)
+      dest
     }
   }
+
+  private def platformSuffix: String =
+    System.getProperty("os.name").toLowerCase match {
+      case mac if mac.contains("mac")   => "dylib"
+      case tux if tux.contains("linux") => "so"
+      case other =>
+        throw new RuntimeException(s"Unknown operating system $other")
+    }
+
 }
