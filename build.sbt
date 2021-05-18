@@ -13,7 +13,10 @@ lazy val commonSettings = Seq(
 
 lazy val root: Project =
   project
-    .settings(commonSettings)
+    .settings(
+      commonSettings,
+      name := "pgQuery4s"
+    )
     .in(file("."))
     .aggregate(parser, macros, core, liftable)
 
