@@ -21,7 +21,7 @@ case class SelectStmt(
     valuesLists: List[List[Node]] = List.empty,
     groupClause: List[Node] = List.empty,
     distinctClause: List[Node] = List.empty,
-    targetList: List[Node] = List.empty,
+    targetList: List[ResTarget] = List.empty,
     fromClause: List[Node] = List.empty,
     windowClause: List[Node] = List.empty,
     sortClause: List[Node] = List.empty,

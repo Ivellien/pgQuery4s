@@ -1,25 +1,31 @@
 package com.github.ivellien.pgquery.core
 
-import com.github.ivellien.pgquery.core.PgQueryInterpolator.PgInterpolator
-import com.github.ivellien.pgquery.macros.Macros
+import com.github.ivellien.pgquery.core.PgQueryInterpolator.CompileTimeInterpolator
 import com.github.ivellien.pgquery.parser.PgQueryParser
-import com.github.ivellien.pgquery.parser.nodes.Node
+import com.github.ivellien.pgquery.parser.nodes.ResTarget
 
 object Main {
   def main(args: Array[String]): Unit = {
-    val input: String =
-      "SELECT $1 WHERE $3"
+    val str: String = "abc LIKE \"abc\""
 
-    println(query("$1", "name LIKE john"))
-//    println(compile_time_query("address", "name LIKE john"))
+    val x = query"SELECT x"
+    val res = expr"x=5"
+
+    println(query"SELECT $res")
+    res match {
+      case r: ResTarget => println(query"SELECT $r")
+      case _            => println("Something happened.")
+    }
+
+    println(PgQueryParser.parse(s"SELECT $str"))
+    println(PgQueryParser.prettify("SELECT x From y where x > 4"))
+//    println(query"SELEC x")
+
+//    println(query"SELEC y")
+
+    println(query"SELECT $res")
+
+    println(expr"x = 4".query)
+    println(PgQueryParser.parse("SELECT x = 5"))
   }
-
-  // This is only checked at runtime, when the function is called
-  def query(select: String, where: String): String =
-    pr"SELECT $select WHERE $where"
-
-  // This is checked at compile time using macro
-//  def compile_time_query(select: String, where: String) =
-//    ctq"SELECT name, $select, email WHERE $where"
-
 }
