@@ -30,6 +30,8 @@ object LiftableCaseClass {
     val T = weakTypeOf[T]
     val symbol = T.typeSymbol
 
+    if (symbol.asClass.isModuleClass)
+      c.abort(c.enclosingPosition, s"$symbol is an object")
     if (!symbol.asClass.isCaseClass)
       c.abort(c.enclosingPosition, s"$symbol is not a case class")
     if (!symbol.isStatic)

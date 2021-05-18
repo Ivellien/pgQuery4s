@@ -2,19 +2,22 @@ package com.github.ivellien.pgquery.macros
 
 import com.github.ivellien.pgquery.liftable.{
   LiftableCaseClassImpls,
+  LiftableCaseObjectImpls,
   LiftableEnumerationImpls
 }
 import com.github.ivellien.pgquery.parser.nodes._
 
 trait LiftableNode
     extends LiftableCaseClassImpls
-    with LiftableEnumerationImpls {
+    with LiftableEnumerationImpls
+    with LiftableCaseObjectImpls {
 
   import c.universe._
 
   private def lift[T](t: T)(implicit l: Liftable[T]) = l(t)
 
   implicit val _liftableNode: Liftable[Node] = {
+    case n: values.A_Star.type => lift[values.A_Star.type](n)
     case n: A_Const            => lift[A_Const](n)
     case n: A_Expr             => lift[A_Expr](n)
     case n: Alias              => lift[Alias](n)
@@ -29,6 +32,7 @@ trait LiftableNode
     case n: CreateStmt         => lift[CreateStmt](n)
     case n: DropdbStmt         => lift[DropdbStmt](n)
     case n: DropStmt           => lift[DropStmt](n)
+    case n: EmptyNode.type     => lift[EmptyNode.type](n)
     case n: FuncCall           => lift[FuncCall](n)
     case n: InsertStmt         => lift[InsertStmt](n)
     case n: IntoClause         => lift[IntoClause](n)
