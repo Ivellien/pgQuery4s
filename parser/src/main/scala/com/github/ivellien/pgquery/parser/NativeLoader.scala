@@ -6,17 +6,20 @@ import org.apache.commons.io.IOUtils
 import java.io._
 import java.net.URL
 import java.nio.file.{Files, Paths}
+import scala.util.control.NonFatal
 import scala.util.{Try, Using}
 
 object NativeLoader extends LazyLogging {
   def fromResources(libName: String): Unit = {
-    extractLibrary(libName).flatMap { libraryPath =>
-      Try(System.load(libraryPath.getAbsolutePath))
-    }.recover {
-      case e: UnsatisfiedLinkError if e.toString.contains("already loaded") =>
-      // ignore : library has been already loaded
-      case o =>
-        throw new RuntimeException(s"Could not find library $libName in resources.", o)
+    extractLibrary(libName).foreach { libraryPath =>
+      try {
+        System.load(libraryPath.getAbsolutePath)
+      } catch {
+        case e: UnsatisfiedLinkError if e.toString.contains("already loaded") =>
+          logger.warn("Library already loaded", e)
+        case NonFatal(o) =>
+          throw new RuntimeException(s"Could not find library $libName in resources.", o)
+      }
     }
   }
 
