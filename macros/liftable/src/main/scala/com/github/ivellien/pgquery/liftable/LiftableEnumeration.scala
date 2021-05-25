@@ -1,13 +1,15 @@
 package com.github.ivellien.pgquery.liftable
 
 // could be a blackbox, yet the case class one works only as a whitebox
+import com.github.ivellien.pgquery.liftable.LiftableCaseObject.getResultTree
+
 import scala.reflect.macros.whitebox
 import scala.language.experimental.macros
 
 /**
   * Adapted LiftableCaseClass.
   */
-object LiftableEnumeration {
+object LiftableEnumeration extends GenericLiftable {
 
   def impl[T <: Enumeration#Value: c.WeakTypeTag](
       c: whitebox.Context
@@ -30,14 +32,7 @@ object LiftableEnumeration {
 
     val reflect = q"Apply($objectName, $arguments)"
 
-    val implicitName = TermName(symbolT.name.encodedName.toString ++ "Liftable")
-
-    q"""
-       implicit object $implicitName extends Liftable[$T] {
-         def apply(value: $T): Tree = $reflect
-       }
-       $implicitName
-     """
+    getResultTree[T](c)(T, symbolT, reflect)
   }
 }
 

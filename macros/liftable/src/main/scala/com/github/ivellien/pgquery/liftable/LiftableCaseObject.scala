@@ -8,7 +8,7 @@ import scala.language.experimental.macros
 /**
   * Adapted LiftableCaseClass.
   */
-object LiftableCaseObject {
+object LiftableCaseObject extends GenericLiftable {
 
   def impl[T: c.WeakTypeTag](c: whitebox.Context): c.Tree = {
     import c.universe._
@@ -26,14 +26,7 @@ object LiftableCaseObject {
 
     val reflect = q"reify(${c.mirror.staticModule(symbol.fullName)}).tree"
 
-    val implicitName = TermName(symbol.name.encodedName.toString ++ "Liftable")
-
-    q"""
-       implicit object $implicitName extends Liftable[$T] {
-         def apply(value: $T): Tree = $reflect
-       }
-       $implicitName
-     """
+    getResultTree[T](c)(T, symbol, reflect)
   }
 }
 

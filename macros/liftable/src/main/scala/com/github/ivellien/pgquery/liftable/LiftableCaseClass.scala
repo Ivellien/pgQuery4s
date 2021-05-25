@@ -1,9 +1,11 @@
 package com.github.ivellien.pgquery.liftable
 
+import com.github.ivellien.pgquery.liftable.LiftableCaseObject.getResultTree
+
 import scala.reflect.macros.whitebox
 import scala.language.experimental.macros
 
-object LiftableCaseClass {
+object LiftableCaseClass extends GenericLiftable {
 
   /* All the trees (except one that has a special comment) in this macro are hygienic
    * (and there is a test to check that). That is, all TermNames used
@@ -55,14 +57,7 @@ object LiftableCaseClass {
 
     val reflect = q"Apply($constructor, $arguments)"
 
-    val implicitName = TermName(symbol.name.encodedName.toString ++ "Liftable")
-
-    q"""
-       implicit object $implicitName extends Liftable[$T] {
-         def apply(value: $T): Tree = $reflect
-       }
-       $implicitName
-     """
+    getResultTree[T](c)(T, symbol, reflect)
   }
 }
 
