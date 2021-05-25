@@ -3,27 +3,25 @@ package com.github.ivellien.pgquery.parser
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.commons.io.IOUtils
 
-import java.io._
 import java.net.URL
-import java.nio.file.{Files, Paths}
-import scala.util.control.NonFatal
-import scala.util.{Try, Using}
+import java.nio.file.{Files, Path, Paths}
+import scala.util.{Success, Try, Using}
 
 object NativeLoader extends LazyLogging {
   def fromResources(libName: String): Unit = {
     extractLibrary(libName).foreach { libraryPath =>
       try {
-        System.load(libraryPath.getAbsolutePath)
+        System.load(libraryPath.toAbsolutePath.toString)
       } catch {
         case e: UnsatisfiedLinkError if e.toString.contains("already loaded") =>
-          logger.warn("Library already loaded", e)
-        case NonFatal(o) =>
-          throw new RuntimeException(s"Could not find library $libName in resources.", o)
+          throw new RuntimeException(
+            "Could not load the native library. " +
+              "Use `fork := true` in your sbt settings to avoid this issue.", e)
       }
     }
   }
 
-  private def extractLibrary(library: String): Try[File] = {
+  private def extractLibrary(library: String): Try[Path] = {
     val fullName = s"lib$library.$platformSuffix"
     val lib = this.getClass.getClassLoader.getResource("lib/" + fullName)
 
@@ -34,21 +32,26 @@ object NativeLoader extends LazyLogging {
     }
   }
 
-  private def urlToFile(lib: URL): Try[File] = {
-    Try(Paths.get(lib.toURI).toFile)
+  private def urlToFile(lib: URL): Try[Path] = {
+    Try(Paths.get(lib.toURI))
   }
 
-  private def unpackFromJarToTemp(fullName: String, lib: URL): Try[File] = {
-    val dir = Files.createTempDirectory("pgquery4s")
-    val dest = dir.resolve(fullName).toFile
-    dest.deleteOnExit()
+  private def unpackFromJarToTemp(fullName: String, lib: URL): Try[Path] = {
+    val dir = Paths.get(System.getProperty("java.io.tmpdir")).resolve("pgquery4s-lib")
+    Files.createDirectories(dir)
 
-    Using.Manager { use =>
-      val in = use(lib.openStream())
-      val out = use(new FileOutputStream(dest))
+    val dest = dir.resolve(fullName)
+    dest.toFile.deleteOnExit()
 
-      IOUtils.copy(in, out)
-      dest
+    if (Files.exists(dest)) {
+      Success(dest)
+    } else {
+      Using.Manager { use =>
+        val in = use(lib.openStream())
+        val out = use(Files.newOutputStream(dest))
+
+        IOUtils.copy(in, out)
+      }.map(_ => dest)
     }
   }
 
