@@ -1,6 +1,7 @@
 package com.github.ivellien.pgquery.core.query
 
 import com.github.ivellien.pgquery.core.PgQueryInterpolator.CompileTimeInterpolator
+import com.github.ivellien.pgquery.parser.enums.A_Expr_Kind
 import com.github.ivellien.pgquery.parser.nodes._
 import org.scalatest.FunSuite
 
@@ -23,10 +24,49 @@ class QueryInterpolatorTests extends FunSuite {
     validateStatementOfQuery[InsertStmt](query)
   }
 
-  test("WHERE query test") {
+  test("WHERE with A_Expr query test") {
     val expr = expr"x = 5"
     val query = query"SELECT x WHERE $expr"
-    validateStatementOfQuery[SelectStmt](query)
+    val select = validateStatementOfQuery[SelectStmt](query)
+    assert(
+      select.whereClause
+        .getOrElse(EmptyNode)
+        .asInstanceOf[ResTarget]
+        .value
+        .getOrElse(EmptyNode)
+        .asInstanceOf[A_Expr]
+        .kind == A_Expr_Kind.AExprOp
+    )
+  }
+
+  test("WHERE with LIKE query test") {
+    val expr = expr"x LIKE abc"
+    val query = query"SELECT x WHERE $expr"
+    val select = validateStatementOfQuery[SelectStmt](query)
+    assert(
+      select.whereClause
+        .getOrElse(EmptyNode)
+        .asInstanceOf[ResTarget]
+        .value
+        .getOrElse(EmptyNode)
+        .asInstanceOf[A_Expr]
+        .kind == A_Expr_Kind.AexprLike
+    )
+  }
+
+  test("WHERE with ILIKE query test") {
+    val expr = expr"x ILIKE abc"
+    val query = query"SELECT x WHERE $expr"
+    val select = validateStatementOfQuery[SelectStmt](query)
+    assert(
+      select.whereClause
+        .getOrElse(EmptyNode)
+        .asInstanceOf[ResTarget]
+        .value
+        .getOrElse(EmptyNode)
+        .asInstanceOf[A_Expr]
+        .kind == A_Expr_Kind.AexprIlike
+    )
   }
 
   // Tests for features that are yet to be implemented
