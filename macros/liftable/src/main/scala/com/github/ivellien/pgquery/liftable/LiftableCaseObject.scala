@@ -26,7 +26,7 @@ object LiftableCaseObject extends GenericLiftable {
 
     val reflect = q"reify(${c.mirror.staticModule(symbol.fullName)}).tree"
 
-    getResultTree[T](c)(T, symbol, reflect)
+    getResultTree(c)(T, symbol, reflect)
   }
 }
 

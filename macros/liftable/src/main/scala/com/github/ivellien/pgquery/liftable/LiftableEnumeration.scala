@@ -32,7 +32,7 @@ object LiftableEnumeration extends GenericLiftable {
 
     val reflect = q"Apply($objectName, $arguments)"
 
-    getResultTree[T](c)(T, symbolT, reflect)
+    getResultTree(c)(T, symbolT, reflect)
   }
 }
 

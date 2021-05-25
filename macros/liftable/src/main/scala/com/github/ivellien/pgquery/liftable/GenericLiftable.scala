@@ -3,7 +3,7 @@ package com.github.ivellien.pgquery.liftable
 import scala.reflect.macros.whitebox
 
 trait GenericLiftable {
-  def getResultTree[T](
+  def getResultTree(
       c: whitebox.Context
   )(T: c.Type, symbol: c.Symbol, reflect: c.Tree): c.Tree = {
     import c.universe._

@@ -1,7 +1,5 @@
 package com.github.ivellien.pgquery.liftable
 
-import com.github.ivellien.pgquery.liftable.LiftableCaseObject.getResultTree
-
 import scala.reflect.macros.whitebox
 import scala.language.experimental.macros
 
@@ -57,7 +55,7 @@ object LiftableCaseClass extends GenericLiftable {
 
     val reflect = q"Apply($constructor, $arguments)"
 
-    getResultTree[T](c)(T, symbol, reflect)
+    getResultTree(c)(T, symbol, reflect)
   }
 }
 
