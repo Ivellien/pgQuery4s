@@ -28,45 +28,24 @@ class QueryInterpolatorTests extends FunSuite {
     val expr = expr"x = 5"
     val query = query"SELECT x WHERE $expr"
     val select = validateStatementOfQuery[SelectStmt](query)
-    assert(
-      select.whereClause
-        .getOrElse(EmptyNode)
-        .asInstanceOf[ResTarget]
-        .value
-        .getOrElse(EmptyNode)
-        .asInstanceOf[A_Expr]
-        .kind == A_Expr_Kind.AExprOp
-    )
+    val exprNode = validateWhereClause[A_Expr](select)
+    assert(exprNode.kind == A_Expr_Kind.AExprOp)
   }
 
   test("WHERE with LIKE query test") {
     val expr = expr"x LIKE abc"
     val query = query"SELECT x WHERE $expr"
     val select = validateStatementOfQuery[SelectStmt](query)
-    assert(
-      select.whereClause
-        .getOrElse(EmptyNode)
-        .asInstanceOf[ResTarget]
-        .value
-        .getOrElse(EmptyNode)
-        .asInstanceOf[A_Expr]
-        .kind == A_Expr_Kind.AexprLike
-    )
+    val exprNode = validateWhereClause[A_Expr](select)
+    assert(exprNode.kind == A_Expr_Kind.AexprLike)
   }
 
   test("WHERE with ILIKE query test") {
     val expr = expr"x ILIKE abc"
     val query = query"SELECT x WHERE $expr"
     val select = validateStatementOfQuery[SelectStmt](query)
-    assert(
-      select.whereClause
-        .getOrElse(EmptyNode)
-        .asInstanceOf[ResTarget]
-        .value
-        .getOrElse(EmptyNode)
-        .asInstanceOf[A_Expr]
-        .kind == A_Expr_Kind.AexprIlike
-    )
+    val exprNode = validateWhereClause[A_Expr](select)
+    assert(exprNode.kind == A_Expr_Kind.AexprIlike)
   }
 
   // Tests for features that are yet to be implemented
@@ -85,6 +64,16 @@ class QueryInterpolatorTests extends FunSuite {
     validateStatementOfQuery[InsertStmt](query)
   }
    */
+
+  private def validateWhereClause[T <: Node: ClassTag](
+      selectStmt: SelectStmt
+  ): T = {
+    val node = selectStmt.whereClause match {
+      case Some(ResTarget(_, _, Some(value: T), _)) => value
+      case _                                        => fail("Node wasn't of ResTarget type.")
+    }
+    node.asInstanceOf[T]
+  }
 
   private def validateStatementOfQuery[T <: Node: ClassTag](
       rawStmt: Node

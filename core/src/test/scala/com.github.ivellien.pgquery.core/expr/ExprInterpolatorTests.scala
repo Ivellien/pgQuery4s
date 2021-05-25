@@ -98,7 +98,6 @@ class ExprInterpolatorTests extends FunSuite {
   private def validateTypeOfExprResult[T <: Node: ClassTag](
       resTarget: ResTarget
   ): T = {
-    println(resTarget)
     val node = resTarget match {
       case ResTarget(_, _, Some(value: T), _) => value
       case _                                  => fail("Node wasn't of ResTarget type.")
