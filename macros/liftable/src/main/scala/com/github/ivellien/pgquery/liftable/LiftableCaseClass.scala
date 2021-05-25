@@ -3,7 +3,8 @@ package com.github.ivellien.pgquery.liftable
 import scala.reflect.macros.whitebox
 import scala.language.experimental.macros
 
-object LiftableCaseClass extends GenericLiftable {
+class LiftableCaseClass(override val c: whitebox.Context)
+    extends GenericLiftable {
 
   /* All the trees (except one that has a special comment) in this macro are hygienic
    * (and there is a test to check that). That is, all TermNames used
@@ -16,11 +17,8 @@ object LiftableCaseClass extends GenericLiftable {
    * Source: https://github.com/folone/scala/blob/d0b82f608ce6d6abfa991e6e6e0dfc92ce9d9d2f/src/reflect/scala/reflect/api/StandardLiftables.scala
    * License: Apache License, Version 2.0
    */
-  def impl[T: c.WeakTypeTag](c: whitebox.Context): c.Tree = {
+  def impl[T: c.WeakTypeTag]: c.Tree = {
     import c.universe._
-
-    // hack: adaptation of the original code - expects to be called from a macro which contains
-    // a context `c` - which is kind of a convention at this point
 
     val T = weakTypeOf[T]
     val symbol = T.typeSymbol
@@ -45,8 +43,7 @@ object LiftableCaseClass extends GenericLiftable {
           name -> typeSign
         }
 
-    val constructor =
-      q"reify(${c.mirror.staticModule(symbol.fullName)}).tree"
+    val constructor = objectName(symbol)
 
     val arguments = fields(T).map {
       case (name, typeSign) ⇒
@@ -55,7 +52,7 @@ object LiftableCaseClass extends GenericLiftable {
 
     val reflect = q"Apply($constructor, $arguments)"
 
-    getResultTree(c)(T, symbol, reflect)
+    instance(typeClassName(symbol), T, reflect)
   }
 }
 

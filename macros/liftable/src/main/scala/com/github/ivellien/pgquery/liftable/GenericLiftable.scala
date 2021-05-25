@@ -3,17 +3,25 @@ package com.github.ivellien.pgquery.liftable
 import scala.reflect.macros.whitebox
 
 trait GenericLiftable {
-  def getResultTree(
-      c: whitebox.Context
-  )(T: c.Type, symbol: c.Symbol, reflect: c.Tree): c.Tree = {
-    import c.universe._
+  val c: whitebox.Context
+  import c.universe._
 
-    val implicitName = TermName(symbol.name.encodedName.toString ++ "Liftable")
+  protected def objectName(symbol: Symbol): Tree =
+    q"reify(${c.mirror.staticModule(symbol.fullName)}).tree"
+
+  protected def typeClassName(symbol: c.Symbol): c.TermName =
+    TermName(s"${symbol.name.encodedName}Liftable")
+
+  protected def instance(
+      typeClassName: c.TermName,
+      T: c.Type,
+      reflect: c.Tree
+  ): c.Tree = {
     q"""
-           implicit object $implicitName extends Liftable[$T] {
-                    def apply(value: $T): Tree = $reflect
-           }
-           $implicitName
+       implicit object $typeClassName extends Liftable[$T] {
+         def apply(value: $T): Tree = $reflect
+       }
+       $typeClassName
      """
   }
 }

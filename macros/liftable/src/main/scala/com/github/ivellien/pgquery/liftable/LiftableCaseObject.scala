@@ -8,13 +8,11 @@ import scala.language.experimental.macros
 /**
   * Adapted LiftableCaseClass.
   */
-object LiftableCaseObject extends GenericLiftable {
+class LiftableCaseObject(override val c: whitebox.Context)
+    extends GenericLiftable {
 
-  def impl[T: c.WeakTypeTag](c: whitebox.Context): c.Tree = {
+  def impl[T: c.WeakTypeTag]: c.Tree = {
     import c.universe._
-
-    // hack: adaptation of the original code - expects to be called from a macro which contains
-    // a context `c` - which is kind of a convention at this point
 
     val T = weakTypeOf[T]
     val symbol = T.typeSymbol
@@ -24,9 +22,9 @@ object LiftableCaseObject extends GenericLiftable {
     if (!symbol.isStatic)
       c.abort(c.enclosingPosition, s"$symbol is not static")
 
-    val reflect = q"reify(${c.mirror.staticModule(symbol.fullName)}).tree"
+    val reflect = objectName(symbol)
 
-    getResultTree(c)(T, symbol, reflect)
+    instance(typeClassName(symbol), T, reflect)
   }
 }
 
