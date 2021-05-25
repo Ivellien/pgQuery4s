@@ -65,7 +65,3 @@ object Node extends LazyLogging {
     }
   }
 }
-
-case object EmptyNode extends Node {
-  override def query: String = ""
-}
