@@ -8,7 +8,8 @@ lazy val commonSettings = Seq(
   organization := "com.github.ivellien",
   version := Version,
   scalaVersion := Dependencies.scalaVersion,
-  libraryDependencies ++= Dependencies.basic
+  libraryDependencies ++= Dependencies.basic,
+  fork := true
 )
 
 lazy val root: Project =
