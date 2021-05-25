@@ -1,16 +1,14 @@
 package com.github.ivellien.pgquery.core.expr
 
 import com.github.ivellien.pgquery.core.PgQueryInterpolator.CompileTimeInterpolator
-import com.github.ivellien.pgquery.parser.PgQueryParser
 import com.github.ivellien.pgquery.parser.enums._
 import com.github.ivellien.pgquery.parser.nodes._
-import com.github.ivellien.pgquery.parser.nodes.values.A_Star
 import org.scalatest._
 
 import scala.reflect.ClassTag
 
 class ExprInterpolatorTests extends FunSuite {
-  test("ColumnDef expression test") {
+  test("ColumnRef expression test") {
     val expr = expr"columnName"
     validateTypeOfExprResult[ColumnRef](expr)
   }
@@ -103,9 +101,8 @@ class ExprInterpolatorTests extends FunSuite {
     println(resTarget)
     val node = resTarget match {
       case ResTarget(_, _, Some(value: T), _) => value
-      case _                                  => EmptyNode
+      case _                                  => fail("Node wasn't of ResTarget type.")
     }
-    assert(node != EmptyNode)
     node.asInstanceOf[T]
   }
 }
