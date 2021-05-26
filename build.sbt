@@ -7,6 +7,7 @@ lazy val Version = "0.1"
 lazy val commonSettings = Seq(
   organization := "com.github.ivellien",
   version := Version,
+  fork := true,
   scalaVersion := Dependencies.scalaVersion,
   libraryDependencies ++= Dependencies.basic,
   fork := true
