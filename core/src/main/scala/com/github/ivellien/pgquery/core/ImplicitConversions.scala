@@ -1,6 +1,8 @@
-package com.github.ivellien.pgquery.parser.nodes
+package com.github.ivellien.pgquery.core
 
-import com.github.ivellien.pgquery.parser.PgQueryParser
+import com.github.ivellien.pgquery.macros.MacrosConversion
+import scala.language.experimental.macros
+import com.github.ivellien.pgquery.parser.nodes.ResTarget
 import com.github.ivellien.pgquery.parser.nodes.values.{
   A_Const,
   NodeInteger,
@@ -10,14 +12,10 @@ import com.github.ivellien.pgquery.parser.nodes.values.{
 object ImplicitConversions {
 
   implicit def string2expression(x: String): ResTarget =
-    PgQueryParser.parseExpression(x) match {
-      case Right(resTarget) => resTarget
-      case Left(error) =>
-        ResTarget(None, None, Some(A_Const(Some(NodeString(x)), None)), None)
-    }
+    macro MacrosConversion.string2ResTarget
 
   implicit def int2expression(x: Int): ResTarget =
-    ResTarget(None, None, Some(A_Const(Some(NodeInteger(x)), None)), None)
+    macro MacrosConversion.int2ResTarget
 
   implicit def string2NodeString(x: String): A_Const =
     A_Const(Some(NodeString(x)), None)
