@@ -18,7 +18,7 @@ trait LiftableNode
 
   implicit val _liftableNode: Liftable[Node] = {
     case n: values.A_Star.type => lift[values.A_Star.type](n)
-    case n: A_Const            => lift[A_Const](n)
+    case n: values.A_Const     => lift[values.A_Const](n)
     case n: A_Expr             => lift[A_Expr](n)
     case n: Alias              => lift[Alias](n)
     case n: AlterTableCmd      => lift[AlterTableCmd](n)
@@ -28,6 +28,7 @@ trait LiftableNode
     case n: CaseWhen           => lift[CaseWhen](n)
     case n: ColumnDef          => lift[ColumnDef](n)
     case n: ColumnRef          => lift[ColumnRef](n)
+    case n: Constraint         => lift[Constraint](n)
     case n: CreatedbStmt       => lift[CreatedbStmt](n)
     case n: CreateStmt         => lift[CreateStmt](n)
     case n: DropdbStmt         => lift[DropdbStmt](n)
@@ -40,7 +41,7 @@ trait LiftableNode
     case n: values.NodeInteger => lift[values.NodeInteger](n)
     case n: values.NodeString  => lift[values.NodeString](n)
     case n: NullTest           => lift[NullTest](n)
-    case n: ParamRef           => lift[ParamRef](n)
+    case n: values.ParamRef    => lift[values.ParamRef](n)
     case n: RangeVar           => lift[RangeVar](n)
     case n: RawStmt            => lift[RawStmt](n)
     case n: ResTarget          => lift[ResTarget](n)

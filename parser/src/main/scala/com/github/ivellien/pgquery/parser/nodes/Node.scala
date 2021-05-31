@@ -2,13 +2,15 @@ package com.github.ivellien.pgquery.parser.nodes
 
 import com.github.ivellien.pgquery.parser.enums.NodeTag
 import com.github.ivellien.pgquery.parser.nodes.values.{
+  A_Const,
   A_Star,
   NodeInteger,
-  NodeString
+  NodeString,
+  ParamRef
 }
-import com.typesafe.scalalogging.{LazyLogging, Logger}
+import com.typesafe.scalalogging.LazyLogging
 import io.circe.generic.extras.Configuration
-import io.circe.{ACursor, Decoder, HCursor}
+import io.circe.{Decoder, HCursor}
 
 abstract class Node {
   def query: String
@@ -57,6 +59,7 @@ object Node extends LazyLogging {
           case NodeTag.T_SubLink        => c.as[SubLink]
           case NodeTag.T_TruncateStmt   => c.as[TruncateStmt]
           case NodeTag.T_TypeName       => c.as[TypeName]
+          case NodeTag.T_Constraint     => c.as[Constraint]
           case _ =>
             logger.error(s"Unsupported yet - $key")
             Right(EmptyNode)
