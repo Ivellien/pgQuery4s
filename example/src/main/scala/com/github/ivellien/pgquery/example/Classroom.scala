@@ -8,7 +8,7 @@ object Classroom {
   val classroomTable: Node =
     query"""
         CREATE TABLE classrooms (
-          class_id serial PRIMARY KEY,
+          classroom_id serial PRIMARY KEY,
           name VARCHAR (255) NOT NULL
           )
       """

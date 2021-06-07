@@ -36,14 +36,15 @@ case class Constraint(
     pk_attrs: List[Node] = List.empty,
     old_conpfeqop: List[Node] = List.empty
 ) extends Node {
-  override def query: String =
+  override def query: String = {
+//    println(this)
     contype match {
       case ConstrType.ConstrForeign =>
-        s"CONSTRAINT${conname.map(" " + _).getOrElse("")} $contype(${conname
-          .getOrElse("")}) REFERENCES ${optionToQuery(pktable)}(${fk_attrs.headOption.getOrElse(EmptyNode).query})"
+        s"REFERENCES ${optionToQuery(pktable)}(${pk_attrs.headOption.getOrElse(EmptyNode).query})"
       case _ =>
-        s"$contype${conname.map(" " + _).getOrElse("")}"
+        s"$contype${conname.getOrElse("")}"
     }
+  }
 }
 
 object Constraint extends NodeDecoder[Constraint](NodeTag.T_Constraint) {
