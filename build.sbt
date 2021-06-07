@@ -47,5 +47,6 @@ lazy val example = project
   .dependsOn(core, parser, macros)
   .settings(
     commonSettings,
+    fork in run := true,
     libraryDependencies += "org.postgresql" % "postgresql" % "9.3-1102-jdbc41"
   )
