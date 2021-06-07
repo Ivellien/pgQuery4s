@@ -10,4 +10,4 @@ script:
   - cd ../../../../..
   - sbt parser/compileWrapper
   - sbt parser/test
-  - sbt example/core
+  - sbt example/run
