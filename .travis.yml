@@ -9,5 +9,5 @@ script:
   - make
   - cd ../../../../..
   - sbt parser/compileWrapper
-  - sbt parser/test
   - sbt example/run
+  - sbt parser/test
