@@ -44,7 +44,7 @@ lazy val liftable = project.in(file("macros/liftable")).settings(commonSettings)
 lazy val core = project.dependsOn(macros, parser).settings(commonSettings)
 
 lazy val example = project
-  .dependsOn(core)
+  .dependsOn(core, parser, macros)
   .settings(
     commonSettings,
     libraryDependencies += "org.postgresql" % "postgresql" % "9.3-1102-jdbc41"
