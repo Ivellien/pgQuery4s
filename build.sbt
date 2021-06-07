@@ -19,7 +19,7 @@ lazy val root: Project =
       name := "pgQuery4s"
     )
     .in(file("."))
-    .aggregate(parser, macros, core, liftable)
+    .aggregate(parser, macros, core, liftable, example)
 
 lazy val parser: Project = project.settings(
   commonSettings,
