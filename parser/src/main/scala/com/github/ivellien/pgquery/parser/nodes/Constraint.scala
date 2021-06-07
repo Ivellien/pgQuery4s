@@ -37,7 +37,6 @@ case class Constraint(
     old_conpfeqop: List[Node] = List.empty
 ) extends Node {
   override def query: String = {
-//    println(this)
     contype match {
       case ConstrType.ConstrForeign =>
         s"REFERENCES ${optionToQuery(pktable)}(${pk_attrs.headOption.getOrElse(EmptyNode).query})"

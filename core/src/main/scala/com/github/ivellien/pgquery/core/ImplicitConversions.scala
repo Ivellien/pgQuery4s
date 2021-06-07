@@ -11,11 +11,14 @@ import com.github.ivellien.pgquery.parser.nodes.values.{
 
 object ImplicitConversions {
 
+
+  // Using macro to allow fail at compilation, when expression can't be created from string.
   implicit def string2expression(x: String): ResTarget =
     macro MacrosConversion.string2ResTarget
 
   implicit def int2expression(x: Int): ResTarget =
-    macro MacrosConversion.int2ResTarget
+    ResTarget(None, None, Some(A_Const(Some(NodeInteger(x)), None)), None)
+
 
   implicit def string2NodeString(x: String): A_Const =
     A_Const(Some(NodeString(x)), None)
