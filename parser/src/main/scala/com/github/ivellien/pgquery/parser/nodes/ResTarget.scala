@@ -2,10 +2,7 @@ package com.github.ivellien.pgquery.parser.nodes
 
 import com.github.ivellien.pgquery.parser.enums.NodeTag
 import io.circe.generic.extras.JsonKey
-import com.github.ivellien.pgquery.parser.nodes.Node.{
-  circeConfig,
-  optionToQuery
-}
+import com.github.ivellien.pgquery.parser.nodes.Node.circeConfig
 import io.circe.Decoder
 import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
 

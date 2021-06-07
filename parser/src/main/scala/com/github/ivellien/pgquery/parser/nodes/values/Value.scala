@@ -18,11 +18,13 @@ object Value extends LazyLogging {
         val key: String = keys.head
 
         NodeTag.withName(key) match {
-          case NodeTag.T_Integer => c.as[NodeInteger]
-          case NodeTag.T_String  => c.as[NodeString]
-          case NodeTag.T_A_Star  => c.as[A_Star.type]
+          case NodeTag.T_Integer  => c.as[NodeInteger]
+          case NodeTag.T_String   => c.as[NodeString]
+          case NodeTag.T_A_Star   => c.as[A_Star.type]
+          case NodeTag.T_ParamRef => c.as[ParamRef]
+          case NodeTag.T_A_Const  => c.as[A_Const]
           case _ =>
-            logger.error(s"Unsupported yet - $key")
+            logger.error(s"Not a Value type - $key")
             Right(NodeString(""))
         }
       case _ => Right(NodeString(""))

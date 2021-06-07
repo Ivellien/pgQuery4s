@@ -1,14 +1,15 @@
-package com.github.ivellien.pgquery.parser.nodes
+package com.github.ivellien.pgquery.parser.nodes.values
 
 import com.github.ivellien.pgquery.parser.enums.NodeTag
-import com.github.ivellien.pgquery.parser.nodes.Node.circeConfig
+import com.github.ivellien.pgquery.parser.nodes.NodeDecoder
 import io.circe.Decoder
 import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
+import com.github.ivellien.pgquery.parser.nodes.Node.circeConfig
 
 case class ParamRef(
     number: Int,
     location: Option[Int]
-) extends Node {
+) extends Value {
   override def query: String = s"$$$number"
 }
 

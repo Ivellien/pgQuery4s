@@ -1,6 +1,11 @@
 package com.github.ivellien.pgquery.parser
 
-import com.github.ivellien.pgquery.parser.nodes.Node
+import com.github.ivellien.pgquery.parser.nodes.{
+  Node,
+  RawStmt,
+  ResTarget,
+  SelectStmt
+}
 import io.circe._
 
 object PgQueryParser {
@@ -19,5 +24,16 @@ object PgQueryParser {
       case Right(node :: _)          => Right(node)
       case Right(Nil)                => Left(EmptyParsingResult)
       case Left(df: DecodingFailure) => Left(FailureWhileParsing(df))
+    }
+
+  def parseExpression(expr: String): PgQueryResult[ResTarget] =
+    parse("SELECT " + expr) match {
+      case Right(RawStmt(_, _, Some(stmt: SelectStmt))) =>
+        stmt.targetList match {
+          case Nil            => Left(EmptyParsingResult)
+          case resTarget :: _ => Right(resTarget)
+        }
+      case Right(_)    => Left(EmptyParsingResult)
+      case Left(error) => Left(error)
     }
 }
