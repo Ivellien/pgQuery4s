@@ -9,14 +9,14 @@ import com.github.ivellien.pgquery.example.DatabaseConnection.{
 }
 import com.github.ivellien.pgquery.parser.nodes.values.A_Const
 
-import java.sql.ResultSet
+import doobie._
 
 object Main {
+  def createFragment(str: String): Fragment =
+    Fragment(str, List.empty)
 
   def main(args: Array[String]): Unit = {
     /* CREATE TABLE queries */
-    println(Student.studentTable)
-    println(Student.studentTable.query)
     updateQuery(Classroom.classroomTable.query)
     updateQuery(Student.studentTable.query)
 
@@ -40,7 +40,11 @@ object Main {
     /*
     Prints all students and their names within 'students' table
      */
-    executeQuery("SELECT * FROM students")
+    executeQuery(
+      createFragment(
+        "SELECT * FROM students"
+      ).query[Student]
+    )
 
     def selectStudentAST(
         expr: ResTarget,
@@ -49,13 +53,19 @@ object Main {
       query"SELECT $columnName FROM students WHERE $expr"
 
     executeQuery(
-      selectStudentAST("age = 2", "age").query
+      createFragment(
+        selectStudentAST("age = 2", "age").query
+      ).query[Int]
     )
     executeQuery(
-      selectStudentAST("name LIKE 'John%'", "name").query
+      createFragment(
+        selectStudentAST("name LIKE 'John%'", "name").query
+      ).query[String]
     )
     executeQuery(
-      selectStudentAST("age > 3", "*").query
+      createFragment(
+        selectStudentAST("age > 3", "*").query
+      ).query[Student]
     )
 
     /*
@@ -65,12 +75,22 @@ object Main {
       selectStudentAST(expr"age > $age", "*")
     }
 
-    executeQuery(nestedSelectAST(2).query)
-    executeQuery(nestedSelectAST(4).query)
+    executeQuery(
+      createFragment(
+        nestedSelectAST(2).query
+      ).query[Student]
+    )
+    executeQuery(
+      createFragment(
+        nestedSelectAST(4).query
+      ).query[Student]
+    )
 
     val expression = expr"students.classroom_id = classrooms.classroom_id"
     executeQuery(
-      query"SELECT * FROM students INNER JOIN classrooms ON ($expression)".query
+      createFragment(
+        query"SELECT * FROM students INNER JOIN classrooms ON ($expression)".query
+      ).query[Student]
     )
 
     updateQuery("DROP TABLE students")

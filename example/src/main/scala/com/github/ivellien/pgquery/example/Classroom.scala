@@ -4,6 +4,11 @@ import com.github.ivellien.pgquery.core.PgQueryInterpolator.CompileTimeInterpola
 import com.github.ivellien.pgquery.parser.nodes.Node
 import com.github.ivellien.pgquery.core.ImplicitConversions._
 
+case class Classroom(
+    classroom_id: Int,
+    name: Int
+)
+
 object Classroom {
   val classroomTable: Node =
     query"""

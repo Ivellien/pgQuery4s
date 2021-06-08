@@ -4,6 +4,12 @@ import com.github.ivellien.pgquery.core.PgQueryInterpolator.CompileTimeInterpola
 import com.github.ivellien.pgquery.parser.nodes.Node
 import com.github.ivellien.pgquery.core.ImplicitConversions._
 
+case class Student(
+    student_id: Int,
+    name: String,
+    age: Int
+)
+
 object Student {
   val studentTable: Node =
     query"""
@@ -11,7 +17,7 @@ object Student {
             student_id serial PRIMARY KEY,
             name VARCHAR (255) NOT NULL UNIQUE,
             age INTEGER,
-            classroom_id serial REFERENCES classrooms(classroom_id) 
+            classroom_id serial REFERENCES classrooms(classroom_id)
             )
        """
 
