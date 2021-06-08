@@ -15,26 +15,6 @@ class MacrosConversion(val c: whitebox.Context)
 
   val lift = implicitly[Liftable[ResTarget]]
 
-  def int2ResTarget(x: c.Expr[Int]): c.Expr[ResTarget] = {
-    x match {
-      case Expr(Literal(Constant(int: Int))) =>
-        c.Expr(lift {
-          ResTarget(
-            None,
-            None,
-            Some(A_Const(Some(NodeInteger(int)), None)),
-            None
-          )
-        })
-      case _ =>
-        c.abort(
-          c.enclosingPosition,
-          s"Error trying to implicitly convert Int to ResTarget."
-        )
-    }
-
-  }
-
   def string2ResTarget(x: c.Expr[String]): c.Expr[ResTarget] = {
     x match {
       case Expr(Literal(Constant(expr: String))) =>
