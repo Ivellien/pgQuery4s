@@ -10,5 +10,3 @@ script:
   - cd ../../../..
   - sbt parser/test
   - sbt publishLocal
-  - cd example
-  - sbt run
