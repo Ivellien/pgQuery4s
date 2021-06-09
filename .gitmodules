@@ -2,3 +2,6 @@
 	path = parser/src/main/native/libpg_query
 	url = https://github.com/lfittl/libpg_query.git
 	branch = 10-latest
+[submodule "native/src/native/libpg_query"]
+	path = native/src/native/libpg_query
+	url = https://github.com/lfittl/libpg_query.git

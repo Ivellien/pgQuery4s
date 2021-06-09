@@ -5,12 +5,10 @@ scala:
 dist: bionic
 
 script:
-  - cd parser/src/main/native/libpg_query
+  - cd native/src/native/libpg_query
   - make
-  - cd ../../../../..
-  - sbt parser/compileWrapper
-  - sbt parser/test
-  - sbt publishLocal
+  - cd ../../../..
+  - sbt test publishLocal
   - cd example
   - docker-compose -f docker-compose.yml up -d
   - sbt run
