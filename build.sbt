@@ -20,23 +20,23 @@ lazy val root: Project =
       name := "pgquery4s"
     )
     .in(file("."))
-    .aggregate(parser, macros, core, liftable)
+    .aggregate(parser, macros, core, liftable, native)
 
-lazy val parser: Project = project.settings(
-  commonSettings,
-  scalacOptions += "-Ymacro-annotations",
-  libraryDependencies ++= Dependencies.circe,
-  libraryDependencies += Dependencies.commonsIO,
-  name := "pgquery4s-parser"
-)
+lazy val native = project
+  .settings(
+    sourceDirectory in nativeCompile := sourceDirectory.value / "native"
+  )
+  .enablePlugins(JniNative)
 
-val compileWrapper: TaskKey[Seq[Path]] =
-  taskKey[Seq[Path]]("compile wrapper code using gcc")
-
-parser / compileWrapper := Native.compileWrapper(
-  sourceDirectory.in(parser).value / "main" / "native",
-  sourceDirectory.in(parser).value / "main" / "resources" / "lib"
-)
+lazy val parser: Project = project
+  .dependsOn(native % Runtime)
+  .settings(
+    commonSettings,
+    scalacOptions += "-Ymacro-annotations",
+    libraryDependencies ++= Dependencies.circe,
+    libraryDependencies += Dependencies.commonsIO,
+    name := "pgquery4s-parser"
+  )
 
 lazy val macros: Project = project
   .dependsOn(parser, liftable)
