@@ -1,20 +1,18 @@
 package com.github.ivellien.pgquery.example
 
-import com.github.ivellien.pgquery.core.PgQueryInterpolator.CompileTimeInterpolator
-import com.github.ivellien.pgquery.parser.nodes._
+import com.github.ivellien.pgquery.example.DatabaseConnection._
 import com.github.ivellien.pgquery.core.ImplicitConversions._
-import com.github.ivellien.pgquery.example.DatabaseConnection.{
-  executeQuery,
-  updateQuery
-}
+import com.github.ivellien.pgquery.parser.nodes.{ResTarget, Node}
+import com.github.ivellien.pgquery.core.PgQueryInterpolator._
 import com.github.ivellien.pgquery.parser.nodes.values.A_Const
+import com.github.ivellien.pgquery.example.Student.{
+  execSelectAge,
+  execSelectName,
+  execSelectStudent
+}
+import com.typesafe.scalalogging.LazyLogging
 
-import doobie._
-
-object Main {
-  def createFragment(str: String): Fragment =
-    Fragment(str, List.empty)
-
+object Main extends LazyLogging {
   def main(args: Array[String]): Unit = {
     /* CREATE TABLE queries */
     updateQuery(Classroom.classroomTable.query)
@@ -25,26 +23,22 @@ object Main {
       - Queries are created via 'query' string interpolator - compile time checked
      */
 
-    updateQuery(Classroom.addClassroom("1.A").query)
-    updateQuery(Classroom.addClassroom("2.A").query)
-    updateQuery(Classroom.addClassroom("3.B").query)
+    addClassroom("1.A")
+    addClassroom("2.A")
+    addClassroom("3.B")
 
     val x = "John Smith"
     val grade = 5
-    updateQuery(Student.addStudent(x, grade, 1).query)
-    updateQuery(Student.addStudent("Petr", 4, 1).query)
-    updateQuery(Student.addStudent("Honza", 3, 2).query)
-    updateQuery(Student.addStudent("xxxx", 2, 3).query)
-    updateQuery(Student.addStudent("4234", 2, 3).query)
+    addStudent(x, grade, 1)
+    addStudent("Petr", 4, 1)
+    addStudent("Honza", 3, 2)
+    addStudent("xxxx", 2, 3)
+    addStudent("4234", 2, 3)
 
     /*
     Prints all students and their names within 'students' table
      */
-    executeQuery(
-      createFragment(
-        "SELECT * FROM students"
-      ).query[Student]
-    )
+    execSelectStudent("SELECT * FROM students")
 
     def selectStudentAST(
         expr: ResTarget,
@@ -52,21 +46,9 @@ object Main {
     ): Node =
       query"SELECT $columnName FROM students WHERE $expr"
 
-    executeQuery(
-      createFragment(
-        selectStudentAST("age = 2", "age").query
-      ).query[Int]
-    )
-    executeQuery(
-      createFragment(
-        selectStudentAST("name LIKE 'John%'", "name").query
-      ).query[String]
-    )
-    executeQuery(
-      createFragment(
-        selectStudentAST("age > 3", "*").query
-      ).query[Student]
-    )
+    execSelectAge(selectStudentAST("age = 2", "age").query)
+    execSelectName(selectStudentAST("name LIKE 'John%'", "name").query)
+    execSelectStudent(selectStudentAST("age > 3", "*").query)
 
     /*
     Example of nesting expressions into queries.
@@ -75,22 +57,12 @@ object Main {
       selectStudentAST(expr"age > $age", "*")
     }
 
-    executeQuery(
-      createFragment(
-        nestedSelectAST(2).query
-      ).query[Student]
-    )
-    executeQuery(
-      createFragment(
-        nestedSelectAST(4).query
-      ).query[Student]
-    )
+    execSelectStudent(nestedSelectAST(2).query)
+    execSelectStudent(nestedSelectAST(4).query)
 
     val expression = expr"students.classroom_id = classrooms.classroom_id"
-    executeQuery(
-      createFragment(
-        query"SELECT * FROM students INNER JOIN classrooms ON ($expression)".query
-      ).query[Student]
+    execSelectStudent(
+      query"SELECT * FROM students INNER JOIN classrooms ON ($expression)".query
     )
 
     updateQuery("DROP TABLE students")

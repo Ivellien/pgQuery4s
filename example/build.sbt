@@ -12,7 +12,6 @@ libraryDependencies ++= Seq(
   "org.tpolecat" %% "doobie-postgres" % doobieVersion,
   "com.github.ivellien" %% "pgquery4s-core" % pgquery4sVersion,
   "com.github.ivellien" %% "pgquery4s-parser" % pgquery4sVersion,
-  "com.github.ivellien" %% "pgquery4s-macros" % pgquery4sVersion,
   "ch.qos.logback" % "logback-classic" % logbackVersion,
   "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion
 )

@@ -6,7 +6,7 @@ import com.github.ivellien.pgquery.core.ImplicitConversions._
 
 case class Classroom(
     classroom_id: Int,
-    name: Int
+    name: String
 )
 
 object Classroom {
