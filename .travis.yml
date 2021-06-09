@@ -5,10 +5,9 @@ scala:
 dist: bionic
 
 script:
-  - cd parser/src/main/native/libpg_query
+  - cd native/src/native/libpg_query
   - make
-  - cd ../../../../..
-  - sbt parser/compileWrapper
+  - cd ../../../..
   - sbt parser/test
   - sbt publishLocal
   - cd example
