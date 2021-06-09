@@ -10,9 +10,9 @@ object DatabaseConnection extends LazyLogging {
 
   private val transactor = Transactor.fromDriverManager[IO](
     "org.postgresql.Driver",
-    "jdbc:postgresql://localhost/pgquery_example",
-    "postgres",
-    "postgres",
+    "jdbc:postgresql://localhost:5432/pgquery_example",
+    "docker",
+    "docker",
     Blocker.liftExecutionContext(
       ExecutionContexts.synchronous
     )

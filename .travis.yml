@@ -12,4 +12,5 @@ script:
   - sbt parser/test
   - sbt publishLocal
   - cd example
+  - docker-compose -f docker-compose.yml up -d
   - sbt run

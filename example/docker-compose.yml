@@ -2,10 +2,13 @@ version: "3.3"
 services:
   db:
     image: postgres:10
+    container_name: example_postgres_db
     ports:
-      - "5439:5439"
+      - "5432:5432"
     environment:
-      -  POSTGRES_PASSWORD=password
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=pgquery_example
     volumes:
       - pg_conf:/etc/postgresql
       - pg_log:/var/log/postgresql
