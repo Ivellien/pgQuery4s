@@ -5,7 +5,7 @@
 # add/modify/remove settings to build your specific library.   #
 ################################################################
 
-cmake_minimum_required(VERSION 3.20.3)
+cmake_minimum_required(VERSION 3.12.4)
 
 # Define project and related variables
 # (required by sbt-jni) please use semantic versioning
