@@ -29,7 +29,7 @@ lazy val native = project
   .enablePlugins(JniNative)
 
 lazy val parser: Project = project
-  .dependsOn(native % Runtime)
+  .dependsOn(native)
   .settings(
     commonSettings,
     scalacOptions += "-Ymacro-annotations",
