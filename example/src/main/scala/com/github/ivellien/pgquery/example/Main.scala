@@ -1,28 +1,20 @@
 package com.github.ivellien.pgquery.example
 
-import com.github.ivellien.pgquery.example.DatabaseConnection._
 import com.github.ivellien.pgquery.core.ImplicitConversions._
-import com.github.ivellien.pgquery.parser.nodes.{ResTarget, Node}
 import com.github.ivellien.pgquery.core.PgQueryInterpolator._
+import com.github.ivellien.pgquery.parser.nodes.{Node, ResTarget}
 import com.github.ivellien.pgquery.parser.nodes.values.A_Const
-import com.github.ivellien.pgquery.example.Student.{
-  execSelectAge,
-  execSelectName,
-  execSelectStudent
-}
-import com.typesafe.scalalogging.LazyLogging
+import com.github.ivellien.pgquery.example.DatabaseConnection._
+import com.github.ivellien.pgquery.example.Classroom.addClassroom
+import com.github.ivellien.pgquery.example.Student._
 
-object Main extends LazyLogging {
+object Main {
   def main(args: Array[String]): Unit = {
-    /* CREATE TABLE queries */
+    // CREATE TABLE queries
     updateQuery(Classroom.classroomTable.query)
     updateQuery(Student.studentTable.query)
 
-    /*
-    INSERT INTO queries
-      - Queries are created via 'query' string interpolator - compile time checked
-     */
-
+    // INSERT INTO queries - Queries are created via 'query' string interpolator - compile time checked
     addClassroom("1.A")
     addClassroom("2.A")
     addClassroom("3.B")
@@ -35,11 +27,10 @@ object Main extends LazyLogging {
     addStudent("xxxx", 2, 3)
     addStudent("4234", 2, 3)
 
-    /*
-    Prints all students and their names within 'students' table
-     */
+    // Prints all students and their names within 'students' table
     execSelectStudent("SELECT * FROM students")
 
+    // Selecting different columns with different expressions - all covered by single prepared query
     def selectStudentAST(
         expr: ResTarget,
         columnName: ResTarget
@@ -50,9 +41,7 @@ object Main extends LazyLogging {
     execSelectName(selectStudentAST("name LIKE 'John%'", "name").query)
     execSelectStudent(selectStudentAST("age > 3", "*").query)
 
-    /*
-    Example of nesting expressions into queries.
-     */
+    // Example of nesting expressions into queries.
     def nestedSelectAST(age: A_Const): Node = {
       selectStudentAST(expr"age > $age", "*")
     }
