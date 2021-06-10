@@ -1,4 +1,5 @@
-package com.github.ivellien.pgquery.parser
+package com.github.ivellien.pgquery.native
+
 import ch.jodersky.jni.nativeLoader
 
 @nativeLoader("PgQueryWrapper0")

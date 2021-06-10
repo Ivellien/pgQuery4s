@@ -6,6 +6,7 @@ import com.github.ivellien.pgquery.parser.nodes.{
   ResTarget,
   SelectStmt
 }
+import com.github.ivellien.pgquery.native.PgQueryWrapper
 import io.circe._
 
 object PgQueryParser {

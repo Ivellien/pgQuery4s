@@ -24,7 +24,7 @@ lazy val root: Project =
 
 lazy val native = project
   .settings(
-    sourceDirectory in nativeCompile := sourceDirectory.value / "native"
+    sourceDirectory in nativeCompile := sourceDirectory.value / "main" / "native"
   )
   .enablePlugins(JniNative)
 
