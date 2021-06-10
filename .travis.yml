@@ -4,11 +4,23 @@ scala:
 
 dist: bionic
 
+services:
+  - postgresql
+
+addons:
+  postgresql: "10"
+  apt:
+    packages:
+      - postgresql-10
+      - postgresql-client-10
+
+before_script:
+  - psql -c 'create database pgquery_example'; -U postgres
+
 script:
   - cd native/src/native/libpg_query
   - make
   - cd ../../../..
   - sbt test publishLocal
   - cd example
-  - docker-compose -f docker-compose.yml up -d
   - sbt run
