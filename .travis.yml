@@ -2,7 +2,8 @@ language: scala
 scala:
   - 2.13.5
 
-dist: bionic
+dist: xenial
+sudo: required
 
 services:
   - postgresql
@@ -14,7 +15,7 @@ before_install:
   - sudo apt-get update
   - sudo apt-get --yes remove postgresql\*
   - sudo apt-get install -y postgresql-10 postgresql-client-10
-  - sudo cp /etc/postgresql/10/main/pg_hba.conf
+  - sudo cp /etc/postgresql/{9.6,10}/main/pg_hba.conf
   - sudo service postgresql restart 10
 
 env:
