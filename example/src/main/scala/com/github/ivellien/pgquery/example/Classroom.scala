@@ -3,8 +3,6 @@ package com.github.ivellien.pgquery.example
 import com.github.ivellien.pgquery.core.PgQueryInterpolator.CompileTimeInterpolator
 import com.github.ivellien.pgquery.parser.nodes.Node
 import com.github.ivellien.pgquery.core.ImplicitConversions._
-import com.github.ivellien.pgquery.example.DatabaseConnection.insertClassroom
-import com.github.ivellien.pgquery.example.DatabaseConnection.y._
 
 case class Classroom(
     classroom_id: Int,
@@ -12,7 +10,7 @@ case class Classroom(
 )
 
 object Classroom {
-  val classroomTable: Node =
+  val ClassroomTable: Node =
     query"""
         CREATE TABLE classrooms (
           classroom_id serial PRIMARY KEY,
@@ -20,9 +18,6 @@ object Classroom {
           )
       """
 
-  def addClassroom(name: String): Unit = {
-    insertClassroom(
-      query"INSERT INTO classrooms (name) VALUES ($name)".query
-    ).quick.unsafeRunSync()
-  }
+  def insertClassroom(name: String): Node =
+    query"INSERT INTO classrooms (name) VALUES ($name)"
 }

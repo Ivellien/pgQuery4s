@@ -1,60 +1,118 @@
 package com.github.ivellien.pgquery.example
 
 import com.github.ivellien.pgquery.core.ImplicitConversions._
-import com.github.ivellien.pgquery.core.PgQueryInterpolator._
+import com.github.ivellien.pgquery.core.PgQueryInterpolator.CompileTimeInterpolator
 import com.github.ivellien.pgquery.parser.nodes.{Node, ResTarget}
 import com.github.ivellien.pgquery.parser.nodes.values.A_Const
 import com.github.ivellien.pgquery.example.DatabaseConnection._
-import com.github.ivellien.pgquery.example.Classroom.addClassroom
-import com.github.ivellien.pgquery.example.Student._
+import com.github.ivellien.pgquery.example.Classroom.insertClassroom
+import com.github.ivellien.pgquery.example.Student.insertStudent
+import com.typesafe.scalalogging.LazyLogging
+import doobie._
+import doobie.implicits._
+import doobie.util.ExecutionContexts
+import cats._
+import cats.data._
+import cats.effect._
+import cats.implicits._
+import fs2.Stream
 
-object Main {
+object Main extends LazyLogging {
+  val JohnName = "John Smith"
+  val JohnGrade = 5
+
+  implicit class NodeToFragment(n: Node) {
+    def fr: Fragment = Fragment(n.query, List.empty)
+  }
+
+  def updateDB(node: Node): Unit =
+    node.fr.update.run.transact(ExampleTransactor).unsafeRunSync()
+
+  def selectStudentsFromDB(node: Node): List[Student] = {
+    node.fr
+      .query[Student]
+      .to[List]
+      .transact(ExampleTransactor)
+      .unsafeRunSync()
+  }
+
   def main(args: Array[String]): Unit = {
-    // CREATE TABLE queries
-    updateQuery(Classroom.classroomTable.query)
-    updateQuery(Student.studentTable.query)
+    updateDB(Classroom.ClassroomTable)
+    updateDB(Student.StudentTable)
+
+    logger.info("Created tables.")
 
     // INSERT INTO queries - Queries are created via 'query' string interpolator - compile time checked
-    addClassroom("1.A")
-    addClassroom("2.A")
-    addClassroom("3.B")
+    val insertClassrooms: ConnectionIO[Int] = for {
+      _ <- insertClassroom("1.A").fr.update.run
+      _ <- insertClassroom("2.A").fr.update.run
+      _ <- insertClassroom("3.B").fr.update.run
+      classrooms <- query"SELECT count(*) FROM classrooms".fr
+        .query[Int]
+        .unique
+    } yield classrooms
 
-    val x = "John Smith"
-    val grade = 5
-    addStudent(x, grade, 1)
-    addStudent("Petr", 4, 1)
-    addStudent("Honza", 3, 2)
-    addStudent("xxxx", 2, 3)
-    addStudent("4234", 2, 3)
+    val insertStudents: ConnectionIO[Int] = for {
+      _ <- insertStudent(JohnName, JohnGrade, 1).fr.update.run
+      _ <- insertStudent("Petr", 4, 1).fr.update.run
+      _ <- insertStudent("Honza", 3, 2).fr.update.run
+      _ <- insertStudent("xxxx", 2, 3).fr.update.run
+      _ <- insertStudent("4234", 2, 3).fr.update.run
+      students <- query"SELECT count(*) FROM students".fr
+        .query[Int]
+        .unique
+    } yield students
 
-    // Prints all students and their names within 'students' table
-    execSelectStudent("SELECT * FROM students")
+    val populateTables = for {
+      classroomCount <- insertClassrooms
+      studentCount <- insertStudents
+    } yield s"There are now $classroomCount classrooms and $studentCount students."
+
+    logger.info(
+      populateTables.transact(ExampleTransactor).unsafeRunSync()
+    )
 
     // Selecting different columns with different expressions - all covered by single prepared query
     def selectStudentAST(
-        expr: ResTarget,
-        columnName: ResTarget
+        columnName: ResTarget,
+        expr: ResTarget
     ): Node =
       query"SELECT $columnName FROM students WHERE $expr"
 
-    execSelectAge(selectStudentAST("age = 2", "age").query)
-    execSelectName(selectStudentAST("name LIKE 'John%'", "name").query)
-    execSelectStudent(selectStudentAST("age > 3", "*").query)
-
-    // Example of nesting expressions into queries.
-    def nestedSelectAST(age: A_Const): Node = {
-      selectStudentAST(expr"age > $age", "*")
-    }
-
-    execSelectStudent(nestedSelectAST(2).query)
-    execSelectStudent(nestedSelectAST(4).query)
-
-    val expression = expr"students.classroom_id = classrooms.classroom_id"
-    execSelectStudent(
-      query"SELECT * FROM students INNER JOIN classrooms ON ($expression)".query
+    logger.info(
+      selectStudentsFromDB(selectStudentAST("*", "age = 2")).toString
+    )
+    logger.info(
+      selectStudentAST("name", "name LIKE 'John%'").fr
+        .query[String]
+        .to[List]
+        .transact(ExampleTransactor)
+        .unsafeRunSync()
+        .toString
     )
 
-    updateQuery("DROP TABLE students")
-    updateQuery("DROP TABLE classrooms")
+    // Example of nesting expressions into queries.
+    def nestedSelectAST(age: A_Const): Node =
+      selectStudentAST("*", expr"age > $age")
+
+    logger.info(
+      selectStudentsFromDB(nestedSelectAST(2)).toString
+    )
+    logger.info(
+      selectStudentsFromDB(nestedSelectAST(4)).toString
+    )
+
+    // Example of usage of interpolator for expressions
+    val expression = expr"students.classroom_id = classrooms.classroom_id"
+
+    logger.info(
+      selectStudentsFromDB(
+        query"SELECT * FROM students INNER JOIN classrooms ON ($expression)"
+      ).toString
+    )
+
+    updateDB(query"DROP TABLE students")
+    updateDB(query"DROP TABLE classrooms")
+    logger.info("Dropped tables.")
   }
 }

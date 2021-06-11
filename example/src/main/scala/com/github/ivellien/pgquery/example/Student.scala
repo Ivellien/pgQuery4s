@@ -2,9 +2,7 @@ package com.github.ivellien.pgquery.example
 
 import com.github.ivellien.pgquery.core.PgQueryInterpolator.CompileTimeInterpolator
 import com.github.ivellien.pgquery.parser.nodes.Node
-import com.github.ivellien.pgquery.example.DatabaseConnection._
 import com.github.ivellien.pgquery.core.ImplicitConversions._
-import com.github.ivellien.pgquery.example.DatabaseConnection.y._
 
 case class Student(
     student_id: Long,
@@ -14,7 +12,7 @@ case class Student(
 )
 
 object Student {
-  val studentTable: Node =
+  val StudentTable: Node =
     query"""
          CREATE TABLE students (
             student_id serial PRIMARY KEY,
@@ -24,18 +22,6 @@ object Student {
             )
        """
 
-  def addStudent(name: String, age: Int, classroom_id: Int): Unit = {
-    insertStudent(
-      query"INSERT INTO students (name, age, classroom_id) VALUES ($name, $age, $classroom_id)".query
-    ).quick.unsafeRunSync()
-  }
-
-  def execSelectStudent(query: String): Unit =
-    selectStudent(query).quick.unsafeRunSync()
-
-  def execSelectName(query: String): Unit =
-    selectName(query).quick.unsafeRunSync()
-
-  def execSelectAge(query: String): Unit =
-    selectAge(query).quick.unsafeRunSync()
+  def insertStudent(name: String, age: Int, classroom_id: Int): Node =
+    query"INSERT INTO students (name, age, classroom_id) VALUES ($name, $age, $classroom_id)"
 }
