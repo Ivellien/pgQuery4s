@@ -24,9 +24,9 @@ env:
     - PGPORT=5432
 
 script:
-  - cd native/src/native/libpg_query
+  - cd native/src/main/native/libpg_query
   - make
-  - cd ../../../..
+  - cd ../../../../..
   - sbt test publishLocal
   - cd example
   - sbt run
