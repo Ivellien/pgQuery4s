@@ -10,7 +10,7 @@
 	 - Lexer (flex), Parser (bison)
  2. Existing libraries - Doobie, Quill, ...
  3. Comparison of those libraries, pros and cons. 
- 4. Decided direction of my implementation
+ 4. Direction of my implementation
  5. What is libpg_query? (maybe more into practical part)
 
 ## Practical part - pgquery4s
@@ -29,16 +29,17 @@
  7. Using interpolators and macros to validate parameterized PostgreSQL queries.
 	 - Use of PostgreSQL inner node ParamRef
 	 - Transforming the syntax tree
- 9. Summary of what is done and tested - how is it tested.
+ 8. Summary of what is done and tested - how is it tested.
  
 
 ## Practical part - testing, deployment
 
  1. Summary of what is done and tested - how is it tested.
  2. Use of Travis CI 
- 3. (Possibilities of testing, if everything had specific types)
+ 
 
 ## Future work
 1. Enrich current coverage of tree nodes.
 2. Update to new libpg_query version. 
-3. Publish the library for open source contribution (???)
+3. Possibilities of testing, if everything had specific types
+4. Publish the library for open source contribution (should be done already)
