@@ -22,6 +22,9 @@ object Student {
             )
        """
 
+  val StudentCountQuery: Node =
+    query"SELECT count(*) FROM students"
+
   def insertStudent(name: String, age: Int, classroom_id: Int): Node =
     query"INSERT INTO students (name, age, classroom_id) VALUES ($name, $age, $classroom_id)"
 }
