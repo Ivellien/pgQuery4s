@@ -2,11 +2,31 @@ language: scala
 scala:
   - 2.13.5
 
-dist: bionic
+dist: xenial
+sudo: required
+
+services:
+  - postgresql
+
+before_script:
+  - psql -c 'create database pgquery_example;' -U postgres
+
+addons:
+  postgresql: "10"
+  apt:
+    packages:
+      - postgresql-10
+      - postgresql-client-10
+
+env:
+  global:
+    - PGUSER=postgres
+    - PGPORT=5432
 
 script:
-  - cd parser/src/main/native/libpg_query
+  - cd native/src/main/native/libpg_query
   - make
   - cd ../../../../..
-  - sbt parser/compileWrapper
-  - sbt parser/test
+  - sbt test publishLocal
+  - cd example
+  - sbt run

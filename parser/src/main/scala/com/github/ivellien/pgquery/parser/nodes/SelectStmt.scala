@@ -38,7 +38,7 @@ case class SelectStmt(
             s"${optionToQuery(larg)} ${op.toString} ${optionToQuery(rarg)}"
         }
       case _ =>
-        s"VALUES (${valuesLists.flatMap(_.toList).map("'" + _.query + "'").mkString(", ")})"
+        s"VALUES (${valuesLists.flatMap(_.toList).map(_.query).mkString(", ")})"
     }
   }
 

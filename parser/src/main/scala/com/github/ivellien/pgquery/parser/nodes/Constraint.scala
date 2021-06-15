@@ -3,7 +3,10 @@ package com.github.ivellien.pgquery.parser.nodes
 import com.github.ivellien.pgquery.parser.enums.{ConstrType, NodeTag}
 import io.circe.Decoder
 import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
-import com.github.ivellien.pgquery.parser.nodes.Node.circeConfig
+import com.github.ivellien.pgquery.parser.nodes.Node.{
+  circeConfig,
+  optionToQuery
+}
 
 case class Constraint(
     contype: ConstrType.Value,
@@ -33,8 +36,14 @@ case class Constraint(
     pk_attrs: List[Node] = List.empty,
     old_conpfeqop: List[Node] = List.empty
 ) extends Node {
-  override def query: String =
-    s"$contype${conname.map(" " + _).getOrElse("")}"
+  override def query: String = {
+    contype match {
+      case ConstrType.ConstrForeign =>
+        s"REFERENCES ${optionToQuery(pktable)}(${pk_attrs.headOption.getOrElse(EmptyNode).query})"
+      case _ =>
+        s"$contype${conname.getOrElse("")}"
+    }
+  }
 }
 
 object Constraint extends NodeDecoder[Constraint](NodeTag.T_Constraint) {
