@@ -1,6 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{FITthesis}[2019/12/23 CTU FIT standard class for theses]
-
 % created by Ondrej Guth <ondrej.guth@fit.cvut.cz>
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
@@ -41,6 +40,7 @@
 
 
 \RequirePackage{babel}[2017/05/19]
+\RequirePackage{pdfpages}
 
 \RequirePackage[unicode,pdfusetitle]{hyperref}[2017/03/14]
 % line breaks in URL
@@ -508,8 +508,8 @@ sp\^ osobom, ktor\'y nezni\v zuje hodnotu Diela (vr\'atane komer\v cn\'eho vyu\v
 \renewcommand{\counterwithin}{\@ifstar{\@csinstar}{\@csin}}
 
 	\thispagestyle{empty}
-	\if\@lang1{Sem vlo{\v z}te zad{\' a}n{\' i} Va{\v s}{\' i} pr{\' a}ce.}\else\if\@lang2{Sem vlo{\v z}te zadanie Va{\v s}ej pr{\' a}ce.}\else{Insert here your thesis' task.}\fi\fi
-
+    \includepdf[pages=-]{zadani.pdf}
+    
 	\frontmatter
 	\pagestyle{plain}
 	\cleardoublepage
