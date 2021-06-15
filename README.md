@@ -6,47 +6,110 @@ Since this library is using native code the base C library has to be compiled fo
 
 ## Installation
 
-```scala
-sbt compileWrapper
-```
 
 ## Usage
-
-### Runtime parsing query
-
-```scala
-PgQueryParser.parse("SELECT *")
-```
 
 ### Taking advantage of compile time validation
 
 To ease working and validating PostgreSQL queries, I have implemented custom string interpolator *query* and *expr*. These use macros to validate queries at compile time.
 
 ```scala
-val expression = expr"x = 5"
-query"SELECT * WHERE $expression"
+val expression = expr"x = 5" 
+expression: ResTarget = ResTarget(None, None, Some(A_Expr(AExprOp, List(NodeString("=")), Some(ColumnRef(List(NodeString("x")), Some(7))), Some(A_Const(Some(NodeInteger(5)), Some(11))), Some(9))), Some(7))
+
+query"SELECT * WHERE $expression" 
+res0: RawStmt = RawStmt(
+  None,
+  None,
+  Some(
+    SelectStmt(
+      None,
+      Some(ResTarget(None, None, Some(A_Expr(AExprOp, List(NodeString("=")), Some(ColumnRef(List(NodeString("x")), Some(7))), Some(A_Const(Some(NodeInteger(5)), Some(11))), Some(9))), Some(7))),
+      None,
+      None,
+      None,
+      None,
+      ,
+      None,
+      None,
+      List(),
+      List(),
+      List(),
+      List(ResTarget(None, None, Some(ColumnRef(List(A_Star), Some(7))), Some(7))),
+      List(),
+      List(),
+      List(),
+      List()
+    )
+  )
+)
 ```
 
 ### Reparsing AST back to query
 
-Each parse tree, represented as tree of *Nodes* can be turned back into valid PostgreSQL query.
+Each parse tree, represented as tree of *Nodes* can be turned back into valid PostgreSQL query. 
 
 ```scala
-val parseTree: Node = query"SELECT *"
+val parseTree: Node = query"SELECT *" 
+parseTree: Node = RawStmt(
+  None,
+  None,
+  Some(SelectStmt(None, None, None, None, None, None, , None, None, List(), List(), List(), List(ResTarget(None, None, Some(ColumnRef(List(A_Star), Some(7))), Some(7))), List(), List(), List(), List()))
+)
+
 parseTree.query
-=> "SELECT *"
+res0: String = "SELECT *"
 ```
 
-## Instructions
 
-- Get familiar with the implementation of query parser in PostgreSQL
+### Runtime parsing query
 
-- Do a research of the existing libraries used to construct SQL queries in Scala programming language. Examine their pros and cons and see how your solution could fit into the existing library ecosystem.
+In case you explicitly want query to be parsed at runtime, you can use `parse` method of PgQueryParser, which is internally used for compilation time validation as well.
 
-- Design and implement a library which would support construction and composition of statically typed PostgreSQL queries in Scala programming language.
+```scala
+PgQueryParser.parse("SELECT *")
+res0: PgQueryParser.PgQueryResult[com.github.ivellien.pgquery.parser.nodes.Node] = Right(
+  RawStmt(
+    None,
+    None,
+    Some(
+      SelectStmt(
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        ,
+        None,
+        None,
+        List(),
+        List(),
+        List(),
+        List(
+          ResTarget(
+            None,
+            None,
+            Some(
+              ColumnRef(
+                List(A_Star),
+                Some(7)
+              )
+            ),
+            Some(7)
+          )
+        ),
+        List(),
+        List(),
+        List(),
+        List()
+      )
+    )
+  )
+)
+```
 
-- To test the library create an extensive unit test suite, as well as implement an example application using the library.
+## Example project
 
-- Make sure that your library is available in a form of a public repository with a working CI pipeline, contribution guidelines, etc.
+In example subproject, which is part of this project you can see integration with [doobie](https://tpolecat.github.io/doobie/). Queries are first created using pgQuery4s and then executed through connection created via doobie.
 
-- Discuss your results.
