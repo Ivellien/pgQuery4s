@@ -47,7 +47,8 @@ object Main extends LazyLogging {
       _ <- insertClassroom("1.A").fr.update.run
       _ <- insertClassroom("2.A").fr.update.run
       _ <- insertClassroom("3.B").fr.update.run
-      classrooms <- query"SELECT count(*) FROM classrooms".fr
+      classroomCountQuery <- query"SELECT count(*) FROM classrooms"
+      classrooms <- classroomCountQuery.fr
         .query[Int]
         .unique
     } yield classrooms
@@ -58,7 +59,8 @@ object Main extends LazyLogging {
       _ <- insertStudent("Honza", 3, 2).fr.update.run
       _ <- insertStudent("xxxx", 2, 3).fr.update.run
       _ <- insertStudent("4234", 2, 3).fr.update.run
-      students <- query"SELECT count(*) FROM students".fr
+      studentCountQuery <- query"SELECT count(*) FROM students"
+      students <- studentCountQuery.fr
         .query[Int]
         .unique
     } yield students
