@@ -5,6 +5,7 @@ import com.github.ivellien.pgquery.parser.nodes.Node.{
   circeConfig,
   optionToQuery
 }
+import com.github.ivellien.pgquery.parser.nodes.values.Value
 import io.circe.Decoder
 import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
 
@@ -18,7 +19,7 @@ case class SelectStmt(
     op: SetOperation.Value,
     larg: Option[Node],
     rarg: Option[Node],
-    valuesLists: List[List[Node]] = List.empty,
+    valuesLists: List[List[Value]] = List.empty,
     groupClause: List[Node] = List.empty,
     distinctClause: List[Node] = List.empty,
     targetList: List[ResTarget] = List.empty,
@@ -37,7 +38,7 @@ case class SelectStmt(
             s"${optionToQuery(larg)} ${op.toString} ${optionToQuery(rarg)}"
         }
       case _ =>
-        s"VALUES (${valuesLists.flatMap(_.toList).map("'" + _.query + "'").mkString(", ")})"
+        s"VALUES (${valuesLists.flatMap(_.toList).map(_.query).mkString(", ")})"
     }
   }
 

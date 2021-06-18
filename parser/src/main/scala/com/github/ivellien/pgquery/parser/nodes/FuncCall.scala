@@ -8,8 +8,8 @@ import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
 case class FuncCall(
     aggFilter: Option[Node],
     aggWithinGroup: Option[Boolean],
-    aggStar: Option[Boolean],
-    aggDistinct: Option[Boolean],
+    agg_star: Option[Boolean],
+    agg_distinct: Option[Boolean],
     funcVariadic: Option[Boolean],
     location: Option[Int],
     funcname: List[Node] = List.empty,
@@ -19,7 +19,10 @@ case class FuncCall(
   override def query: String = funcname match {
     case Nil => ""
     case _ =>
-      s"${funcname.head.query}(${args.map(_.query).mkString(", ")})"
+      agg_star match {
+        case Some(true) => s"${funcname.head.query}(*)"
+        case _          => s"${funcname.head.query}(${args.map(_.query).mkString(", ")})"
+      }
   }
 }
 

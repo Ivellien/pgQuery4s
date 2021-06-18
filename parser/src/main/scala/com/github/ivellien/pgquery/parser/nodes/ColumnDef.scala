@@ -22,11 +22,11 @@ case class ColumnDef(
     collClause: Option[CollateClause], // CollateClause
     collOid: Option[Int],
     location: Option[Int],
-    constraints: List[Node] = List.empty,
+    constraints: List[Constraint] = List.empty,
     fdwoptions: List[Node] = List.empty
 ) extends Node {
   override def query: String =
-    s"${colname.getOrElse("")}${typeName.map(" " + _.query).getOrElse("")}"
+    s"${colname.getOrElse("")}${typeName.map(" " + _.query).getOrElse("")}${constraints.map(" " + _.query).mkString}"
 }
 
 object ColumnDef extends NodeDecoder[ColumnDef](NodeTag.T_ColumnDef) {

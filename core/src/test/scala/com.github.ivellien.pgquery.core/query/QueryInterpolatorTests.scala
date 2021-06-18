@@ -3,49 +3,71 @@ package com.github.ivellien.pgquery.core.query
 import com.github.ivellien.pgquery.core.PgQueryInterpolator.CompileTimeInterpolator
 import com.github.ivellien.pgquery.parser.enums.A_Expr_Kind
 import com.github.ivellien.pgquery.parser.nodes._
-import org.scalatest.FunSuite
+import com.github.ivellien.pgquery.core.ImplicitConversions._
+import org.scalatest.Inside.inside
+import org.scalatest.{FunSuite, Matchers}
 
-import scala.reflect.ClassTag
-
-class QueryInterpolatorTests extends FunSuite {
+class QueryInterpolatorTests extends FunSuite with Matchers {
   test("SELECT query test") {
     val column1 = expr"column1"
     val column2 = expr"column2"
     val column3 = expr"column3"
     val query = query"SELECT $column1, $column2, $column3"
-    val selectStmt = validateStatementOfQuery[SelectStmt](query)
-    assert(selectStmt.targetList.size == 3)
+    inside(query) {
+      case RawStmt(_, _, Some(selectStmt: SelectStmt)) =>
+        selectStmt.targetList.size shouldBe 3
+    }
   }
 
   test("INSERT INTO value query test") {
-    val value = expr"Cardinal"
+    val value = "Cardinal"
     val query =
       query"INSERT INTO tableName (customername, city, country) VALUES ($value, 'Stavanger', 'Norway')"
-    validateStatementOfQuery[InsertStmt](query)
+    query should matchPattern {
+      case RawStmt(_, _, Some(_: InsertStmt)) =>
+    }
   }
 
   test("WHERE with A_Expr query test") {
     val expr = expr"x = 5"
     val query = query"SELECT x WHERE $expr"
-    val select = validateStatementOfQuery[SelectStmt](query)
-    val exprNode = validateWhereClause[A_Expr](select)
-    assert(exprNode.kind == A_Expr_Kind.AExprOp)
+    inside(query) {
+      case RawStmt(_, _, Some(selectStmt: SelectStmt)) =>
+        inside(selectStmt.whereClause) {
+          case Some(resTarget: ResTarget) =>
+            resTarget.value should matchPattern {
+              case Some(A_Expr(A_Expr_Kind.AExprOp, _, _, _, _)) =>
+            }
+        }
+    }
   }
 
   test("WHERE with LIKE query test") {
     val expr = expr"x LIKE abc"
     val query = query"SELECT x WHERE $expr"
-    val select = validateStatementOfQuery[SelectStmt](query)
-    val exprNode = validateWhereClause[A_Expr](select)
-    assert(exprNode.kind == A_Expr_Kind.AexprLike)
+    inside(query) {
+      case RawStmt(_, _, Some(selectStmt: SelectStmt)) =>
+        inside(selectStmt.whereClause) {
+          case Some(resTarget: ResTarget) =>
+            resTarget.value should matchPattern {
+              case Some(A_Expr(A_Expr_Kind.AexprLike, _, _, _, _)) =>
+            }
+        }
+    }
   }
 
   test("WHERE with ILIKE query test") {
     val expr = expr"x ILIKE abc"
     val query = query"SELECT x WHERE $expr"
-    val select = validateStatementOfQuery[SelectStmt](query)
-    val exprNode = validateWhereClause[A_Expr](select)
-    assert(exprNode.kind == A_Expr_Kind.AexprIlike)
+    inside(query) {
+      case RawStmt(_, _, Some(selectStmt: SelectStmt)) =>
+        inside(selectStmt.whereClause) {
+          case Some(resTarget: ResTarget) =>
+            resTarget.value should matchPattern {
+              case Some(A_Expr(A_Expr_Kind.AexprIlike, _, _, _, _)) =>
+            }
+        }
+    }
   }
 
   // Tests for features that are yet to be implemented
@@ -63,26 +85,5 @@ class QueryInterpolatorTests extends FunSuite {
       query"INSERT INTO $tableName (customername, city, country) VALUES ('Cardinal', 'Stavanger', 'Norway')"
     validateStatementOfQuery[InsertStmt](query)
   }
-   */
-
-  private def validateWhereClause[T <: Node: ClassTag](
-      selectStmt: SelectStmt
-  ): T = {
-    val node = selectStmt.whereClause match {
-      case Some(ResTarget(_, _, Some(value: T), _)) => value
-      case _                                        => fail("Node wasn't of ResTarget type.")
-    }
-    node.asInstanceOf[T]
-  }
-
-  private def validateStatementOfQuery[T <: Node: ClassTag](
-      rawStmt: Node
-  ): T = {
-    val stmt = rawStmt match {
-      case RawStmt(_, _, Some(stmt: T)) => stmt
-      case _                            => fail("Node wasn't of RawStmt type.")
-    }
-    stmt.asInstanceOf[T]
-  }
-
+ */
 }
