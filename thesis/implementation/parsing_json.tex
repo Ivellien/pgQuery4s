@@ -1,0 +1,23 @@
+\section{Parsing JSON result from libpg\_query}
+There are few different libraries that can help with parsing JSONs. From those I decided to use \textit{circe}. Circe is fork of a pure functional library called Argonaut. It is great for parsing, traversing JSON, but the main functionality I use is autoderivation of \texttt{Encoder} and \texttt{Decoder} instances for a given algebraic data type. 
+
+For each case class that represents one node of the parse tree, we have to generate \texttt{Encoder} and \texttt{Decoder} instances.
+
+\subsection{JSON structure}
+Each node is in the JSON defined as key-value pair. Key is always the name of the node and value is dictionary where keys are names of the parameters with their corresponding values. 
+
+\subsection{How decoding works}
+Basic decoder for specific case class in \textit{circe} works as follows. JSON is parsed as key-value pairs and it attempts to map each parameter in case class to corresponding key from JSON. Return value from parsing is \texttt{Decoder.Result[T]}, which translates to \texttt{Either[DecodingFailure, T]}. As the name suggests, you get either \texttt{Left(DecodingFailure)} in case any invalid operation happens during the parsing, or \texttt{Right(T)}, where \texttt{T} is the required object that is supposed to be parsed. 
+
+If the key is not found in the case class parameter list, it either sets the parameter to \texttt{None} (if the parameter is of \texttt{Option[T]} type), or returns \texttt{DecodingFailure}. If the value we are trying to further parse is not one of the built-in types, we have to implement Decoder for it. That means each of our case classes is required to have implementation of Decoder for everything to work smoothly.
+
+\subsection{Using \texttt{circe}}
+Input for parsing is always plain string representation of the query. \texttt{Libpg\_query} is then used to get the JSON representation of parse tree. Then I parse the JSON using \textit{circe} Decoder as Node type, which is an abstract class for all possible Nodes representing nodes of the SQL parse tree. In Node apply method correct Node subtype is chosen and Decoder for that subtype is used. Following the approach \textit{circe} uses, the parsing returns \texttt{Either[PgQueryError, Node]}.
+
+\subsection{Parse expressions}
+For parsing expressions, I use similar approach. The difference is that before the expression is sent to \texttt{libpg\_query}, the prefix "SELECT " is added. That way valid query should be created (if expression is valid) and following that the process is the same as for query. However, when we receive Node result, we have to get the expression only. That is done using pattern matching, since we expect \texttt{SelectStmt} node and we know its structure. Extracted expression is then returned as result.
+
+\subsection{Prettify}
+Prettify goes one step beyond the parsing of the query. In case the parse tree is built succesfully, it uses \texttt{Node.query} method. Depending on the structure of each Node, the query method is implemented to recursively build the whole parse tree back to SQL query in the string form.
+
+

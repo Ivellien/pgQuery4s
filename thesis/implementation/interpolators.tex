@@ -1,0 +1,23 @@
+\section{Scala custom interpolators}
+\subsection{What are interpolators?}
+Since version 2.10, Scala offers a new possibility of string interpolation.~\cite{String interpolation} This allows me to create generic queries with variables instead of direct values. That way we can define and reuse queries, without unnecessary copying and pasting of code. The idea behind Scala interpolation is the processing of string literals. For example, this code  \verb|id"Interpolated text"| is transformed into the call of method "id" on instance of \texttt{StringContext} class. By extending this existing class we can introduce custom interpolators, which allows for a clear definition of these generic query definitions.
+\bigskip
+\newline
+\textbf{String concatenation}
+\begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false]
+val query: String = 
+ "SELECT " + columnName + " FROM students WHERE " + expression
+PgQueryParser.parse(query)
+\end{lstlisting}
+\bigskip
+\textbf{String interpolation}
+\begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false]
+query"SELECT $columnName FROM students WHERE $expression"
+\end{lstlisting}
+
+\subsection{Implementation}
+The first version of the library used only runtime validation. I defined my custom interpolator called \textit{query}
+
+\subsection{`query` and `expr`}
+There are currently two custom interpolators, one is meant for full, valid SQL queries, i.e. \texttt{SELECT * FROM students}. The second one is used for expressions, that can be inserted into the queries as parameters. Expression can be many different things, column name, constant, expression, function call etc.
+
