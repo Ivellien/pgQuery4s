@@ -1,0 +1,30 @@
+\section{Difference in approach}
+\subsection{Database-independent validation}
+As we can see, working with the database has been already done by multiple existing libraries. However, sometimes we might not have the option to use the database to validate the queries. And if we do and the query is not valid, we might have to backtrack to find the source of the problem. 
+
+The goal is to use the parse tree generated during the \textit{Parser stage} of the PostgreSQL parser. As mentioned before, the parsing is independent of the existing database. Thanks to that, we can check whether the syntax of the SQL query is valid. 
+
+\subsection{Getting parse tree}
+To get the parse tree we have to access the internal functions of the PostgreSQL parser. These internal functions are not accessible directly, fortunately, the PostgreSQL\cite{Postgres wiki} wiki points us in the direction of \textit{pg\_query, a Ruby gem which can generate query trees in JSON representation}. This then further leads to \texttt{Libpg\_query}, which will help us get the parse tree.
+
+\subsection{Libpg\_query}
+\texttt{Libpg\_query} is an open-source C library created by Lukas Frittl. It uses parts of the PostgreSQL server to access the internal \texttt{raw\_parse} function, which returns the internal parse tree. It accesses internal functions of the server, which allows the library to get the parse tree for each valid query. A minor disadvantage of this approach is that it uses the server code directly, and it has to be compiled before it can be used.
+
+The main purpose of \texttt{libpg\_query} is to be used as a base library for implementations in other languages. There already exist multiple wrappers, for example \texttt{pg\_query} for Ruby or \texttt{pglast} for Python. However, at the moment of writing this thesis, there is no existing wrapper for it written for Scala. The important function from \texttt{libpg\_query} is the \texttt{pg\_query\_parse} function.
+
+The \texttt{pg\_query\_parse} takes the plain text SQL query in form of \texttt{const char*}. Then it calls the extracted parts of the PostgreSQL server and returns the parse tree as JSON. Once we have that, we can decode the JSON and map it onto the created case class structure in Scala.
+
+\newpage
+Here we have a simple code snippet describing simple usage taken from the GitHub README\cite{libpgquery}. 
+
+\begin{lstlisting}[language=C, basicstyle=\ttfamily, keywordstyle=\color{purple}]
+#include <pg_query.h>
+#include <stdio.h>
+
+int main() {
+  PgQueryParseResult result;
+  result = pg_query_parse("SELECT 1");
+  printf("%s\n", result.parse_tree);
+  pg_query_free_parse_result(result);
+}
+\end{lstlisting}

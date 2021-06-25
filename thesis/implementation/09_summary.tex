@@ -1,0 +1,10 @@
+\section{Summary}
+So far, we have a library, which can validate queries using a C library called \texttt{libpg\_query}. To connect our Scala code with the native code, we are using sbt-jni plugins. The JSON containing the parse tree representation is then parsed to our custom case class structure using a functional library for working with JSON, \texttt{circe}. Then we implemented our interpolators, one for expressions and another one for queries. To achieve compile-time validation, we used macros, where we are working with abstract syntax trees of the program itself. The final query is then type-checked and throws compilation errors whenever the types don't match.
+
+\section{Future work}
+The library can be, for now, considered a prototype. It covers the majority of generally used SQL keywords and queries. However, the list of SQL keywords is long, and together with all the possible combinations, it leaves room for improvement. The library can be further expanded to eventually cover the whole SQL node structure. 
+
+At the end of May 2021, the newest version of \texttt{libpg\_query} was also released. It contains plenty of changes, support for the PostgreSQL 13 version, changes to JSON output format, new Protobuf parse tree output format, added deparsing functionality from parse tree back to SQL, and more. \cite{libpgquery13}. 
+
+\section{Publishing library}
+The whole library is currently publically accessible in a repository on github.com under the name \textit{pgquery4s}. 

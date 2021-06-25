@@ -15,10 +15,13 @@ When we enter execution of macro, we have the context and the function arguments
   \caption {Differences in AST between parsing string directly and parsing variable}
 \end{figure}
 
-\subsection{Implementation of macro validation}
-First of all the context prefix is validated. The prefix contains info about from which context the macro was called. We expcept that the macro is always called using custom interpolator from the \texttt{CompileTimeInterpolator} object. That is done using pattern matching of the context prefix tree against the quasiquote representing the expected tree.
+\subsection{Liftable}
+Scala uses trait \texttt{Liftable[T]} to specify conversion of type to tree. It has only single abstract method - \texttt{def apply(value: T): Tree}. Since the goal of using macros is to validate queries at compile time, we will use \texttt{parse} method from \texttt{PgQueryParse}, which returns the parse tree in form of a \texttt{Node}. We will have to 'lift' the result, so we can return the correct \texttt{Tree} representation. \cite{Liftable}
 
-Quasiquotes are another example of interpolator. They are used to convert snippet of code into its tree represenatation.\cite{quasiquotes}
-
-\subsection{Lifting}
-
+Therefore, we have to define Liftable[Node]. We are using three macros, that generate Liftable object from the original. 
+\begin{itemize}
+    \item \texttt{LiftableCaseClass}
+    \item \texttt{LiftableCaseObject}
+    \item \texttt{LiftableEnumeration}
+\end{itemize}
+Each one of them provides implementation of creating implicit object, which extends Liftable[T] and implements the logic of creating corresponding \texttt{Tree}.

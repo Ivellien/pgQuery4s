@@ -23,6 +23,7 @@
 \usepackage{dirtree} %directory tree visualisation
 \usepackage{listings}
 \usepackage{subfiles}
+\usepackage{enumitem}
 
 % % list of acronyms
 % \usepackage[acronym,nonumberlist,toc,numberedsection=autolabel]{glossaries}
@@ -63,17 +64,17 @@
 
 \chapter{Technologies used}
 
-\subfile{introduction/02_scala}
+\subfile{introduction/02_postgresql}
 
-\subfile{introduction/03_postgresql}
+\subfile{introduction/03_scala}
 
-\chapter{Existing options}
+\chapter{Existing solutions}
 
 \subfile{background/01_database_libs}
 
-\chapter{Realisation}
+\subfile{background/02_difference_approach}
 
-\subfile{implementation/01_get_sql_parsetree}
+\chapter{Realisation}
 
 \subfile{implementation/02_parsetree_representation}
 
@@ -89,9 +90,7 @@
 
 \subfile{implementation/08_testing}
 
-\section{Summary}
-
-\section{Publishing library}
+\subfile{implementation/09_summary}
 
 \chapter{Conclusion}
 
@@ -107,6 +106,11 @@ https://www.postgresqltutorial.com/what-is-postgresql/
 \bibitem{Stackoverflow survey}
 \textit {Stack Overflow Annual Developer Survey} [online]. [cit. 2021-06-13]. Available from: https://insights.stackoverflow.com/survey/2020\#technology-databases-all-respondents4
 
+\bibitem{Parse tree usage}
+PENG, Bo.
+\textit {Introducing PostgreSQL SQL Parser} [online]. [cit. 2021-06-24]. Available from:
+https://www.pgcon.org/2019/schedule/attachments/556\_PostgreSQL\_SQL\_parser.pdf
+
 \bibitem{Scala static}
 Mayank Bhatnagar
 \textit {Magic lies here - Statically vs Dynamically Typed Languages} [online]. [cit. 2021-06-21]. Available from: https://medium.com/android-news/magic-lies-here-statically-typed-vs-dynamically-typed-languages-d151c7f95e2b
@@ -119,6 +123,11 @@ NORRIS, Rob.
 \bibitem{PostgreSQL documentation}
 The PostgreSQL Global Development Group
 \textit{The Parser Stage} [online]. [cit. 2021-06-20]. Available from: https://www.postgresql.org/docs/10/parser-stage.html
+
+\bibitem{Postgres wiki}
+\textit {Query Parsing} [online]. [cit. 2021-06-25]. Available from:
+https://wiki.postgresql.org/wiki/Query\_Parsing
+
 \bibitem{libpgquery}
 FITTL, Lukas.
 \textit {libpg\_query} [online]. [cit. 2021-04-25]. Available from:
@@ -143,11 +152,32 @@ BURMAKO, Eugene.
 MILLER, Heather, BURMAKO Eugene and HALLER Philipp 
 \textit {Compile-time reflection} [online]. [cit. 2021-06-19]. Available from: https://docs.scala-lang.org/overviews/reflection/overview.html\#compile-time-reflection
 
+\bibitem{Liftable}
+SHABALIN, Denys.
+\textit {Quasiquotes introduction} [online]. [cit. 2021-06-22]. Available from:
+https://docs.scala-lang.org/overviews/quasiquotes/lifting.html
+
 \bibitem{quasiquotes}
-SHABALIN, Denys
+SHABALIN, Denys.
 \textit {Quasiquotes introduction} [online]. [cit. 2021-06-22]. Available from:
 https://docs.scala-lang.org/overviews/quasiquotes/intro.html
 
+\bibitem{Transformer}
+\textit {Transformer} [online]. [cit. 2021-06-23]. Available from:
+https://www.scala-lang.org/api/2.12.9/scala-reflect/scala/reflect/api/Trees\$Transformer.html
+
+\bibitem{Implicit}
+\textit {Implicit conversions} [online]. [cit. 2021-06-24]. Available from:
+https://docs.scala-lang.org/tour/implicit-conversions.html
+
+\bibitem{Looking up Implicits}
+SUERETH, Josh.
+\textit {Implicits without the import tax} [online]. [cit. 2021-06-24]. Available from: http://jsuereth.com/scala/2011/02/18/2011-implicits-without-tax.html
+
+\bibitem{libpgquery13}
+FITTL, Lukas.
+\textit {Release 13-2.0.0} [online]. [cit. 2021-06-24]. Available from:
+https://github.com/pganalyze/libpg\_query/releases/tag/13-2.0.0
 
 \end{thebibliography}
 \setsecnumdepth{all}
