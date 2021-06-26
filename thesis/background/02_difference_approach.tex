@@ -1,6 +1,6 @@
 \section{Difference in approach}
 \subsection{Database-independent validation}
-As we can see, working with the database has been already done by multiple existing libraries. However, sometimes we might not have the option to use the database to validate the queries. And if we do and the query is not valid, we might have to backtrack to find the source of the problem. 
+As we can see, working with the database has been already done by multiple existing libraries. However, sometimes we might not have the option to use the database to validate the queries. And if we do and the query is not valid, we might have to backtrack to find the source of the problem. This project isn't meant as a competitor to those mentioned libraries. Instead, it is recommended to use them together. In the example project that was implemented to showcase the usage of our library, we are using Doobie. The queries are created and validated using our implementation, and then they are executed on a specific database using a connection created by Doobie to show that the queries are, in fact, valid.
 
 The goal is to use the parse tree generated during the \textit{Parser stage} of the PostgreSQL parser. As mentioned before, the parsing is independent of the existing database. Thanks to that, we can check whether the syntax of the SQL query is valid. 
 

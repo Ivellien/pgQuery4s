@@ -21,7 +21,7 @@ Having the option to work with parse tree directly, can prove useful in multiple
 \item [Extracting specific part of query] \hfill \newline
 Using parse tree, we will be able to easily extract parts like column names from the \texttt{SELECT} target list, expression from the \texttt{WHERE} statement or nested statement from some complicated SQL query.
 \item [Modifying part of the query string] \hfill \newline
-In a similar fashion to extracting, we can also replace parts in the query. We can for example change the \texttt{sort\_clause} in Select statement or change the target columns of the query.
-\item [Determine type of query] \hfill \newline
+In a similar fashion to extracting, we can also replace parts in the query. We can for example change the \texttt{sort\_clause} in \texttt{SELECT} statement or change the target columns of the query.
+\item [Determining type of query] \hfill \newline
 It can be also used to accomplish load balancing in applications, by deciding whether the query is read only, or it writes something into the database.
 \end{description}

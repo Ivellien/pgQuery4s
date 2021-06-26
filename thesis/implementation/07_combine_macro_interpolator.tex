@@ -1,8 +1,8 @@
 \section{Combining interpolators and macros}
 \subsection{Parameterized queries in PostgreSQL}
-Before we can get to the part where our custom interpolator is a simple call to the macro, which does the validation, we have to talk about the implementation of placeholders in PostgreSQL. There is existing support for something called \textit{Prepared statements}. These allow for placeholders inside the query, in the form of \textbf{\$n} where \textbf{n} must be a positive integer.  
+Before we can get to the part where our custom interpolator is a simple call to the macro, which does the validation, we have to talk about the implementation of placeholders in PostgreSQL. There is existing support for something called \textit{Prepared statements}. These allow for placeholders inside the query, in the form of \texttt{\$n} where \texttt{n} must be a positive integer.  
 
-During compile time each variable in our interpolated string is known by name only. In macro, the first thing we have to do is build the string itself from the \textit{StringContext} and the arguments. To keep the final query valid, each of the arguments has to be replaced with the placeholder \textit{\$n}. 
+During compile time each variable in our interpolated string is known by name only. In macro, the first thing we have to do is build the string itself from the \textit{StringContext} and the arguments. To keep the final query valid, each of the arguments has to be replaced with the placeholder \texttt{\$n}. 
 Let's say we have the following example.
 \begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false]
 query"SELECT $columnName FROM students WHERE $expression"

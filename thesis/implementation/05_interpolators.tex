@@ -6,13 +6,13 @@ Since version 2.10, Scala offers a new possibility of string interpolation.~\cit
 \textbf{String concatenation}
 \begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false]
 val query: String = 
- "SELECT " + columnName + " FROM students WHERE " + expression
+ "SELECT " + columnName + " FROM students"
 PgQueryParser.parse(query)
 \end{lstlisting}
 \bigskip
 \textbf{String interpolation}
 \begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false]
-query"SELECT $columnName FROM students WHERE $expression"
+query"SELECT $columnName FROM students"
 \end{lstlisting}
 
 \subsection{Runtime implementation}

@@ -5,7 +5,7 @@ When we are working with databases in Java, we are most likely using JDBC, eithe
 Quill provides a Quoted Domain Specific Language (QDSL).~\cite{Quill} Its primary usage is to generate SQL queries, using only Scala code which resembles collection-like operations using combinator methods, such as a filter or map. Doing it this way, Quill also provides type-safe queries, based on validation against defined database structure. The query generation requires a defined case class database structure. Quill also provides compile-time validation of the queries by checking against an existing database connection.
 
 \subsection{Doobie}
-Next up there is Doobie, which is presented as \textit{"Doobie is pure functional JDBC layer for Scala"}.~\cite{Doobie} In this library we can create pure SQL queries in plain text form. 
+Next up there is Doobie, which is presented as \textit{"Doobie is pure functional JDBC layer for Scala"}.~\cite{Doobie} In this library we can create pure SQL queries in plain text form. Thanks to the low level access to the \texttt{java.sql}, we can create connection to the database in functional style. 
 
 Just like in Quill, validation is possible only with an existing database. Additionally, it is only possible to validate during runtime.
 

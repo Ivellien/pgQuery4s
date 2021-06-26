@@ -11,7 +11,6 @@ Basic decoder for specific case class in \textit{circe} works as follows. JSON i
 
 If the key is not found in the case class parameter list, it either sets the parameter to \texttt{None} (if the parameter is of \texttt{Option[T]} type), or returns \texttt{DecodingFailure}. If the value we are trying to further parse is not one of the built-in types, we have to implement Decoder for it. That means each of our case classes is required to have implementation of Decoder for everything to work smoothly.
 
-\subsection{Using \texttt{circe}}
 Input for parsing is always plain string representation of the query. \texttt{Libpg\_query} is then used to get the JSON representation of parse tree. Then I parse the JSON using \textit{circe} Decoder as Node type, which is an abstract class for all possible Nodes representing nodes of the SQL parse tree. In Node apply method correct Node subtype is chosen and Decoder for that subtype is used. Following the approach \textit{circe} uses, the parsing returns \texttt{Either[PgQueryError, Node]}.
 
 \subsection{Parse expressions}
