@@ -24,6 +24,8 @@
 \usepackage{listings}
 \usepackage{subfiles}
 \usepackage{enumitem}
+\usepackage{url}
+
 
 % % list of acronyms
 % \usepackage[acronym,nonumberlist,toc,numberedsection=autolabel]{glossaries}
@@ -73,37 +75,37 @@ Nejprve jsou představeny použité technologie. Následně jsou popsané existu
 
 \setsecnumdepth{all}
 
-\subfile{introduction/01_motivation}
+\subfile{01_introduction/01_motivation}
 
 \chapter{Technologies used}
 
-\subfile{introduction/02_postgresql}
+\subfile{01_introduction/02_postgresql}
 
-\subfile{introduction/03_scala}
+\subfile{01_introduction/03_scala}
 
 \chapter{Existing solutions}
 
-\subfile{background/01_database_libs}
+\subfile{02_background/01_database_libs}
 
-\subfile{background/02_difference_approach}
+\subfile{02_background/02_difference_approach}
 
 \chapter{Realisation}
 
-\subfile{implementation/02_parsetree_representation}
+\subfile{03_implementation/02_parsetree_representation}
 
-\subfile{implementation/03_native_libary}
+\subfile{03_implementation/03_native_libary}
 
-\subfile{implementation/04_parsing_json}
+\subfile{03_implementation/04_parsing_json}
 
-\subfile{implementation/05_interpolators}
+\subfile{03_implementation/05_interpolators}
 
-\subfile{implementation/06_macros}
+\subfile{03_implementation/06_macros}
 
-\subfile{implementation/07_combine_macro_interpolator}
+\subfile{03_implementation/07_combine_macro_interpolator}
 
-\subfile{implementation/08_testing}
+\subfile{03_implementation/08_testing}
 
-\subfile{implementation/09_summary}
+\subfile{03_implementation/09_summary}
 
 \chapter{Conclusion}
 
@@ -113,89 +115,106 @@ Nejprve jsou představeny použité technologie. Následně jsou popsané existu
 \begin{thebibliography}{9}
 
 \bibitem{PostgreSQL}
-\textit {What Is PostgreSQL?} [online]. [cit. 2021-06-21]. Available from:
-https://www.postgresqltutorial.com/what-is-postgresql/
+PostgreSQL Tutorial.
+\textit {What Is PostgreSQL?} [online]. 2021. [Accessed 21 June 2021]. Available from:
+\url{https://www.postgresqltutorial.com/what-is-postgresql/}
 
 \bibitem{Stackoverflow survey}
-\textit {Stack Overflow Annual Developer Survey} [online]. [cit. 2021-06-13]. Available from: https://insights.stackoverflow.com/survey/2020\#technology-databases-all-respondents4
+Stack Overflow.
+\textit {Stack Overflow Annual Developer Survey} [online]. 2020. [Accessed 13 June 2021].
+Available from: \url{https://insights.stackoverflow.com/survey/2020\#technology-databases-all-respondents4}
 
 \bibitem{Parse tree usage}
 PENG, Bo.
-\textit {Introducing PostgreSQL SQL Parser} [online]. [cit. 2021-06-24]. Available from:
-https://www.pgcon.org/2019/schedule/attachments/556\_PostgreSQL\_SQL\_parser.pdf
+\textit {Introducing PostgreSQL SQL Parser} [online]. 2019. [Accessed 24 June 2021]. Available from:
+\url{https://www.pgcon.org/2019/schedule/attachments/556\_PostgreSQL\_SQL\_parser.pdf}
 
-\bibitem{Typing image}
+\bibitem{Static vs dynamic}
 BHATNAGAR, Mayank.
-\textit {Magic lies here - Statically vs Dynamically Typed Languages} [online]. [cit. 2021-06-21]. Available from: https://medium.com/android-news/magic-lies-here-statically-typed-vs-dynamically-typed-languages-d151c7f95e2b
-
-\bibitem{Scala static}
-
-\textit {Magic lies here - Statically vs Dynamically Typed Languages} [online]. [cit. 2021-06-21]. Available from:
-https://medium.com/android-news/magic-lies-here-statically-typed-vs-dynamically-typed-languages-d151c7f95e2b
+\textit {Magic lies here - Statically vs Dynamically Typed Languages} [online]. Sep 9, 2018. [Accessed 21 June 2021]. Available from: \url{https://medium.com/android-news/magic-lies-here-statically-typed-vs-dynamically-typed-languages-d151c7f95e2b}
 
 \bibitem{Quill} 
-\textit {What is Quill?} [online]. [cit. 2021-04-25]. Available from: https://github.com/getquill/quill/
+IOFFE, Alexander.
+\textit {What is Quill?} [online]. 2021. [Accessed 25 April 2021]. Available from: \url{https://github.com/getquill/quill/}
+
 \bibitem{Doobie}
 NORRIS, Rob. 
-\textit {Doobie documentation} [online]. [cit. 2021-04-25]. Available from: https://tpolecat.github.io/doobie/
+\textit {Doobie documentation} [online]. 2021. [Accessed 25 April 2021]. Available from: \url{https://tpolecat.github.io/doobie/}
+
 \bibitem{PostgreSQL documentation}
 The PostgreSQL Global Development Group
-\textit{The Parser Stage} [online]. [cit. 2021-06-20]. Available from: https://www.postgresql.org/docs/10/parser-stage.html
+\textit{The Parser Stage} [online]. 2021. [Accessed 20 June 2021]. Available from: \url{https://www.postgresql.org/docs/10/parser-stage.html}
 
 \bibitem{Postgres wiki}
-\textit {Query Parsing} [online]. [cit. 2021-06-25]. Available from:
-https://wiki.postgresql.org/wiki/Query\_Parsing
+RENNER, Michael.
+\textit {Query Parsing} [online]. 2014. [Accessed 25 June 2021]. Available from:
+\url{https://wiki.postgresql.org/wiki/Query\_Parsing}
 
 \bibitem{libpgquery}
 FITTL, Lukas.
-\textit {libpg\_query} [online]. [cit. 2021-04-25]. Available from:
-https://github.com/pganalyze/libpg\_query
+\textit {libpg\_query} [online]. 2021. [Accessed 25 June 2021]. Available from:
+\url{https://github.com/pganalyze/libpg\_query}
 
 \bibitem{sbt fork}
-\textit {Forking} [online]. [cit. 2021-06-22]. Available from:
-https://www.scala-sbt.org/0.12.3/docs/Detailed-Topics/Forking.html
+sbt Documentation.
+\textit {Forking} [online]. [Accessed 22 June 2021]. Available from:
+\url{https://www.scala-sbt.org/0.12.3/docs/Detailed-Topics/Forking.html}
 
 \bibitem{JNI}
-Oracle
-\textit{Java Native Interface} [online]. [cit. 2021-06-20]. Available from:
-https://docs.oracle.com/javase/8/docs/technotes/guides/jni/
+Oracle.
+\textit{Java Native Interface} [online]. [Accessed 20 June 2021]. Available from:
+\url{https://docs.oracle.com/javase/8/docs/technotes/guides/jni/}
+
+\bibitem{What is JNI}
+MIKHALENKO, Peter.
+\textit{Discover how the Java Native Interface works} [online]. 6 Sep 2006  [Accessed 26 June 2021]. Available from:
+\url{https://www.techrepublic.com/article/discover-how-the-java-native-interface-works/}
 
 \bibitem{String interpolation}
 SUERETH, Josh. 
-\textit {String interpolation} [online]. [cit. 2021-04-25]. Available from: https://docs.scala-lang.org/overviews/core/string-interpolation.html
+\textit {String interpolation} [online]. [Accessed 25 April 2021]. Available from: \url{https://docs.scala-lang.org/overviews/core/string-interpolation.html}
+
 \bibitem{Def macros}
 BURMAKO, Eugene. 
-\textit {Def macros} [online]. [cit. 2021-04-25]. Available from: https://docs.scala-lang.org/overviews/macros/overview.html
+\textit {Def macros} [online]. [Accessed 25 April 2021]. Available from: \url{https://docs.scala-lang.org/overviews/macros/overview.html}
+
+\bibitem{Trees}
+Scala Documentation.
+Symbols, Trees, and Types. Scala Documentation [online]. [Accessed 26 June 2021]. Available from: \url{https://docs.scala-lang.org/overviews/reflection/symbols-trees-types.html} 
+
+
 \bibitem{Compile-time reflection}
-MILLER, Heather, BURMAKO Eugene and HALLER Philipp 
-\textit {Compile-time reflection} [online]. [cit. 2021-06-19]. Available from: https://docs.scala-lang.org/overviews/reflection/overview.html\#compile-time-reflection
+MILLER, Heather, BURMAKO Eugene and HALLER Philipp.
+\textit {Compile-time reflection} [online]. [Accessed 19 June 2021]. Available from: \url{https://docs.scala-lang.org/overviews/reflection/overview.html\#compile-time-reflection}
 
 \bibitem{Liftable}
 SHABALIN, Denys.
-\textit {Quasiquotes introduction} [online]. [cit. 2021-06-22]. Available from:
-https://docs.scala-lang.org/overviews/quasiquotes/lifting.html
+\textit {Quasiquotes introduction} [online]. [Accessed 22 June 2021]. Available from:
+\url{https://docs.scala-lang.org/overviews/quasiquotes/lifting.html}
 
 \bibitem{quasiquotes}
 SHABALIN, Denys.
-\textit {Quasiquotes introduction} [online]. [cit. 2021-06-22]. Available from:
-https://docs.scala-lang.org/overviews/quasiquotes/intro.html
+\textit {Quasiquotes introduction} [online]. [Accessed 22 June 2021]. Available from:
+\url{https://docs.scala-lang.org/overviews/quasiquotes/intro.html}
 
 \bibitem{Transformer}
-\textit {Transformer} [online]. [cit. 2021-06-23]. Available from:
-https://www.scala-lang.org/api/2.12.9/scala-reflect/scala/reflect/api/Trees\$Transformer.html
+Scala Documentation.
+\textit {Transformer} [online]. [Accessed 23 June 2021]. Available from:
+\url{https://www.scala-lang.org/api/current/scala-reflect/scala/reflect/api/Trees$Transformer.html}
 
 \bibitem{Implicit}
-\textit {Implicit conversions} [online]. [cit. 2021-06-24]. Available from:
-https://docs.scala-lang.org/tour/implicit-conversions.html
+Scala Documentation.
+\textit {Implicit conversions} [online]. [Accessed 24 June 2021]. Available from:
+\url{https://docs.scala-lang.org/tour/implicit-conversions.html}
 
 \bibitem{Looking up Implicits}
 SUERETH, Josh.
-\textit {Implicits without the import tax} [online]. [cit. 2021-06-24]. Available from: http://jsuereth.com/scala/2011/02/18/2011-implicits-without-tax.html
+\textit {Implicits without the import tax} [online]. 2011. [Accessed 24 June 2021]. Available from: \url{http://jsuereth.com/scala/2011/02/18/2011-implicits-without-tax.html}
 
 \bibitem{libpgquery13}
 FITTL, Lukas.
-\textit {Release 13-2.0.0} [online]. [cit. 2021-06-24]. Available from:
-https://github.com/pganalyze/libpg\_query/releases/tag/13-2.0.0
+\textit {Release 13-2.0.0} [online]. 18 Mar, 2021. [Accessed 24 June 2021]. Available from:
+\url{https://github.com/pganalyze/libpg\_query/releases/tag/13-2.0.0}
 
 \end{thebibliography}
 \setsecnumdepth{all}

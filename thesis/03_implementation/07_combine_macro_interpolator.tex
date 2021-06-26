@@ -5,11 +5,11 @@ Before we can get to the part where our custom interpolator is a simple call to 
 During compile time each variable in our interpolated string is known by name only. In macro, the first thing we have to do is build the string itself from the \textit{StringContext} and the arguments. To keep the final query valid, each of the arguments has to be replaced with the placeholder \texttt{\$n}. 
 Let's say we have the following example.
 \begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false]
-query"SELECT $columnName FROM students WHERE $expression"
+query"SELECT $columnName FROM students"
 \end{lstlisting}
 If we tried to pass this string directly to the libpg\_query, we would get an empty JSON result, because this is not a valid query. That means we have to transform it into this form.
 \begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false]
-query"SELECT $1 FROM students WHERE $2"
+query"SELECT $1 FROM students"
 \end{lstlisting}
 This returns the correct parse tree, where each of the placeholders contains a node of ParamRef type. 
 

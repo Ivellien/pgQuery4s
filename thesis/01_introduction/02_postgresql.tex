@@ -13,7 +13,7 @@ PostgreSQL internally uses parse trees to process SQL Queries. The whole parsing
   \caption {Visualisation of parse tree for \texttt{"SELECT * FROM users WHERE name = 'Captain Nemo' ORDER BY id ASC LIMIT 1"}}
 \end{figure}
 
-During the \textit{Parse stage}, the parser checks the query string for valid syntax. It does not lookup in the system catalogs, and for that reason, it is independent of the database structure.
+During the \textit{Parse stage}, the parser checks the syntax of a query string. It does not do any lookups in the system catalogs, and for that reason, it is independent of the database schema. In the following chapters you will see how our library seamlessly exposes the internal Postgres parse trees to the higher level language and how this can be used to validate queries during compilation.
 
 \subsection{Reasons to use parse trees}
 Having the option to work with parse tree directly, can prove useful in multiple cases. \cite{Parse tree usage}

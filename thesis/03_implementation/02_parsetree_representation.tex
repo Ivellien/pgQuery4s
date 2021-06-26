@@ -1,0 +1,51 @@
+\section{Parse tree representation}
+\subsection{C}
+
+If we look at internal representation of the tree directly in the PostgreSQL parser, it defines each possible node of the parsetree in form of \texttt{struct}. Any type of node is guaranteed to have \texttt{NodeTag} as the first field. 
+\begin{itemize}
+    \item \texttt{enum NodeTag} - defines all possible types of nodes
+    \item \texttt{struct Node} - contains only one variable - the \texttt{NodeTag}
+\end{itemize}
+Thanks to that guarantee, any type of node can be cast to \texttt{Node} without losing the information about the type of the node. That allows casting the \texttt{Node} back to the original type when needed.
+This fact is also used when a node contains another node as a leaf. Most of the time, the type of the required node isn't specified directly, instead \texttt{Node} pointer is used. This provides flexibility for the parameters of the nodes. A great example of that is the node of type \texttt{A\_Expr}, where both left side expression and right side expression have \texttt{Node*} type.
+\begin{lstlisting}[language=C, basicstyle=\ttfamily]      
+typedef struct A_Expr {
+    NodeTag     type;
+    A_Expr_Kind kind;
+    List       *name; 
+    Node       *lexpr; 
+    Node       *rexpr; 
+    int         location; 
+} A_Expr;
+\end{lstlisting}
+
+
+\subsection{Scala}
+Since we already have existing parse tree representation in C we can mirror it in Scala.
+Scala is an object-oriented language, therefore each type of node should be defined by its own class. However, using case classes offers several advantages over classes in Scala: 
+\begin{itemize}
+    \item Case classes can be pattern matched
+    \item Automatic definition of equals and hashcode methods
+    \item Automatic definition of getters
+\end{itemize}
+First, we convert the \texttt{struct Node} into \texttt{abstract class Node}. It will be used as base class for every node of the parse tree. \\
+Each \texttt{struct} can be then converted into case class in Scala. 
+\begin{itemize}
+    \item Each \texttt{Node*} is converted to \texttt{Option[Node]} - same for other variables, which are pointers to specific \texttt{Node} type
+    \item Each \texttt{List*} is converted to \texttt{List[Node]}
+    \item Primitive data types are converted to their Scala equivalents \\
+    (e.g. \texttt{int} to \texttt{Int}, \texttt{char*} to \texttt{String})
+    \item The NodeTag parameter can be ommited, because in Scala we can use pattern matching to check the type of the \texttt{Node}.
+\end{itemize}
+Each \texttt{enum} is converted to object extending abstract class Enumeration.
+ \\
+\textbf{Converted \texttt{A\_Expr} case class}
+\begin{lstlisting}[language=scala, basicstyle=\ttfamily]
+case class A_Expr(
+    kind:     A_Expr_Kind.Value,
+    name:     List[Node],
+    lexpr:    Option[Node],
+    rexpr:    Option[Node],
+    location: Int
+) extends Node
+\end{lstlisting}
