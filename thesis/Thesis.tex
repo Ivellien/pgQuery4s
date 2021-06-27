@@ -26,7 +26,10 @@
 \usepackage{enumitem}
 \usepackage{url}
 
-
+\lstset{
+    captionpos=b,
+    xleftmargin=.25in
+}
 % % list of acronyms
 % \usepackage[acronym,nonumberlist,toc,numberedsection=autolabel]{glossaries}
 % \iflanguage{czech}{\renewcommand*{\acronymname}{Seznam pou{\v z}it{\' y}ch zkratek}}{}
@@ -49,8 +52,6 @@
 
 First, technologies used for this project are introduced, followed by research of existing Scala libraries for working with PostgreSQL. The implementation part then follows the steps that were required to create the library. It covers the connection of Scala with C library, use of \textit{circe} library for parsing JSON results, and creating case class structure to represent SQL parse trees. Another big part of implementation covers macros in Scala and their usage for compile time validation of queries. Then the current state of the library is described, together with plans for future improvements.}
 
-\newpage
-
 \abstractCS{Hlavní téma této práce je vývoj a implementace knihovny pro vytváření staticky typovaných SQL dotazů v jazyce Scala, společně s průzkumem existujících Scala knihoven, které se zabývají vytvářením SQL dotazů.
 
 Nejprve jsou představeny použité technologie a popsány existující knihovny pro práci s PostgreSQL. Implementační část následně popisuje kroky potřebné k vytvoření knihovny. Popsáno je propojení Scaly a knihovny v jazyce C, použití \textit{circe} knihovny, která slouží pro parsování JSON výsledků a vytvoření \textit{case class} struktury pro reprezentaci syntaktických stromů SQL výrazů. Další velká část implementace popisuje makra v jazyce Scala a jejich využití pro validaci SQL dotazů během kompilace. Nakonec je popsán nynější stav knihovny společně s plány pro budoucí vylepšení.
@@ -65,7 +66,7 @@ Nejprve jsou představeny použité technologie a popsány existující knihovny
 
 
 \begin{document}
-
+\lstlistoflistings*
 % \newacronym{CVUT}{{\v C}VUT}{{\v C}esk{\' e} vysok{\' e} u{\v c}en{\' i} technick{\' e} v Praze}
 % \newacronym{FIT}{FIT}{Fakulta informa{\v c}n{\' i}ch technologi{\' i}}
 
@@ -226,6 +227,10 @@ FITTL, Lukas.
 \textit {Release 13-2.0.0} [online]. 18 Mar, 2021. [Accessed 24 June 2021]. Available from:
 \url{https://github.com/pganalyze/libpg\_query/releases/tag/13-2.0.0}
 
+\bibitem{CI}
+Could Bees.
+\textit{What is Continuous Integration?}  [online]. 2021. [Accessed 27 June 2021]. Available from: \url{https://www.cloudbees.com/continuous-delivery/continuous-integration}
+
 \end{thebibliography}
 \setsecnumdepth{all}
 \appendix
@@ -235,6 +240,7 @@ FITTL, Lukas.
 \begin{description}
 	\item[API] Application programming interface
 	\item[AST] Abstract syntax tree
+	\item[CI] Continuous integration
 	\item[CQL] Cassandra Query Language
 	\item[DSL] Domain-specific language
 	\item[JDBC] Java Database Connectivity

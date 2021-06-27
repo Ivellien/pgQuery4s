@@ -4,7 +4,7 @@ PostgreSQL is an ORDBMS - abbreviation for open source object-relational databas
 Nowadays, it's widely used. PostgreSQL popularity has been steadily rising in the last few years. Based on "Stack Overflow Annual Developer Survey"~\cite{Stackoverflow survey}, PostgreSQL currently sits in second place for the 'Most popular technology in the database category', right after the MySQL.
 
 \subsection{Parse tree}
-PostgreSQL internally uses parse trees to process SQL Queries. The whole parsing comprises multiple stages. First, a query passed in form of plain text is transformed to tokens using a tool \textit{Flex}. Next up the parser generator called \textit{Flex} is used. It consists of multiple grammar rules and actions. Each action is executed whenever any of the rules are applied and together they are used to build the final parse tree.
+PostgreSQL internally uses parse trees to process SQL Queries. The whole parsing comprises multiple stages. First, a query passed in form of plain text is transformed to tokens using a tool \textit{Flex}. Next up the parser generator called \textit{Bison} is used. It consists of multiple grammar rules and actions. Each action is executed whenever any of the rules are applied and together they are used to build the final parse tree.
 
 \newpage
 
@@ -13,10 +13,10 @@ PostgreSQL internally uses parse trees to process SQL Queries. The whole parsing
   \caption {Visualisation of parse tree for \texttt{"SELECT * FROM users WHERE name = 'Captain Nemo' ORDER BY id ASC LIMIT 1"}\cite{Parse tree image}}
 \end{figure}
 
-During the \textit{Parse stage}, the parser checks the syntax of a query string. It does not do any lookups in the system catalogs, and for that reason, it is independent of the database schema. In the following chapters you will see how our library seamlessly exposes the internal Postgres parse trees to the higher level language and how this can be used to validate queries during compilation.
+During the \textit{Parse stage}, the parser checks the syntax of a query string. It does not do any lookups in the system catalogs, and for that reason, it is independent of the database schema. In the following chapters you will see how our library seamlessly exposes the internal PostgreSQL parse trees to the higher level language and how this can be used to validate queries during compilation.
 
 \subsection{Reasons to use parse trees}
-Having the option to work with parse tree directly, can prove useful in multiple cases. \cite{Parse tree usage}
+Having the option to work with parse trees can prove useful in multiple cases.\cite{Parse tree usage} However, working with the tree directly can be tedious work, especially for big nested queries. That's why we will use high-level Scala features to make working with them easier while still keeping the option to access and work with the parse tree on the lower level.
 \begin{description}[font=$\bullet$~\normalfont\scshape\color{black}\\]
 \item [Extracting specific part of query] \hfill \newline
 Using parse tree, we will be able to easily extract parts like column names from the \texttt{SELECT} target list, expression from the \texttt{WHERE} statement or nested statement from some complicated SQL query.

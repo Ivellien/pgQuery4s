@@ -1,6 +1,28 @@
+\newpage
 \section{Testing}
-\subsection{Scalatest}
+\subsection{Unit testing}
+Unit tests are used to test small parts of the codebase. They are intended to be run often, so they have to be simple and quick. For testing, we are using the most popular option for Scala - \textit{scalatest}. 
+\subsection{Parser and core testing}
+The tests in \textit{parser} submodule cover parsing and deparsing of the SQL queries. The goal is to have every \texttt{Node} properly tested. The tests are currently separated into three groups - tests for \texttt{DatabaseStmt}, \texttt{InsertStmt}, and \texttt{SelectStmt}.
 
-\subsection{Parser testing}
+Tests in \textit{core} submodule focus on the interpolators and implicit conversions. We are testing both \texttt{query} and \texttt{expr} interpolator using \texttt{Matchers} DSL from scalatest.
 
-\subsection{Core testing}
+
+\begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false, caption={Test for expression with \texttt{FuncCall}}]
+test("Func call expression test") {
+    val expr = expr"MIN(columnName)"
+    expr should matchPattern {
+      case ResTarget(_, _, Some(_: FuncCall), _) =>
+    }
+  }
+\end{lstlisting}
+\subsection{Continuous integration}
+Our library is intended as an open-source project, which means we can expect contributions from other developers. \textit{Continuous Integration (CI) is a development practice where developers integrate code into a shared repository frequently.}\cite{CI} For our project, we are using free \textit{TravisCI} service, which provides quick integration with public \textit{GitHub} repositories. 
+
+With \textit{TravisCI} we can create a building and testing pipeline, that will be run for each new contribution. The pipeline is divided into few steps:
+\begin{itemize}
+    \item Before the testing part of the pipeline is run, \textit{TravisCI} sets up local PostgreSQL 10 database and creates \texttt{pgquery\_example} database.
+    \item The script navigates inside the \textit{libpg\_query} folder and compiles the C library.
+    \item Then all tests are run and the artifacts are locally published.
+    \item In the last step of the pipeline, the example project is built and run, using locally published artifacts.
+\end{itemize}

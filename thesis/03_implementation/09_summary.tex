@@ -1,11 +1,11 @@
 \section{Summary}
-Since the library is meant as an open-source project, the whole source code is available on \textit{github.com} in a public repository, under the name \textit{pgquery4s}. The project is separated into multiple submodules.
+Since the library is meant as an open-source project, the whole source code is available on \url{https://github.com/Ivellien/pgQuery4s/} as a public repository. The project is separated into multiple submodules.
 
 \begin{description}[font=$\bullet$~\normalfont\scshape\color{black}\\]
 \item [Native] \hfill \newline
-This module contains everything related to handling the native \texttt{libpg\_query} library. From Scala side there is \texttt{PgQueryWrapper} class, which implements single method \texttt{pgQueryParse} with \texttt{@native} annotation. Then there is the JNI implementation of the native method, which directly calls the C library.
+This module contains everything related to native code. There is the \texttt{PgQueryWrapper} class, which implements single method \texttt{pgQueryParse} with \texttt{@native} annotation. Then there is the \textit{libpg\_query} library itself, and the JNI implementation of the native method, which directly calls the C library.
 \item [Parser] \hfill \newline
-Possibly the most important part of the library. Parser submodule contains the whole existing case class structure representation of the parse tree in \texttt{node} and \texttt{enums} packages. The \texttt{PgQueryParser} object then defines part of our usable public API. Each one of these methods takes string representing SQL query or expression: 
+Possibly the most important part of the library. Parser submodule contains the whole existing case class structure representation of the parse tree in \textit{node} and \textit{enums} packages. The \texttt{PgQueryParser} object then defines part of our usable public API. Each one of these methods takes string representing SQL query or expression: 
 \begin{itemize}
     \item \texttt{json} - Returns JSON representation of the passed query as received from \texttt{libpg\_query}
     \item \texttt{prettify} - Creates the \texttt{Node} representation of the passed SQL query and then deparses it back to string again.
@@ -14,19 +14,19 @@ Possibly the most important part of the library. Parser submodule contains the w
 \end{itemize}
 
 \item [Macros] \hfill \newline
-The macros submodule is further split into two other subprojects - \texttt{liftable} and \texttt{macros}. The macros were one of the reasons for splitting up the project because the macro has to always be compiled before it can be used elsewhere. 
+The macros submodule is further split into two other subprojects - \textit{liftable} and \textit{macros}. The macros were one of the reasons for splitting up the project because the macro has to always be compiled before it can be used elsewhere. 
 
 The macros subproject currently contains macro implementations for parsing queries, expressions and for implicit conversion from \texttt{String} to \texttt{ResTarget}.
 
-The liftable subproject contains generators of Liftable objects, as explained in section 4.5.2.
+The \textit{liftable} subproject contains generators of \texttt{Liftable} objects, as explained in section 4.5.2.
 \item [Core] \hfill \newline
 The core uses the macros package and contains definitions of the custom interpolators for queries, expressions, and implicit conversions.
 
 \end{description}
-So far, we have a library, which can validate queries using a C library called \texttt{libpg\_query}. To connect our Scala code with the native code, we are using sbt-jni plugins. The JSON containing the parse tree representation is then parsed to our custom case class structure using a functional library for working with JSON, \texttt{circe}. Then we implemented our interpolators, one for expressions and another one for queries. To achieve compile-time validation, we used macros, where we are working with abstract syntax trees of the program itself. The final query is then type-checked and throws compilation errors whenever the types don't match.
+So far, we have a library, which can validate queries using a C library called \textit{libpg\_query}. To connect our Scala code with the native code, we are using sbt-jni plugins. The JSON containing the parse tree representation is then parsed to our custom case class structure using a functional library for working with JSON, \textit{circe}. Then we implemented our interpolators, one for expressions and another one for queries. To achieve compile-time validation, we used macros, where we are working with abstract syntax trees of the program itself. The final query is then type-checked and throws compilation errors whenever the types don't match.
 
 
 \section{Future work}
 The library can be, for now, considered a prototype. It covers the majority of generally used SQL keywords and queries. However, the list of SQL keywords is long, and together with all the possible combinations, it leaves room for improvement. The library can be further expanded to eventually cover the whole SQL node structure. 
 
-At the end of May 2021, the newest version of \texttt{libpg\_query} was also released. It contains plenty of changes, support for the PostgreSQL 13 version, changes to JSON output format, new Protobuf parse tree output format, added deparsing functionality from parse tree back to SQL, and more. \cite{libpgquery13}. 
+At the end of May 2021, the newest version of \texttt{libpg\_query} was also released. It contains plenty of changes, support for the PostgreSQL 13 version, changes to JSON output format, new \texttt{Protobuf} parse tree output format, added deparsing functionality from parse tree back to SQL, and more. \cite{libpgquery13}. 

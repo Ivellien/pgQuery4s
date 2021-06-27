@@ -2,7 +2,7 @@
 \subsection{C}
 
 If we look at internal representation of the tree directly in the PostgreSQL parser, it defines each possible node of the parsetree in form of \texttt{struct}. Any type of node is guaranteed to have \texttt{NodeTag} as the first field. 
-\begin{lstlisting}[language=C, basicstyle=\ttfamily]      
+\begin{lstlisting}[language=C, basicstyle=\ttfamily, caption={\texttt{Node} representation in PostgreSQL parser}]      
 typedef struct Node
 {
    NodeTag  type;
@@ -12,8 +12,7 @@ typedef struct Node
 
 This fact is also used when a node contains another node as a leaf. Most of the time, the type of the required node isn't specified directly instead, \texttt{Node} pointer is used. This provides flexibility for the parameters of the nodes. 
 
-A great example of that is the node of type \texttt{A\_Expr}, where both left side expression and right side expression have \texttt{Node*} type.
-\begin{lstlisting}[language=C, basicstyle=\ttfamily]      
+\begin{lstlisting}[language=C, basicstyle=\ttfamily, caption={\texttt{A\_Expr} representation in PostgreSQL parser}]      
 typedef struct A_Expr {
     NodeTag     type;
     A_Expr_Kind kind;
@@ -41,12 +40,12 @@ Each \texttt{struct} can be then converted into case class in Scala.
     \item Each \texttt{List*} is converted to \texttt{List[Node]}
     \item Primitive data types are converted to their Scala equivalents \\
     (e.g. \texttt{int} to \texttt{Int}, \texttt{char*} to \texttt{String})
-    \item The NodeTag parameter can be ommited, because in Scala we can use pattern matching to check the type of the \texttt{Node}.
+    \item The \texttt{NodeTag} parameter can be ommited, because in Scala we can use pattern matching to check the type of the \texttt{Node}.
 \end{itemize}
-Each \texttt{enum} is converted to object extending abstract class Enumeration.
+Each \texttt{enum} is converted to object extending abstract class \texttt{Enumeration}.
  \\
 \textbf{Converted \texttt{A\_Expr} case class}
-\begin{lstlisting}[language=scala, basicstyle=\ttfamily]
+\begin{lstlisting}[language=scala, basicstyle=\ttfamily, caption={\texttt{A\_Expr} representation in Scala}]
 case class A_Expr(
     kind:     A_Expr_Kind.Value,
     name:     List[Node],

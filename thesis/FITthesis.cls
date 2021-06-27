@@ -488,7 +488,7 @@ sp\^ osobom, ktor\'y nezni\v zuje hodnotu Diela (vr\'atane komer\v cn\'eho vyu\v
 		\ClassError{FITthesis}{Czech keywords unspecified}{Specify the keywords in Czech of your thesis using \keywordsCS command.}
 	\fi
 
-	\vfil
+	\newpage
 
 	\if@abstractendefined
 		\chapterstyletitle{Abstract}\theabstracten
@@ -531,8 +531,8 @@ sp\^ osobom, ktor\'y nezni\v zuje hodnotu Diela (vr\'atane komer\v cn\'eho vyu\v
 	\listoffigures*
 
 	\cleardoublepage
-	\listoftablescond
-
+    \renewcommand*{\lstlistlistingname}{List of Listings}
+    \newlistof{lstlistoflistings}{lol}{\lstlistlistingname}
 	\pagestyle{ruled}
 	\mainmatter
 }

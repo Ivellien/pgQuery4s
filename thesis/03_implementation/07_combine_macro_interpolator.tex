@@ -2,32 +2,31 @@
 \subsection{Parameterized queries in PostgreSQL}
 Before we can get to the part where our custom interpolator is a simple call to the macro, which does the validation, we have to talk about the implementation of placeholders in PostgreSQL. There is existing support for something called \textit{Prepared statements}. These allow for placeholders inside the query, in the form of \texttt{\$n} where \texttt{n} must be a positive integer.  
 
-During compile time each variable in our interpolated string is known by name only. In macro, the first thing we have to do is build the string itself from the \textit{StringContext} and the arguments. To keep the final query valid, each of the arguments has to be replaced with the placeholder \texttt{\$n}. 
+During compile time each variable in our interpolated string is known by name only. In macro, the first thing we have to do is build the string itself from the \texttt{StringContext} and the arguments. To keep the final query valid, each of the arguments has to be replaced with the placeholder \texttt{\$n}. 
 Let's say we have the following example.
-\begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false]
+\begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false, caption={Query with variable name.}]
 query"SELECT $columnName FROM students"
 \end{lstlisting}
-If we tried to pass this string directly to the libpg\_query, we would get an empty JSON result, because this is not a valid query. That means we have to transform it into this form.
-\begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false]
+If we tried to pass this string directly to the \textit{libpg\_query}, we would get an empty JSON result, because this is not a valid query. That means we have to transform it into this form.
+\begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false,
+caption={Query with a placeholder.}]
 query"SELECT $1 FROM students"
 \end{lstlisting}
-This returns the correct parse tree, where each of the placeholders contains a node of ParamRef type. 
+This returns the correct parse tree, where each of the placeholders contains a node of \texttt{ParamRef} type. 
 
-\subsection{Checking the context prefix}
-First of all, the context prefix is validated. The prefix contains info about the expression the macro was called on. We expect that the macro is always called using a custom interpolator from the \texttt{CompileTimeInterpolator} object. That is validated using pattern matching of the context prefix tree against the quasiquote representing the expected tree. Quasiquotes are another example of an interpolator. They are used to convert a snippet of code into its tree representation.\cite{quasiquotes} During the validation we also extract the \texttt{List[String]} from the \texttt{StringContext}.
-
-\subsection{Handling arguments}
-Once we validate the prefix and extract the string from \texttt{StringContext}, we have to transform the arguments. Each argument is represented by its AST, which we need to retain. Therefore, we create an indexed map from the arguments with type \texttt{Map[Int, Tree]}. This structure is used in the Transforming step later on.
-
-\subsection{Validation of query with placeholders}
-For each argument we generate placeholder starting from \texttt{\$1} up to \texttt{\$n}. The placeholders are then interspersed into the extracted \texttt{List[String]} we got from \texttt{StringContext}. This finished string is then parsed using our \texttt{parse} method from \texttt{PgQueryParser}, which gets us the parse tree representation in the form of a \texttt{Node}.
+\subsection{Validation of the query}
+We are able to build the query string from the \texttt{StringContext} and passed arguments. To create a valid query, we have to enumerate the arguments. Each argument is replaced by placeholder starting from \texttt{\$1} up to \texttt{\$n}, where \texttt{n} is the total count of passed arguments. After we intersperse the placeholders into \texttt{List[String]} we can use the \texttt{parse} method from \texttt{PgQueryParser} for validation. If the query is valid, we get the parse tree representation in the form of a \texttt{Node}.
 
 \subsection{Transforming syntax tree}
-Now we have the result parse tree, which contains \texttt{ParamRef} nodes in places where the arguments are supposed to be. As I described in section 4.6.2, we have to lift the Node structure to the AST representation before we can return the result. However, before we do it, we have to insert the arguments back into the structure in their corresponding places. For that purpose, we are going to use our custom class \texttt{ParamRefTransformer}. It extends the abstract class \texttt{Transformer}, which \textit{implements a default tree transformation strategy: breadth-first component-wise cloning}.\cite{Transformer} 
+The parse tree now contains one \texttt{ParamRef} node for each argument. The next step is to replace these placeholder nodes with their corresponding arguments. Macros are required to return results in the form of \texttt{Tree}. The easiest solution is to \texttt{lift} the \texttt{Node} we got from \textit{libpg\_query} to AST representation and then replace the placeholders with the original arguments. 
 
-The \texttt{ParamRefTransformer} class takes the \texttt{Map} we created in section 4.7.2 as input parameter. Then it overrides the \texttt{transform} method, which takes one argument - the \texttt{Tree} object. \texttt{Tree} is the representation of the parse tree. The method then iterates over each node of the \texttt{Tree} and matches the \texttt{q"ParamRef(\$\{Literal(Constant(constant:Int))\}, \$\{\_\})"} pattern.
+For that purpose, we are going to use our custom class \texttt{ParamRefTransformer}. It extends the abstract class \texttt{Transformer}, which \textit{implements a default tree transformation strategy: breadth-first component-wise cloning}.\cite{Transformer} 
 
-Whenever the pattern matches the current \texttt{Tree}, the whole \texttt{ParamRef} is replaced by the \texttt{Tree} value from the \texttt{Map} with corresponding index. If the pattern doesn't match, the original method from the superclass is called. The original transform then applies the transform function again on each leaf of the current node.
+The \texttt{ParamRefTransformer} overrides the \texttt{transform} method, which takes one argument - the parse tree in form of a \texttt{Tree}. The method then iterates over each node of the \texttt{Tree} and matches the following pattern.
+\begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false, caption={Pattern of the AST of \texttt{ParamRef} node.}, xleftmargin=.05in]
+q"ParamRef(${Literal(Constant(constant:Int))}, ${_})"
+\end{lstlisting}
+Whenever the pattern matches the current \texttt{Tree}, the whole \texttt{ParamRef} is replaced by the argument AST with same index as the \texttt{constant}. If the pattern doesn't match, the original method from the superclass is called. The original transform then applies the transform function again on each leaf of the current node.
 This way, every node of the AST is traversed, and we replace each \texttt{ParamRef} node with the original argument.
 
 \subsection{Type checking}
@@ -38,7 +37,7 @@ Within the tree, each placeholder is replaced with the original argument. The co
 \subsection{Implicit conversions}
 Since we introduced the validation and type checking using the macro, we could only use interpolator, which uses the macro with arguments that are Node objects or a more specific type of \texttt{Node}, depending on where we try to insert it. That means if we wanted to define a function, which takes \texttt{String} as an argument, we couldn't use it in the interpolator. Instead, we had to parse it as an expression and only then pass it to the interpolator.
 
-Fortunately, Scala provides \textit{implicit} keyword that can be used to create the implicit conversion from one type to another. \textit{An implicit conversion from type S to type T is defined by an implicit value which has function type S $\rightarrow$ T, or by an implicit method convertible to a value of that type.}\cite{Implicit} Whenever the type of an expression does not conform to the expected type, compile attempts to find an implicit conversion function, which can be used to get the correct type. The order in which the compiler looks for the implicit conversion is as follows: \cite{Looking up Implicits}
+Fortunately, Scala provides \texttt{implicit} keyword that can be used to create the implicit conversion from one type to another. \textit{An implicit conversion from type S to type T is defined by an implicit value which has function type S $\rightarrow$ T, or by an implicit method convertible to a value of that type.}\cite{Implicit} Whenever the type of an expression does not conform to the expected type, compile attempts to find an implicit conversion function, which can be used to get the correct type. The order in which the compiler looks for the implicit conversion is as follows: \cite{Looking up Implicits}
 \begin{enumerate}
   \item Implicits defined in the current scope
   \item Explicit imports (i.e. \texttt{import ImplicitConversions.int2string})
