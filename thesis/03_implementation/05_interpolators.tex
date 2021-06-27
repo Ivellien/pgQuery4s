@@ -1,6 +1,6 @@
 \section{Scala custom interpolators}
 \subsection{What are interpolators?}
-Since version 2.10, Scala offers a new possibility of string interpolation.~\cite{String interpolation} This allows me to create generic queries with variables instead of direct values. That way, we can define and reuse queries without unnecessary copying and pasting of code. The idea behind Scala interpolation is the processing of string literals. For example, this code  \verb|id"Interpolated text"| is transformed into the call of method \texttt{id} on instance of \texttt{StringContext} class. By extending this existing class, we can introduce custom interpolators, which allows for a clear definition of these generic query definitions.
+\textit{Starting in Scala 2.10.0, Scala offers a new mechanism to create strings from your data: String Interpolation. String Interpolation allows users to embed variable references directly in processed string literals.}~\cite{String interpolation} Besides the three interpolators provided by scala, we can also define our own custom interpolator. This would help us to create generic queries with variables instead of direct values. That way, we can define and reuse queries without unnecessary copying and pasting of code. By extending the existing \texttt{StringContext} class with new method, we can introduce custom interpolators. 
 \bigskip
 \newline
 \begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false, caption={Example of \texttt{String} concatenation}]
@@ -9,7 +9,7 @@ val query: String =
 PgQueryParser.parse(query)
 \end{lstlisting}
 \bigskip
-\begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false, caption={Example of \texttt{String} interpolation}]
+\begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false, caption={Example of custom interpolation}]
 query"SELECT $columnName FROM students"
 \end{lstlisting}
 

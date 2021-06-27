@@ -10,14 +10,15 @@ Macros are part of the Scala reflection library. We will specifically talk about
 
 When we enter the execution of the macro, we have the context and the function arguments. Everything is in the form of AST, so programming macros is slightly different from the usual programming in Scala. In simple terms, context tells us where the macro was called from, which class, method name, etc. 
 
-Another tool, often used when working with macros, is called \texttt{reify}. It is a method, which takes expression and returns its AST. In the snippet below we can see difference in the AST, when we call the method directly with the \texttt{String} vs. passing the \texttt{String} as variable.
+Another tool, often used when working with macros, is called \texttt{reify}. It is a method, which takes expression and returns its AST. In the following snippet we can see difference in the AST, when we call the method directly with the \texttt{String} vs. passing the \texttt{String} as variable.
+\newpage
 \begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false, caption={Comparison of ASTs of function calls with \texttt{String} and with variable}]
-reify { printQuery("SELECT 1") }
+scala> reify { printQuery("SELECT 1") }
 res1: Expr[Unit] = 
     Expr[Unit](cmd1.printQuery("SELECT 1"))
 
-val selectQuery: String = "SELECT 1"
-reify { printQuery(selectQuery) }
+scala> val selectQuery: String = "SELECT 1"
+scala> reify { printQuery(selectQuery) }
 res1: Expr[Unit] = 
     Expr[Unit](cmd1.printQuery(cmd2.selectQuery))
 \end{lstlisting}

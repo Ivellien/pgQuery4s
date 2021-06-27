@@ -46,7 +46,7 @@
 \author{Petr Hron} %author's name without academic degrees
 \authorWithDegrees{Petr Hron} %author's name with academic degrees
 \supervisor{Ing. Vojtěch Létal}
-\acknowledgements{THANKS (remove entirely in case you do not with to thank anyone)}
+\acknowledgements{I would like to thank my supervisor Ing. Vojtěch Létal, for the patience, guidance and support. I would also like to thank my family for their support.}
 
 \abstractEN{The focus of this thesis is development of the Scala library capable of creating statically typed queries, together with research of Scala libraries that deal with constructing SQL queries. 
 
@@ -62,7 +62,7 @@ Nejprve jsou představeny použité technologie a popsány existující knihovny
 \keywordsCS{Scala, PostgreSQL, abstraktní syntaktický strom, open source, validace během kompilace}
 \keywordsEN{Scala, PostgreSQL, parse tree, open source, compile time validation}
 \declarationOfAuthenticityOption{1} %select as appropriate, according to the desired license (integer 1-6)
-% \website{http://site.example/thesis} %optional thesis URL
+\website{https://github.com/Ivellien/pgQuery4s} %optional thesis URL
 
 
 \begin{document}
@@ -191,7 +191,7 @@ BURMAKO, Eugene.
 
 \bibitem{Trees}
 Scala Documentation.
-Symbols, Trees, and Types. Scala Documentation [online]. [Accessed 26 June 2021]. Available from: \url{https://docs.scala-lang.org/overviews/reflection/symbols-trees-types.html} 
+\textit{Symbols, Trees, and Types.} [online]. [Accessed 26 June 2021]. Available from: \url{https://docs.scala-lang.org/overviews/reflection/symbols-trees-types.html} 
 
 
 \bibitem{Compile-time reflection}
@@ -257,14 +257,17 @@ Could Bees.
 
 \begin{figure}
 	\dirtree{%
-		.1 readme.txt\DTcomment{the file with CD contents description}.
-		.1 exe\DTcomment{the directory with executables}.
-		.1 src\DTcomment{the directory of source codes}.
-		.2 wbdcm\DTcomment{implementation sources}.
-		.2 thesis\DTcomment{the directory of \LaTeX{} source codes of the thesis}.
-		.1 text\DTcomment{the thesis text directory}.
-		.2 thesis.pdf\DTcomment{the thesis text in PDF format}.
-		.2 thesis.ps\DTcomment{the thesis text in PS format}.
+	    .1 pgQuery4s\DTcomment{the directory of source codes}.
+	    .2 core\DTcomment{core submodule}.
+	    .2 example\DTcomment{example project}.
+	    .2 macros\DTcomment{macros submodule}.
+	    .2 native\DTcomment{native submodule}.
+	    .2 parser\DTcomment{parser submodule}.
+	    .2 project\DTcomment{metabuild}.
+	    .2 thesis\DTcomment{the directory of \LaTeX  source codes of the thesis}.
+	    .2 build.sbt\DTcomment{build definition}.
+	    .2 README.md\DTcomment{github description of library}.
+		.1 thesis.pdf\DTcomment{the thesis text in PDF format}.
 	}
 \end{figure}
 
