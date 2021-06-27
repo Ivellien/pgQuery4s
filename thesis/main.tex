@@ -1,0 +1,215 @@
+% arara: xelatex
+% arara: xelatex
+% arara: xelatex
+
+
+% options:
+% thesis=B bachelor's thesis
+% thesis=M master's thesis
+% czech thesis in Czech language
+% english thesis in English language
+% hidelinks remove colour boxes around hyperlinks
+
+\documentclass[thesis=B,english]{FITthesis}[2019/12/23]
+
+%\usepackage[utf8]{inputenc} % LaTeX source encoded as UTF-8
+% \usepackage[latin2]{inputenc} % LaTeX source encoded as ISO-8859-2
+% \usepackage[cp1250]{inputenc} % LaTeX source encoded as Windows-1250
+
+% \usepackage{subfig} %subfigures
+% \usepackage{amsmath} %advanced maths
+% \usepackage{amssymb} %additional math symbols
+
+\usepackage{dirtree} %directory tree visualisation
+\usepackage{listings}
+\usepackage{subfiles}
+\usepackage{enumitem}
+
+% % list of acronyms
+% \usepackage[acronym,nonumberlist,toc,numberedsection=autolabel]{glossaries}
+% \iflanguage{czech}{\renewcommand*{\acronymname}{Seznam pou{\v z}it{\' y}ch zkratek}}{}
+% \makeglossaries
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% EDIT THIS
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+
+\department{Department of software engineering}
+\title{Scala library for constructing statically typed PostgreSQL queries}
+\authorGN{Petr} %author's given name/names
+\authorFN{Hron} %author's surname
+\author{Petr Hron} %author's name without academic degrees
+\authorWithDegrees{Petr Hron} %author's name with academic degrees
+\supervisor{Ing. Vojtěch Létal}
+\acknowledgements{THANKS (remove entirely in case you do not with to thank anyone)}
+\abstractEN{Summarize the contents and contribution of your work in a few sentences in English language.}
+\abstractCS{V n{\v e}kolika v{\v e}t{\' a}ch shr{\v n}te obsah a p{\v r}{\' i}nos t{\' e}to pr{\' a}ce v {\v c}esk{\' e}m jazyce.}
+\placeForDeclarationOfAuthenticity{Prague}
+\keywordsCS{Scala, PostgreSQL, syntaktický strom, open source, validace během kompilace}
+\keywordsEN{Scala, PostgreSQL, parse tree, open source, compile time validation}
+\declarationOfAuthenticityOption{1} %select as appropriate, according to the desired license (integer 1-6)
+% \website{http://site.example/thesis} %optional thesis URL
+
+
+\begin{document}
+
+% \newacronym{CVUT}{{\v C}VUT}{{\v C}esk{\' e} vysok{\' e} u{\v c}en{\' i} technick{\' e} v Praze}
+% \newacronym{FIT}{FIT}{Fakulta informa{\v c}n{\' i}ch technologi{\' i}}
+
+\setsecnumdepth{part}
+\setsecnumdepth{all}
+\chapter{Introduction}
+
+\subfile{introduction/01_motivation}
+
+\chapter{Technologies used}
+
+\subfile{introduction/02_postgresql}
+
+\subfile{introduction/03_scala}
+
+\chapter{Existing solutions}
+
+\subfile{background/01_database_libs}
+
+\subfile{background/02_difference_approach}
+
+\chapter{Realisation}
+
+\subfile{implementation/02_parsetree_representation}
+
+\subfile{implementation/03_native_libary}
+
+\subfile{implementation/04_parsing_json}
+
+\subfile{implementation/05_interpolators}
+
+\subfile{implementation/06_macros}
+
+\subfile{implementation/07_combine_macro_interpolator}
+
+\subfile{implementation/08_testing}
+
+\subfile{implementation/09_summary}
+
+\chapter{Conclusion}
+
+
+\bibliographystyle{iso690}
+\bibliography{mybibliographyfile}
+\begin{thebibliography}{9}
+
+\bibitem{PostgreSQL}
+\textit {What Is PostgreSQL?} [online]. [cit. 2021-06-21]. Available from:
+https://www.postgresqltutorial.com/what-is-postgresql/
+
+\bibitem{Stackoverflow survey}
+\textit {Stack Overflow Annual Developer Survey} [online]. [cit. 2021-06-13]. Available from: https://insights.stackoverflow.com/survey/2020\#technology-databases-all-respondents4
+
+\bibitem{Parse tree usage}
+PENG, Bo.
+\textit {Introducing PostgreSQL SQL Parser} [online]. [cit. 2021-06-24]. Available from:
+https://www.pgcon.org/2019/schedule/attachments/556\_PostgreSQL\_SQL\_parser.pdf
+
+\bibitem{Scala static}
+Mayank Bhatnagar
+\textit {Magic lies here - Statically vs Dynamically Typed Languages} [online]. [cit. 2021-06-21]. Available from: https://medium.com/android-news/magic-lies-here-statically-typed-vs-dynamically-typed-languages-d151c7f95e2b
+
+\bibitem{Quill} 
+\textit {What is Quill?} [online]. [cit. 2021-04-25]. Available from: https://github.com/getquill/quill/
+\bibitem{Doobie}
+NORRIS, Rob. 
+\textit {Doobie documentation} [online]. [cit. 2021-04-25]. Available from: https://tpolecat.github.io/doobie/
+\bibitem{PostgreSQL documentation}
+The PostgreSQL Global Development Group
+\textit{The Parser Stage} [online]. [cit. 2021-06-20]. Available from: https://www.postgresql.org/docs/10/parser-stage.html
+
+\bibitem{Postgres wiki}
+\textit {Query Parsing} [online]. [cit. 2021-06-25]. Available from:
+https://wiki.postgresql.org/wiki/Query\_Parsing
+
+\bibitem{libpgquery}
+FITTL, Lukas.
+\textit {libpg\_query} [online]. [cit. 2021-04-25]. Available from:
+https://github.com/pganalyze/libpg\_query
+
+\bibitem{sbt fork}
+\textit {Forking} [online]. [cit. 2021-06-22]. Available from:
+https://www.scala-sbt.org/0.12.3/docs/Detailed-Topics/Forking.html
+
+\bibitem{JNI}
+Oracle
+\textit{Java Native Interface} [online]. [cit. 2021-06-20]. Available from:
+https://docs.oracle.com/javase/8/docs/technotes/guides/jni/
+
+\bibitem{String interpolation}
+SUERETH, Josh. 
+\textit {String interpolation} [online]. [cit. 2021-04-25]. Available from: https://docs.scala-lang.org/overviews/core/string-interpolation.html
+\bibitem{Def macros}
+BURMAKO, Eugene. 
+\textit {Def macros} [online]. [cit. 2021-04-25]. Available from: https://docs.scala-lang.org/overviews/macros/overview.html
+\bibitem{Compile-time reflection}
+MILLER, Heather, BURMAKO Eugene and HALLER Philipp 
+\textit {Compile-time reflection} [online]. [cit. 2021-06-19]. Available from: https://docs.scala-lang.org/overviews/reflection/overview.html\#compile-time-reflection
+
+\bibitem{Liftable}
+SHABALIN, Denys.
+\textit {Quasiquotes introduction} [online]. [cit. 2021-06-22]. Available from:
+https://docs.scala-lang.org/overviews/quasiquotes/lifting.html
+
+\bibitem{quasiquotes}
+SHABALIN, Denys.
+\textit {Quasiquotes introduction} [online]. [cit. 2021-06-22]. Available from:
+https://docs.scala-lang.org/overviews/quasiquotes/intro.html
+
+\bibitem{Transformer}
+\textit {Transformer} [online]. [cit. 2021-06-23]. Available from:
+https://www.scala-lang.org/api/2.12.9/scala-reflect/scala/reflect/api/Trees\$Transformer.html
+
+\bibitem{Implicit}
+\textit {Implicit conversions} [online]. [cit. 2021-06-24]. Available from:
+https://docs.scala-lang.org/tour/implicit-conversions.html
+
+\bibitem{Looking up Implicits}
+SUERETH, Josh.
+\textit {Implicits without the import tax} [online]. [cit. 2021-06-24]. Available from: http://jsuereth.com/scala/2011/02/18/2011-implicits-without-tax.html
+
+\bibitem{libpgquery13}
+FITTL, Lukas.
+\textit {Release 13-2.0.0} [online]. [cit. 2021-06-24]. Available from:
+https://github.com/pganalyze/libpg\_query/releases/tag/13-2.0.0
+
+\end{thebibliography}
+\setsecnumdepth{all}
+\appendix
+
+\chapter{Acronyms}
+% \printglossaries
+\begin{description}
+	\item[API] Application programming interface
+	\item[JDBC] Java Database Connectivity
+	\item[JPA] Jakarta Persistence
+	\item[JSON] JavaScript Object Notation
+	\item[JVM] Java virtual machine
+	\item[SQL] Structured Query Language
+\end{description}
+
+
+\chapter{Contents of enclosed CD}
+
+%change appropriately
+
+\begin{figure}
+	\dirtree{%
+		.1 readme.txt\DTcomment{the file with CD contents description}.
+		.1 exe\DTcomment{the directory with executables}.
+		.1 src\DTcomment{the directory of source codes}.
+		.2 wbdcm\DTcomment{implementation sources}.
+		.2 thesis\DTcomment{the directory of \LaTeX{} source codes of the thesis}.
+		.1 text\DTcomment{the thesis text directory}.
+		.2 thesis.pdf\DTcomment{the thesis text in PDF format}.
+		.2 thesis.ps\DTcomment{the thesis text in PS format}.
+	}
+\end{figure}
+
+\end{document}

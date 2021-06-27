@@ -1,0 +1,36 @@
+\section{Difference in approach}
+\subsection{Database-independent validation}
+As we can see, working with the database has been already done by multiple existing libraries. However, sometimes we might not have the option to use the database to validate the queries. This project isn't meant as a competitor to those mentioned libraries. Instead, it is recommended to use them together. In the example project that was implemented to showcase the usage of our library, we are using \textit{Doobie}. The queries are created and validated using our implementation, and then they are executed on a specific database using a connection created by \textit{Doobie} to show that the queries are, in fact, valid.
+
+\subsection{Implementation goal}
+The goal is to use the parse tree generated during the \textit{Parser stage} of the PostgreSQL parser. As mentioned before, the parsing is independent of the existing database. Thanks to that, we can check whether the syntax of the SQL query is valid. 
+
+All that will be done during compilation. We will create an interpolator, which will generate the parse tree structure. As arguments the interpolator will accept either \texttt{Nodes} directly, or even primitive types like \texttt{String} or \texttt{Int}, which will be transformed into \texttt{Node} thanks to the implicit conversion. 
+
+For example we will be able to create function, that will create different filtering queries, based on passed expression. 
+\begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false, caption={Example of \texttt{query} interpolator usage}]
+def filterStudents(expr: ResTarget) : Node = 
+    query"SELECT * FROM students WHERE $expr"
+\end{lstlisting}
+
+\subsection{Getting parse tree}
+To get the parse tree we have to access the internal functions of the PostgreSQL parser. These internal functions are not accessible directly, fortunately, the PostgreSQL\cite{Postgres wiki} wiki points us in the direction of \textit{pg\_query, a Ruby gem which can generate query trees in JSON representation}. Internally it uses \textit{libpg\_query}, which is standalone C library used to parse PostgreSQL queries.
+
+\subsection{Libpg\_query}
+\textit{Libpg\_query} is an open-source C library created by Lukas Frittl. It uses parts of the PostgreSQL server to access the internal \texttt{raw\_parse} function, which returns the internal parse tree. It accesses internal functions of the server, which allows the library to get the parse tree for each valid query. A minor disadvantage of this approach is that it uses the server code directly, and it has to be compiled before it can be used.
+
+The main purpose of \textit{libpg\_query} is to be used as a base library for implementations in other languages. There already exist multiple wrappers, for example \textit{pg\_query} for Ruby or \textit{pglast} for Python. However, at the moment of writing this thesis, there is no existing wrapper for it written for Scala. The important function from \textit{libpg\_query} is the \texttt{pg\_query\_parse} function.
+
+The \texttt{pg\_query\_parse} takes the plain text SQL query in form of \texttt{const char*}. Then it calls the extracted parts of the PostgreSQL server and returns the parse tree as JSON. Once we have that, we can decode the JSON and map it onto the created case class structure in Scala.
+
+\begin{lstlisting}[language=C, basicstyle=\ttfamily, keywordstyle=\color{purple}, showstringspaces=false, caption={\texttt{Libpg\_query usage example} \cite{libpgquery}}]
+#include <pg_query.h>
+#include <stdio.h>
+
+int main() {
+  PgQueryParseResult result;
+  result = pg_query_parse("SELECT 1");
+  printf("%s\n", result.parse_tree);
+  pg_query_free_parse_result(result);
+}
+\end{lstlisting}

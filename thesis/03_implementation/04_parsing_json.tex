@@ -1,0 +1,45 @@
+\section{Parsing JSON result from libpg\_query}
+There are few different libraries that can help with parsing JSON. From those, we are using \textit{circe}. \textit{Circe} is fork of a pure functional library called \textit{Argonaut}. It is great for parsing, traversing JSON, but the main functionality we are using is the auto derivation of \texttt{Encoder} and \texttt{Decoder} instances for a given algebraic data type. 
+
+\subsection{How decoding works in circe}
+Basic decoder for case class in \textit{circe} iterates over all parameters of the case class and matches the name of the paramater with the key in JSON. Then it attempts to parse the value as the type of the parameter. Let's say we have case class representing person together with implicit definitions of \texttt{Decoder}.
+\begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false, caption={Scala case class with \texttt{@JsonCodec} annotation}]
+@JsonCodec case class Person(age: Int, 
+                             name: Option[String])
+\end{lstlisting}
+The \texttt{@JsonCodec} annotation simplifies the process of generating the \texttt{Decoder} and \texttt{Encoder} using semi-automatic derivation. \cite{Semi automatic derivation} \\
+Next we have simple JSON, that we want to parse as \texttt{Person} object.
+\begin{lstlisting}[basicstyle=\ttfamily, showstringspaces=false, caption={Deparsing JSON using \textit{circe}}]
+parse("{ "age" : 5 }").as[Person]
+\end{lstlisting}
+First the string is converted to \texttt{Json} - \texttt{circe}-specific representation of JSON. Decoding starts with the \texttt{age} parameter and successfully finds the key in JSON. Then it type checks the value, if it is \texttt{Int}, or if it can be converted to \texttt{Int} using any implicit conversion. Then it continues with the \texttt{name} parameter. The JSON doesn't contain key \texttt{name}, but the type of name is \texttt{Option[String]}, which represents nullable type. The decoder then sets \texttt{Name} as \texttt{None} and the decoding is finished. \textit{Circe} then returns \texttt{Right(Person(5, None))}. \\
+However, if the \texttt{name} was \texttt{String} instead, the decoding would stop and return: 
+\begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false, caption={Return value on decoding failure}]
+Left(
+    DecodingFailure(
+        Attempt to decode value on failed cursor,
+        List(DownField(name))
+        )
+    )
+\end{lstlisting}
+
+\subsection{Query parsing}
+Parsing of the SQL queries is covered by \texttt{PgQueryParser} object. The main \texttt{parse} function takes SQL query as a plain string on input. The query is parsed using \textit{libpg\_query}. The string representing JSON is then converted to \textit{circe Json} type and parsed. The result is then decided based on pattern matching of the output of \textit{circe}. 
+
+To keep code consistent, we are following the monadic approach \textit{circe} uses. The parsing method then returns \texttt{Either[PgQueryError, Node]}.
+\begin{itemize}
+    \item When everything goes well, we get the \texttt{Node} and return it as \\ \texttt{Right(node)}.
+    \item If the result is an empty array, it suggests that the query was not valid and \texttt{libpg\_query} returned JSON with empty array. \\
+    \texttt{Left(EmptyParsingResult)}
+    \item If the parsing of the JSON fails, we get \texttt{DecodingFailure} object from \texttt{circe}. Return value is then \\ \texttt{Left(FailureWhileParsing(DecodingFailure))}
+\end{itemize}
+
+\subsection{Parse expressions}
+Besides parsing full queries, we also support the parsing of expressions. Having access to parse trees of expression will be useful for the interpolation of queries. Just like \texttt{parse} method used for parsing queries, the \texttt{parseExpression} takes expression as string on input. However, \textit{libpg\_query} only supports parsing of full valid queries. For that reason, we are using a small trick, where we add the prefix "SELECT " in front of the expression. This works, because by definition, \texttt{targetList} of \texttt{SelectStmt} can contain arbitrary expression.
+
+The created query is then parsed using the original \texttt{parse} method. Since the structure of the \texttt{SelectStmt} node is known, we can use pattern matching to extract precisely only the expression. The error handling works in similar fashion as in the \texttt{parse} function and the return type is \texttt{Either[PgQueryError, ResTarget]}.
+
+\subsection{Prettify}
+Prettify goes one step beyond the parsing of the query. In case the parse tree is built successfully, it uses \texttt{Node.query} method. Depending on the structure of each node, the \texttt{query} method is implemented to recursively build the whole parse tree back to the SQL query in the string form.
+
+

@@ -1,0 +1,39 @@
+\section{Using native library}
+\textit{Libpg\_query} provides \texttt{pg\_query\_parse} function, which takes \texttt{const char*} parameter (the SQL query) and returns parse tree in form of JSON. However, because of difference between native code and java byte code, we can't directly import the C library into our Scala code.
+
+\subsection{Native code and byte code}
+Native code is compiled to run on a specific processor. Examples of languages that produce native code after compilation are C, C++. That means, every time we want to run our C program, it has to be recompiled for that specific operating system or processor.
+
+Java byte code, on the other hand, is compiled source code from i.e. Java, Scala. Byte code is then translated to machine code using JVM. Any system that has JVM can run the byte code, does not matter which operating system it uses. That is why Java and Scala as well, are platform-independent.
+
+\subsection{Java native interface}
+JNI is programming interface for writing Java native methods.\cite{JNI} It is used to enable Java code to use native applications and libraries. The native functions are implemented in separate generated \texttt{.c} or \texttt{.cpp} file. Let's say we defined our class with native method like this:
+
+\begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false, caption={Scala class with native method}, xleftmargin=.05in]
+package com.pgquery
+
+class Wrapper {
+  @native def parse(query: String): String
+}
+\end{lstlisting}
+
+Then we compile the file with the Scala source code. From the compiled code we generate the JNI header using \texttt{javah} command. The definition of the native function then looks like this: 
+
+\begin{lstlisting}[language=c, basicstyle=\ttfamily, showstringspaces=false, caption={Generated JNI header}, xleftmargin=.05in]
+JNIEXPORT void JNICALL Java_com_pgquery_Wrapper_parse
+  (JNIEnv *env, jobjectobj, jstring string)
+{
+  // Method native implementation
+}
+\end{lstlisting}
+The parameter list for the generated function contains a \texttt{JNIEnv} pointer, a \texttt{jobject} pointer, and any Java arguments declared by the Java method.\cite{What is JNI} \\
+The \texttt{JNIEnv} pointer is used as an interface to the JVM. Thanks to that we can for example use function the convert native \texttt{const char*} to and from Scala string. \\
+The \texttt{jobject} pointer is used to access class variables of the object the method was called from.
+
+The JNI header is then compiled, with included JNI headers from local Java JDK. The extension of the final shared library depends on system - \texttt{.so} for Linux, \texttt{.dylib} for MacOS and \texttt{.dll} for Windows. The created native library is then loaded using \texttt{System.loadLibrary}.
+
+
+\subsection{sbt-jni}
+\texttt{sbt-jni} library provides a JNI wrapper for Scala. It is a suite of sbt plugins for simplifying the creation and distribution of JNI programs. To name the ones used, \textit{JniJavah} works as a wrapper around the \texttt{javah} command to generate headers for classes with \texttt{@native methods}. It uses \textit{CMake} to compile the native libraries.
+Next one used is \textit{JniLoad}, which enables correct loading of shared libraries through \texttt{@nativeLoader} annotation. 
+

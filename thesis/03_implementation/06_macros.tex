@@ -1,0 +1,36 @@
+\section{Scala macros}
+Since we want to achieve compile time validation, we have to explicitly tell the Scala compiler. If the query is defined as a function with parameters, it waits for runtime, when the values of parameters are known (not just the types, as it is when compiling). And then each call to the function would be evaluated separately.
+
+What we want to do, is to validate the query at compilation and create placeholders at the parameter positions. These will have the expected type, so every value passed to the function with the matching type will result in a valid query. If the query is not valid, we will get compile time error right away, making it easier for us to debug the code and fix it.
+
+That is where Scala macros are useful. They have the same signature as functions, but their body consists of \texttt{macro} keyword and name of the macro function.  \textit{It will expand that application by invoking the corresponding macro implementation method, with the abstract-syntax trees of the argument expressions args as arguments.}~\cite{Def macros} I think that little description of what abstract syntax trees are is required here. \textit{Trees are the basis of Scala’s abstract syntax which is used to represent programs. They are also called abstract syntax trees and commonly abbreviated as ASTs.}\cite{Trees}
+
+\subsection{Scala AST and Reflection library}
+Macros are part of the Scala reflection library. We will specifically talk about the compile-time reflection. \textit{Scala reflection enables a form of metaprogramming which makes it possible for programs to modify themselves at compile time.}\cite{Compile-time reflection} 
+
+When we enter the execution of the macro, we have the context and the function arguments. Everything is in the form of AST, so programming macros is slightly different from the usual programming in Scala. In simple terms, context tells us where the macro was called from, which class, method name, etc. 
+
+Another tool, often used when working with macros, is called \texttt{reify}. It is a method, which takes expression and returns its AST. In the following snippet we can see difference in the AST, when we call the method directly with the \texttt{String} vs. passing the \texttt{String} as variable.
+\newpage
+\begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false, caption={Comparison of ASTs of function calls with \texttt{String} and with variable}]
+scala> reify { printQuery("SELECT 1") }
+res1: Expr[Unit] = 
+    Expr[Unit](cmd1.printQuery("SELECT 1"))
+
+scala> val selectQuery: String = "SELECT 1"
+scala> reify { printQuery(selectQuery) }
+res1: Expr[Unit] = 
+    Expr[Unit](cmd1.printQuery(cmd2.selectQuery))
+\end{lstlisting}
+Here we can see that if our function calls a macro, the compiler does not know the value of parameters of the function, only the type, and name. This will be important when we are going to implement our interpolators using macros.
+
+\subsection{Liftable}
+Scala uses trait \texttt{Liftable[T]} to specify conversion of type to tree. It has only single abstract method - \texttt{def apply(value: T): Tree}. Since the goal of using macros is to validate queries at compile time, we will use \texttt{parse} method from \texttt{PgQueryParse}, which returns the parse tree in form of a \texttt{Node}. We will have to 'lift' the result, so we can return the correct \texttt{Tree} representation. \cite{Liftable}
+
+Therefore, we have to define Liftable[Node]. We are using three macros, that generate Liftable object from the original. 
+\begin{itemize}
+    \item \texttt{LiftableCaseClass}
+    \item \texttt{LiftableCaseObject}
+    \item \texttt{LiftableEnumeration}
+\end{itemize}
+Each one of them provides an implementation of creating an implicit object, which extends Liftable[T] and implements the logic of creating corresponding \texttt{Tree}.

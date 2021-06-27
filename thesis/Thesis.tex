@@ -1,0 +1,274 @@
+% arara: xelatex
+% arara: xelatex
+% arara: xelatex
+
+
+% options:
+% thesis=B bachelor's thesis
+% thesis=M master's thesis
+% czech thesis in Czech language
+% english thesis in English language
+% hidelinks remove colour boxes around hyperlinks
+
+\documentclass[thesis=B,english]{FITthesis}[2019/12/23]
+
+%\usepackage[utf8]{inputenc} % LaTeX source encoded as UTF-8
+% \usepackage[latin2]{inputenc} % LaTeX source encoded as ISO-8859-2
+% \usepackage[cp1250]{inputenc} % LaTeX source encoded as Windows-1250
+
+% \usepackage{subfig} %subfigures
+% \usepackage{amsmath} %advanced maths
+% \usepackage{amssymb} %additional math symbols
+
+\usepackage{dirtree} %directory tree visualisation
+\usepackage{listings}
+\usepackage{subfiles}
+\usepackage{enumitem}
+\usepackage{url}
+
+\lstset{
+    captionpos=b,
+    xleftmargin=.25in
+}
+% % list of acronyms
+% \usepackage[acronym,nonumberlist,toc,numberedsection=autolabel]{glossaries}
+% \iflanguage{czech}{\renewcommand*{\acronymname}{Seznam pou{\v z}it{\' y}ch zkratek}}{}
+% \makeglossaries
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% EDIT THIS
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+
+\department{Department of software engineering}
+\title{Scala library for constructing statically typed PostgreSQL queries}
+\authorGN{Petr} %author's given name/names
+\authorFN{Hron} %author's surname
+\author{Petr Hron} %author's name without academic degrees
+\authorWithDegrees{Petr Hron} %author's name with academic degrees
+\supervisor{Ing. Vojtěch Létal}
+\acknowledgements{I would like to thank my supervisor Ing. Vojtěch Létal, for the patience, guidance and support. I would also like to thank my family for their support.}
+
+\abstractEN{The focus of this thesis is development of the Scala library capable of creating statically typed queries, together with research of Scala libraries that deal with constructing SQL queries. 
+
+First, technologies used for this project are introduced, followed by research of existing Scala libraries for working with PostgreSQL. The implementation part then follows the steps that were required to create the library. It covers the connection of Scala with C library, use of \textit{circe} library for parsing JSON results, and creating case class structure to represent SQL parse trees. Another big part of implementation covers macros in Scala and their usage for compile time validation of queries. Then the current state of the library is described, together with plans for future improvements.}
+
+\abstractCS{Hlavní téma této práce je vývoj a implementace knihovny pro vytváření staticky typovaných SQL dotazů v jazyce Scala, společně s průzkumem existujících Scala knihoven, které se zabývají vytvářením SQL dotazů.
+
+Nejprve jsou představeny použité technologie a popsány existující knihovny pro práci s PostgreSQL. Implementační část následně popisuje kroky potřebné k vytvoření knihovny. Popsáno je propojení Scaly a knihovny v jazyce C, použití \textit{circe} knihovny, která slouží pro parsování JSON výsledků a vytvoření \textit{case class} struktury pro reprezentaci syntaktických stromů SQL výrazů. Další velká část implementace popisuje makra v jazyce Scala a jejich využití pro validaci SQL dotazů během kompilace. Nakonec je popsán nynější stav knihovny společně s plány pro budoucí vylepšení.
+}
+
+
+\placeForDeclarationOfAuthenticity{Prague}
+\keywordsCS{Scala, PostgreSQL, abstraktní syntaktický strom, open source, validace během kompilace}
+\keywordsEN{Scala, PostgreSQL, parse tree, open source, compile time validation}
+\declarationOfAuthenticityOption{1} %select as appropriate, according to the desired license (integer 1-6)
+\website{https://github.com/Ivellien/pgQuery4s} %optional thesis URL
+
+
+\begin{document}
+\lstlistoflistings*
+% \newacronym{CVUT}{{\v C}VUT}{{\v C}esk{\' e} vysok{\' e} u{\v c}en{\' i} technick{\' e} v Praze}
+% \newacronym{FIT}{FIT}{Fakulta informa{\v c}n{\' i}ch technologi{\' i}}
+
+\setsecnumdepth{part}
+\chapter{Introduction}
+
+
+\setsecnumdepth{all}
+
+\subfile{01_introduction/01_motivation}
+
+\chapter{Technologies used}
+
+\subfile{01_introduction/02_postgresql}
+
+\subfile{01_introduction/03_scala}
+
+\chapter{Existing solutions}
+
+\subfile{02_background/01_database_libs}
+
+\subfile{02_background/02_difference_approach}
+
+\chapter{Realisation}
+
+\subfile{03_implementation/02_parsetree_representation}
+
+\subfile{03_implementation/03_native_libary}
+
+\subfile{03_implementation/04_parsing_json}
+
+\subfile{03_implementation/05_interpolators}
+
+\subfile{03_implementation/06_macros}
+
+\subfile{03_implementation/07_combine_macro_interpolator}
+
+\subfile{03_implementation/08_testing}
+
+\chapter{Conclusion}
+
+\subfile{03_implementation/09_summary}
+
+
+\bibliographystyle{iso690}
+\bibliography{mybibliographyfile}
+\begin{thebibliography}{9}
+
+\bibitem{PostgreSQL}
+PostgreSQL Tutorial.
+\textit {What Is PostgreSQL?} [online]. 2021. [Accessed 21 June 2021]. Available from:
+\url{https://www.postgresqltutorial.com/what-is-postgresql/}
+
+\bibitem{Stackoverflow survey}
+Stack Overflow.
+\textit {Stack Overflow Annual Developer Survey} [online]. 2020. [Accessed 13 June 2021].
+Available from: \url{https://insights.stackoverflow.com/survey/2020\#technology-databases-all-respondents4}
+
+\bibitem{Parse tree image}
+SHAUGHNESSY, Pat.
+\textit{Following a Select Statement Through Postgres Internals} [online]. 15 Jun 2015. [Accessed 27 June 2015] Available from: \url{https://www.cloudbees.com/blog/following-a-select-statement-through-postgres-internals}
+
+\bibitem{Parse tree usage}
+PENG, Bo.
+\textit {Introducing PostgreSQL SQL Parser} [online]. 2019. [Accessed 24 June 2021]. Available from:
+\url{https://www.pgcon.org/2019/schedule/attachments/556\_PostgreSQL\_SQL\_parser.pdf}
+
+\bibitem{Static vs dynamic}
+BHATNAGAR, Mayank.
+\textit {Magic lies here - Statically vs Dynamically Typed Languages} [online]. Sep 9, 2018. [Accessed 21 June 2021]. Available from: \url{https://medium.com/android-news/magic-lies-here-statically-typed-vs-dynamically-typed-languages-d151c7f95e2b}
+
+\bibitem{Quill} 
+IOFFE, Alexander.
+\textit {What is Quill?} [online]. 2021. [Accessed 25 April 2021]. Available from: \url{https://github.com/getquill/quill/}
+
+\bibitem{Doobie}
+NORRIS, Rob. 
+\textit {Doobie documentation} [online]. 2021. [Accessed 25 April 2021]. Available from: \url{https://tpolecat.github.io/doobie/}
+
+\bibitem{PostgreSQL documentation}
+The PostgreSQL Global Development Group
+\textit{The Parser Stage} [online]. 2021. [Accessed 20 June 2021]. Available from: \url{https://www.postgresql.org/docs/10/parser-stage.html}
+
+\bibitem{Postgres wiki}
+RENNER, Michael.
+\textit {Query Parsing} [online]. 2014. [Accessed 25 June 2021]. Available from:
+\url{https://wiki.postgresql.org/wiki/Query\_Parsing}
+
+\bibitem{libpgquery}
+FITTL, Lukas.
+\textit {libpg\_query} [online]. 2021. [Accessed 25 June 2021]. Available from:
+\url{https://github.com/pganalyze/libpg\_query}
+
+\bibitem{sbt fork}
+sbt Documentation.
+\textit {Forking} [online]. [Accessed 22 June 2021]. Available from:
+\url{https://www.scala-sbt.org/0.12.3/docs/Detailed-Topics/Forking.html}
+
+\bibitem{JNI}
+Oracle.
+\textit{Java Native Interface} [online]. [Accessed 20 June 2021]. Available from:
+\url{https://docs.oracle.com/javase/8/docs/technotes/guides/jni/}
+
+\bibitem{What is JNI}
+MIKHALENKO, Peter.
+\textit{Discover how the Java Native Interface works} [online]. 6 Sep 2006  [Accessed 26 June 2021]. Available from:
+\url{https://www.techrepublic.com/article/discover-how-the-java-native-interface-works/}
+
+\bibitem{Semi automatic derivation}
+Circe documentation.
+\textit{Semi-automatic Derivation}
+[online]. [Accessed 27 June 2021]. Available from:
+\url{https://circe.github.io/circe/codecs/semiauto-derivation.html}
+
+\bibitem{String interpolation}
+SUERETH, Josh. 
+\textit {String interpolation} [online]. [Accessed 25 April 2021]. Available from: \url{https://docs.scala-lang.org/overviews/core/string-interpolation.html}
+
+\bibitem{Def macros}
+BURMAKO, Eugene. 
+\textit {Def macros} [online]. [Accessed 25 April 2021]. Available from: \url{https://docs.scala-lang.org/overviews/macros/overview.html}
+
+\bibitem{Trees}
+Scala Documentation.
+\textit{Symbols, Trees, and Types.} [online]. [Accessed 26 June 2021]. Available from: \url{https://docs.scala-lang.org/overviews/reflection/symbols-trees-types.html} 
+
+
+\bibitem{Compile-time reflection}
+MILLER, Heather, BURMAKO Eugene and HALLER Philipp.
+\textit {Compile-time reflection} [online]. [Accessed 19 June 2021]. Available from: \url{https://docs.scala-lang.org/overviews/reflection/overview.html\#compile-time-reflection}
+
+\bibitem{Liftable}
+SHABALIN, Denys.
+\textit {Quasiquotes lifting} [online]. [Accessed 22 June 2021]. Available from:
+\url{https://docs.scala-lang.org/overviews/quasiquotes/lifting.html}
+
+\bibitem{quasiquotes}
+SHABALIN, Denys.
+\textit {Quasiquotes introduction} [online]. [Accessed 22 June 2021]. Available from:
+\url{https://docs.scala-lang.org/overviews/quasiquotes/intro.html}
+
+\bibitem{Transformer}
+Scala Documentation.
+\textit {Transformer} [online]. [Accessed 23 June 2021]. Available from:
+\url{https://www.scala-lang.org/api/current/scala-reflect/scala/reflect/api/Trees$Transformer.html}
+
+\bibitem{Implicit}
+Scala Documentation.
+\textit {Implicit conversions} [online]. [Accessed 24 June 2021]. Available from:
+\url{https://docs.scala-lang.org/tour/implicit-conversions.html}
+
+\bibitem{Looking up Implicits}
+SUERETH, Josh.
+\textit {Implicits without the import tax} [online]. 2011. [Accessed 24 June 2021]. Available from: \url{http://jsuereth.com/scala/2011/02/18/2011-implicits-without-tax.html}
+
+\bibitem{libpgquery13}
+FITTL, Lukas.
+\textit {Release 13-2.0.0} [online]. 18 Mar, 2021. [Accessed 24 June 2021]. Available from:
+\url{https://github.com/pganalyze/libpg\_query/releases/tag/13-2.0.0}
+
+\bibitem{CI}
+Could Bees.
+\textit{What is Continuous Integration?}  [online]. 2021. [Accessed 27 June 2021]. Available from: \url{https://www.cloudbees.com/continuous-delivery/continuous-integration}
+
+\end{thebibliography}
+\setsecnumdepth{all}
+\appendix
+
+\chapter{Acronyms}
+% \printglossaries
+\begin{description}
+	\item[API] Application programming interface
+	\item[AST] Abstract syntax tree
+	\item[CI] Continuous integration
+	\item[CQL] Cassandra Query Language
+	\item[DSL] Domain-specific language
+	\item[JDBC] Java Database Connectivity
+	\item[JPA] Jakarta Persistence
+	\item[JSON] JavaScript Object Notation
+	\item[JVM] Java virtual machine
+	\item[SQL] Structured Query Language
+\end{description}
+
+
+\chapter{Contents of enclosed CD}
+
+%change appropriately
+
+\begin{figure}
+	\dirtree{%
+	    .1 pgQuery4s\DTcomment{the directory of source codes}.
+	    .2 core\DTcomment{core submodule}.
+	    .2 example\DTcomment{example project}.
+	    .2 macros\DTcomment{macros submodule}.
+	    .2 native\DTcomment{native submodule}.
+	    .2 parser\DTcomment{parser submodule}.
+	    .2 project\DTcomment{metabuild}.
+	    .2 thesis\DTcomment{the directory of \LaTeX  source codes of the thesis}.
+	    .2 build.sbt\DTcomment{build definition}.
+	    .2 README.md\DTcomment{github description of library}.
+		.1 thesis.pdf\DTcomment{the thesis text in PDF format}.
+	}
+\end{figure}
+
+\end{document}
