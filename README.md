@@ -24,13 +24,20 @@ libraryDependencies ++= Seq(
   "com.github.ivellien" %% "pgquery4s-parser" % pgquery4sVersion
 )
 ```
-## 
+## Contribution guidelines
+
+We appreciate any type of contribution. If you find any bugs or have ideas for improvement, use GitHub issues or contact me via email.
+
+Pull request guidelines
+1. Provide description about your changes
+2. Make sure that all existing tests are passing
+3. If you are adding new feature, make sure it is properly tested
 
 ## Usage
 
 ### Taking advantage of compile time validation
 
-To ease working and validating PostgreSQL queries, I have implemented custom string interpolator *query* and *expr*. These use macros to validate queries at compile time.
+To ease working and validating PostgreSQL queries, we provide custom string interpolators *query* and *expr*. These use macros to validate queries at compile time.
 
 ```scala
 val expression = expr"x = 5" 
