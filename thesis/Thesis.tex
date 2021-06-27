@@ -45,15 +45,15 @@
 \supervisor{Ing. Vojtěch Létal}
 \acknowledgements{THANKS (remove entirely in case you do not with to thank anyone)}
 
-\abstractEN{The focus of this thesis is the development of the Scala library capable of creating statically typed queries, together with research of Scala libraries that deal with constructing SQL queries. 
+\abstractEN{The focus of this thesis is development of the Scala library capable of creating statically typed queries, together with research of Scala libraries that deal with constructing SQL queries. 
 
-First, the technologies used for this project are introduced, followed by research of existing Scala libraries for working with PostgreSQL. The implementation part then follows the steps that were required to create the library. It covers the connection of Scala with C library, use of \textit{circe} library for parsing JSON results, and creating case class structure to represent SQL parse trees. Another big part of implementation covers macros in Scala and their usage for compile time validation of queries. Then the current state of the library is described, together with plans for future improvements.}
+First, technologies used for this project are introduced, followed by research of existing Scala libraries for working with PostgreSQL. The implementation part then follows the steps that were required to create the library. It covers the connection of Scala with C library, use of \textit{circe} library for parsing JSON results, and creating case class structure to represent SQL parse trees. Another big part of implementation covers macros in Scala and their usage for compile time validation of queries. Then the current state of the library is described, together with plans for future improvements.}
 
 \newpage
 
 \abstractCS{Hlavní téma této práce je vývoj a implementace knihovny pro vytváření staticky typovaných SQL dotazů v jazyce Scala, společně s průzkumem existujících Scala knihoven, které se zabývají vytvářením SQL dotazů.
 
-Nejprve jsou představeny použité technologie. Následně jsou popsané existující knihovny pro práci s PostgreSQL. Implementační část následně popisuje kroky potřebné k vytvoření knihovny. Popsáno je propojení Scaly a knihovny v jazyce C, použití \textit{circe} knihovny, která slouží pro parsování JSON výsledků a vytvoření \textit{case class} struktury pro reprezentaci SQL syntaktických stromů. Další velká část implementace popisuje makra v jazyce Scala a jejich využití pro validaci SQL dotazů během kompilace. Následně je popsán nynější stav knihovny společně s plány pro budoucí vylepšení.
+Nejprve jsou představeny použité technologie a popsány existující knihovny pro práci s PostgreSQL. Implementační část následně popisuje kroky potřebné k vytvoření knihovny. Popsáno je propojení Scaly a knihovny v jazyce C, použití \textit{circe} knihovny, která slouží pro parsování JSON výsledků a vytvoření \textit{case class} struktury pro reprezentaci syntaktických stromů SQL výrazů. Další velká část implementace popisuje makra v jazyce Scala a jejich využití pro validaci SQL dotazů během kompilace. Nakonec je popsán nynější stav knihovny společně s plány pro budoucí vylepšení.
 }
 
 
@@ -105,9 +105,9 @@ Nejprve jsou představeny použité technologie. Následně jsou popsané existu
 
 \subfile{03_implementation/08_testing}
 
-\subfile{03_implementation/09_summary}
-
 \chapter{Conclusion}
+
+\subfile{03_implementation/09_summary}
 
 
 \bibliographystyle{iso690}
@@ -123,6 +123,10 @@ PostgreSQL Tutorial.
 Stack Overflow.
 \textit {Stack Overflow Annual Developer Survey} [online]. 2020. [Accessed 13 June 2021].
 Available from: \url{https://insights.stackoverflow.com/survey/2020\#technology-databases-all-respondents4}
+
+\bibitem{Parse tree image}
+SHAUGHNESSY, Pat.
+\textit{Following a Select Statement Through Postgres Internals} [online]. 15 Jun 2015. [Accessed 27 June 2015] Available from: \url{https://www.cloudbees.com/blog/following-a-select-statement-through-postgres-internals}
 
 \bibitem{Parse tree usage}
 PENG, Bo.
@@ -170,6 +174,12 @@ MIKHALENKO, Peter.
 \textit{Discover how the Java Native Interface works} [online]. 6 Sep 2006  [Accessed 26 June 2021]. Available from:
 \url{https://www.techrepublic.com/article/discover-how-the-java-native-interface-works/}
 
+\bibitem{Semi automatic derivation}
+Circe documentation.
+\textit{Semi-automatic Derivation}
+[online]. [Accessed 27 June 2021]. Available from:
+\url{https://circe.github.io/circe/codecs/semiauto-derivation.html}
+
 \bibitem{String interpolation}
 SUERETH, Josh. 
 \textit {String interpolation} [online]. [Accessed 25 April 2021]. Available from: \url{https://docs.scala-lang.org/overviews/core/string-interpolation.html}
@@ -189,7 +199,7 @@ MILLER, Heather, BURMAKO Eugene and HALLER Philipp.
 
 \bibitem{Liftable}
 SHABALIN, Denys.
-\textit {Quasiquotes introduction} [online]. [Accessed 22 June 2021]. Available from:
+\textit {Quasiquotes lifting} [online]. [Accessed 22 June 2021]. Available from:
 \url{https://docs.scala-lang.org/overviews/quasiquotes/lifting.html}
 
 \bibitem{quasiquotes}
@@ -225,6 +235,7 @@ FITTL, Lukas.
 \begin{description}
 	\item[API] Application programming interface
 	\item[AST] Abstract syntax tree
+	\item[CQL] Cassandra Query Language
 	\item[DSL] Domain-specific language
 	\item[JDBC] Java Database Connectivity
 	\item[JPA] Jakarta Persistence

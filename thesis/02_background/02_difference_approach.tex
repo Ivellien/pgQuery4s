@@ -2,7 +2,16 @@
 \subsection{Database-independent validation}
 As we can see, working with the database has been already done by multiple existing libraries. However, sometimes we might not have the option to use the database to validate the queries. This project isn't meant as a competitor to those mentioned libraries. Instead, it is recommended to use them together. In the example project that was implemented to showcase the usage of our library, we are using Doobie. The queries are created and validated using our implementation, and then they are executed on a specific database using a connection created by Doobie to show that the queries are, in fact, valid.
 
+\subsection{Implementation goal}
 The goal is to use the parse tree generated during the \textit{Parser stage} of the PostgreSQL parser. As mentioned before, the parsing is independent of the existing database. Thanks to that, we can check whether the syntax of the SQL query is valid. 
+
+All that will be done during compilation. We will create an interpolator, which will generate the parse tree structure. As arguments the interpolator will accept either \texttt{Nodes} directly, or even primitive types like \texttt{String} or \texttt{Int}, which will be transformed into \texttt{Node} thanks to the implicit conversion. 
+
+For example we will be able to create function, that will create different filtering queries, based on passed expression. 
+\begin{lstlisting}[language=scala, basicstyle=\ttfamily, showstringspaces=false]
+def filterStudents(expr: Expr) : Node = 
+    query"SELECT * FROM students WHERE $expr"
+\end{lstlisting}
 
 \subsection{Getting parse tree}
 To get the parse tree we have to access the internal functions of the PostgreSQL parser. These internal functions are not accessible directly, fortunately, the PostgreSQL\cite{Postgres wiki} wiki points us in the direction of \textit{pg\_query, a Ruby gem which can generate query trees in JSON representation}. This then further leads to \texttt{Libpg\_query}, which will help us get the parse tree.
@@ -14,7 +23,6 @@ The main purpose of \texttt{libpg\_query} is to be used as a base library for im
 
 The \texttt{pg\_query\_parse} takes the plain text SQL query in form of \texttt{const char*}. Then it calls the extracted parts of the PostgreSQL server and returns the parse tree as JSON. Once we have that, we can decode the JSON and map it onto the created case class structure in Scala.
 
-\newpage
 Here we have a simple code snippet describing simple usage taken from the GitHub README\cite{libpgquery}. 
 
 \begin{lstlisting}[language=C, basicstyle=\ttfamily, keywordstyle=\color{purple}]

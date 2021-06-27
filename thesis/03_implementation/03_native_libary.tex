@@ -30,9 +30,10 @@ The parameter list for the generated function contains a \texttt{JNIEnv} pointer
 The \texttt{JNIEnv} pointer is used as an interface to the JVM. Thanks to that we can for example use function the convert native \texttt{const char*} to and from Scala string. \\
 The \texttt{jobject} pointer is used to access class variables of the object the method was called from.
 
-The JNI header is then compiled, with included JNI headers from local Java JDK. The extension of the final shared library depends on system - \texttt{.so} for Linux, \texttt{.dylib} for MacOS and \texttt{.dll} for Windows.
+The JNI header is then compiled, with included JNI headers from local Java JDK. The extension of the final shared library depends on system - \texttt{.so} for Linux, \texttt{.dylib} for MacOS and \texttt{.dll} for Windows. The created native library is then loaded using \texttt{System.loadLibrary}.
 
 
 \subsection{sbt-jni}
-Fortunately, \texttt{sbt-jni} library provides a JNI wrapper for Scala. It is a suite of sbt plugins for simplifying the creation and distribution of JNI programs. To name the ones used, \texttt{JniJavah} works as a wrapper around the \texttt{javah} command to generate headers for classes with \texttt{@native methods}. Next one used is \texttt{JniLoad}, which enables correct loading of shared libraries through \texttt{@nativeLoader} annotation.
+\texttt{sbt-jni} library provides a JNI wrapper for Scala. It is a suite of sbt plugins for simplifying the creation and distribution of JNI programs. To name the ones used, \texttt{JniJavah} works as a wrapper around the \texttt{javah} command to generate headers for classes with \texttt{@native methods}. It uses \texttt{CMake} to compile the native libraries.
+Next one used is \texttt{JniLoad}, which enables correct loading of shared libraries through \texttt{@nativeLoader} annotation. 
 

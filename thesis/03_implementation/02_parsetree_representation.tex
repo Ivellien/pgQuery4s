@@ -2,12 +2,17 @@
 \subsection{C}
 
 If we look at internal representation of the tree directly in the PostgreSQL parser, it defines each possible node of the parsetree in form of \texttt{struct}. Any type of node is guaranteed to have \texttt{NodeTag} as the first field. 
-\begin{itemize}
-    \item \texttt{enum NodeTag} - defines all possible types of nodes
-    \item \texttt{struct Node} - contains only one variable - the \texttt{NodeTag}
-\end{itemize}
-Thanks to that guarantee, any type of node can be cast to \texttt{Node} without losing the information about the type of the node. That allows casting the \texttt{Node} back to the original type when needed.
-This fact is also used when a node contains another node as a leaf. Most of the time, the type of the required node isn't specified directly, instead \texttt{Node} pointer is used. This provides flexibility for the parameters of the nodes. A great example of that is the node of type \texttt{A\_Expr}, where both left side expression and right side expression have \texttt{Node*} type.
+\begin{lstlisting}[language=C, basicstyle=\ttfamily]      
+typedef struct Node
+{
+   NodeTag  type;
+} Node;
+\end{lstlisting}
+\texttt{NodeTag} is an \texttt{enum}, which contains all types of possible nodes. This is used to achieve polymorphism in C. Thanks to that guarantee, any type of node can be cast to \texttt{Node} without losing the information about the type. That allows casting the \texttt{Node} back to the original type when needed.
+
+This fact is also used when a node contains another node as a leaf. Most of the time, the type of the required node isn't specified directly instead, \texttt{Node} pointer is used. This provides flexibility for the parameters of the nodes. 
+
+A great example of that is the node of type \texttt{A\_Expr}, where both left side expression and right side expression have \texttt{Node*} type.
 \begin{lstlisting}[language=C, basicstyle=\ttfamily]      
 typedef struct A_Expr {
     NodeTag     type;
@@ -19,6 +24,7 @@ typedef struct A_Expr {
 } A_Expr;
 \end{lstlisting}
 
+However, in many places, the \texttt{Node} reference could be replaced by a smaller subset of possible types. Having \texttt{Node} everywhere creates a flat structure, which could be improved, especially for purposes of type checking. 
 
 \subsection{Scala}
 Since we already have existing parse tree representation in C we can mirror it in Scala.

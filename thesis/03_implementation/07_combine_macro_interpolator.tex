@@ -13,7 +13,7 @@ query"SELECT $1 FROM students"
 \end{lstlisting}
 This returns the correct parse tree, where each of the placeholders contains a node of ParamRef type. 
 
-\subsection{Implementation of macro validation}
+\subsection{Checking the context prefix}
 First of all, the context prefix is validated. The prefix contains info about the expression the macro was called on. We expect that the macro is always called using a custom interpolator from the \texttt{CompileTimeInterpolator} object. That is validated using pattern matching of the context prefix tree against the quasiquote representing the expected tree. Quasiquotes are another example of an interpolator. They are used to convert a snippet of code into its tree representation.\cite{quasiquotes} During the validation we also extract the \texttt{List[String]} from the \texttt{StringContext}.
 
 \subsection{Handling arguments}
