@@ -23,8 +23,14 @@ class QueryInterpolatorTests extends FunSuite with Matchers {
     val value = "Cardinal"
     val query =
       query"INSERT INTO tableName (customername, city, country) VALUES ($value, 'Stavanger', 'Norway')"
-    query should matchPattern {
-      case RawStmt(_, _, Some(_: InsertStmt)) =>
+    inside(query) {
+      case RawStmt(_, _, Some(insertStmt: InsertStmt)) =>
+        inside(insertStmt.selectStmt) {
+          case Some(selectStmt: SelectStmt) =>
+            selectStmt.valuesLists.headOption
+              .getOrElse(List.empty)
+              .size shouldBe 3
+        }
     }
   }
 
