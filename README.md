@@ -5,7 +5,26 @@ Scala library accessing the *parse tree* of PostgreSQL queries. It is based on h
 Since this library is using native code the base C library has to be compiled for various OS - currently supporting MacOS and Linux. When building, the PostgresSQL server source, which is within [libpg_query](https://github.com/pganalyze/libpg_query) is built and linked using JNI.
 
 ## Installation
+As mentioned before pgQuery4s uses libpg_query to get access to parse trees of SQL queries. Therefore, the native library has to be compiled on your system, running these commands from the root folder of the project:
+```
+git submodule init
+git submodule update
+cd parser/src/main/native/libpg_query
+make
+```
+The pgQuery4s library itself can be then published locally.
+```
+sbt test publishLocal
+```
 
+And added to your sbt project
+```
+libraryDependencies ++= Seq(
+  "com.github.ivellien" %% "pgquery4s-core" % pgquery4sVersion,
+  "com.github.ivellien" %% "pgquery4s-parser" % pgquery4sVersion
+)
+```
+## 
 
 ## Usage
 
