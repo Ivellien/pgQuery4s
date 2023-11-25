@@ -9,7 +9,7 @@ As mentioned before pgQuery4s uses libpg_query to get access to parse trees of S
 ```
 git submodule init
 git submodule update
-cd parser/src/main/native/libpg_query
+cd native/src/main/native/libpg_query
 make
 ```
 The pgQuery4s library itself can be then published locally.
